@@ -1,51 +1,102 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KING MAKE - K-FOOD Brand Map</title>
+  <title>KING MAKE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:#000;
-      color:#fff;
-      text-align:center;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      text-align: center;
     }
+
     .container {
-      padding:100px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 80px 20px;
     }
+
     h1 {
-      font-size:64px;
-      letter-spacing:4px;
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin: 0;
     }
+
     h2 {
-      font-weight:300;
-      margin-top:10px;
+      font-size: 22px;
+      font-weight: 400;
+      opacity: 0.7;
+      margin-top: 16px;
     }
+
+    img {
+      width: 85%;
+      max-width: 1000px;
+      margin: 60px 0 30px;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+
+    .note {
+      font-size: 14px;
+      opacity: 0.5;
+      margin-bottom: 40px;
+    }
+
     .btn {
-      display:inline-block;
-      margin-top:40px;
-      padding:15px 40px;
-      border:2px solid #fff;
-      text-decoration:none;
-      color:#fff;
+      display: inline-block;
+      padding: 16px 48px;
+      border: 1px solid #fff;
+      border-radius: 30px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 16px;
+      transition: all 0.2s ease;
     }
+
     .btn:hover {
-      background:#fff;
-      color:#000;
+      background: #fff;
+      color: #000;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 12px;
+      opacity: 0.4;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <h1>KING MAKE</h1>
-    <h2>The Official K-FOOD Brand Map</h2>
-    <p>대한민국 대표 음식 브랜드를<br>
-    한눈에 보여주는 디지털 광고 플랫폼</p>
+
+    <h1>The Map of K-FOOD Power</h1>
+    <h2>Premium digital seats for Korea’s top food brands</h2>
+
+    <!-- 여기에 실제 픽셀 지도 이미지 파일명 넣기 -->
+    <img src="map.png" alt="KING MAKE Brand Map">
+
+    <div class="note">
+      This is not a mockup. This is the actual advertising space.
+    </div>
 
     <a class="btn" href="mailto:contact@kingmake.kr">
-      Contact Us
+      Reserve Your Seat
     </a>
+
+    <footer>
+      © 2026 KING MAKE
+    </footer>
+
   </div>
 </body>
 </html>
