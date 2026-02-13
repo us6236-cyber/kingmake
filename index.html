@@ -4,522 +4,230 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KING MAKE</title>
-
   <style>
     :root{
-      --bg:#000;
-      --fg:#fff;
-      --muted:rgba(255,255,255,.7);
-      --muted2:rgba(255,255,255,.55);
-      --line:rgba(255,255,255,.16);
+      --bg:#000; --fg:#fff; --line:rgba(255,255,255,.14);
       --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.08);
-      --shadow:0 20px 60px rgba(0,0,0,.65);
-      --radius:16px;
+      --muted:rgba(255,255,255,.7);
+      --r:16px;
+      --tile:10px; /* 타일 크기(픽셀 느낌) */
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-      background:var(--bg);
-      color:var(--fg);
-    }
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
-
-    /* NAV */
-    .nav{
-      position:sticky;top:0;z-index:20;
-      background:rgba(0,0,0,.72);
-      backdrop-filter: blur(12px);
-      border-bottom:1px solid var(--line);
-    }
-    .nav-inner{
-      display:flex;align-items:center;justify-content:space-between;
-      height:64px;
-    }
-    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.5px}
-    .dot{width:10px;height:10px;border-radius:50%;background:#fff;opacity:.9}
-    .menu{display:flex;gap:18px;align-items:center;font-size:14px;color:var(--muted)}
-    .menu a{padding:8px 10px;border-radius:10px}
-    .menu a:hover{background:var(--card2);color:#fff}
-    .cta{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:10px 16px;border:1px solid var(--line);border-radius:999px;
-      font-size:14px;color:#fff;background:transparent;
-      transition:.2s ease;
-    }
+    body{margin:0;background:var(--bg);color:var(--fg);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px 20px 40px;}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    h1{margin:0;font-size:28px;letter-spacing:-.3px}
+    .sub{color:var(--muted);margin:6px 0 0;font-size:14px}
+    .cta{border:1px solid var(--line);padding:10px 14px;border-radius:999px;text-decoration:none;color:#fff}
     .cta:hover{background:#fff;color:#000;border-color:#fff}
 
-    /* HERO */
-    .hero{padding:76px 0 50px}
-    .hero h1{
-      margin:0;font-size:56px;letter-spacing:-1px;line-height:1.05;
+    /* ===== GRID ===== */
+    .board{
+      margin-top:18px;
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      overflow:hidden;
+      background:rgba(255,255,255,.03);
     }
-    .hero p{
-      margin:18px 0 0;font-size:18px;color:var(--muted);line-height:1.6;
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(100, var(--tile));
+      grid-auto-rows: var(--tile);
+      width: calc(100 * var(--tile));
+      max-width: 100%;
+      transform-origin: top left;
     }
-    .hero-actions{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:14px 22px;border-radius:999px;border:1px solid var(--line);
-      font-size:15px;color:#fff;background:transparent;transition:.2s ease;
+    /* 화면 좁으면 축소 */
+    .grid-wrap{display:flex;justify-content:center;overflow:auto}
+    .tile{
+      border-right:1px solid rgba(255,255,255,.04);
+      border-bottom:1px solid rgba(255,255,255,.04);
+      background:rgba(255,255,255,.02);
       cursor:pointer;
     }
+    .tile:hover{background:rgba(255,255,255,.10)}
+    .owned{background:rgba(255,255,255,.12)}
+    .king{background:rgba(255,255,255,.18)}
+    .hot{animation: blinkRed 1s infinite;}
+    .cold{animation: blinkBlue 1.2s infinite;}
+    @keyframes blinkRed{0%,100%{box-shadow: inset 0 0 0 1px rgba(255,0,0,.0)}50%{box-shadow: inset 0 0 0 1px rgba(255,0,0,.9)}}
+    @keyframes blinkBlue{0%,100%{box-shadow: inset 0 0 0 1px rgba(0,140,255,.0)}50%{box-shadow: inset 0 0 0 1px rgba(0,140,255,.9)}}
+
+    /* ===== MODAL ===== */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;padding:16px}
+    .modal{width:min(560px,100%);background:rgba(20,20,20,.95);border:1px solid rgba(255,255,255,.18);border-radius:18px;overflow:hidden}
+    .mhead{display:flex;justify-content:space-between;align-items:center;padding:14px 14px;border-bottom:1px solid rgba(255,255,255,.12)}
+    .mhead b{letter-spacing:.2px}
+    .close{border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;border-radius:12px;padding:8px 10px;cursor:pointer}
+    .close:hover{background:#fff;color:#000;border-color:#fff}
+    .mbody{padding:14px}
+    .mbody p{margin:0;color:var(--muted);line-height:1.7}
+    .row{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+    .pill{border:1px solid var(--line);background:rgba(255,255,255,.05);padding:8px 10px;border-radius:999px;font-size:12px;color:rgba(255,255,255,.82)}
+    .mfoot{padding:14px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+    .btn{border:1px solid var(--line);background:transparent;color:#fff;border-radius:999px;padding:10px 14px;cursor:pointer;text-decoration:none}
     .btn:hover{background:#fff;color:#000;border-color:#fff}
     .btn.primary{background:#fff;color:#000;border-color:#fff}
     .btn.primary:hover{opacity:.9}
 
-    /* IMAGE WRAP */
-    .hero-img{
-      margin-top:46px;
-      border-radius:var(--radius);
-      overflow:hidden;
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      background:var(--card);
-    }
-
-    /* ✅ 핫스팟을 위해 relative 래퍼 */
-    .img-wrap{
-      position:relative;
-      width:100%;
-    }
-    .img-wrap img{
-      width:100%;
-      display:block;
-    }
-
-    /* HOTSPOT */
-    .hotspot{
-      position:absolute;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.06);
-      backdrop-filter: blur(2px);
-      cursor:pointer;
-      transition:.18s ease;
-      outline:none;
-    }
-    .hotspot:hover{
-      border-color: rgba(255,255,255,.55);
-      background: rgba(255,255,255,.10);
-      transform: translateY(-1px);
-    }
-
-    /* 작은 라벨 (원하면 끌 수 있음) */
-    .hotspot::after{
-      content: attr(data-label);
-      position:absolute;
-      left:12px; bottom:10px;
-      font-size:12px;
-      color: rgba(255,255,255,.85);
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(0,0,0,.45);
-      border:1px solid rgba(255,255,255,.18);
-      letter-spacing:.2px;
-    }
-
-    /* 힌트 텍스트 */
-    .hero-note{
-      text-align:center;
-      margin:14px 0 0;
-      font-size:13px;
-      color:var(--muted2);
-    }
-
-    /* SECTION */
-    section{padding:56px 0;border-top:1px solid var(--line)}
-    .sec-title{
-      display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;
-      margin-bottom:18px;
-    }
-    .sec-title h2{margin:0;font-size:24px;letter-spacing:-.2px}
-    .sec-title .sub{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
-
-    .grid-2{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
-    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-
-    @media (max-width: 920px){
-      .hero h1{font-size:44px}
-      .grid-2{grid-template-columns:1fr}
-      .grid-3{grid-template-columns:1fr}
-    }
-
-    /* CARDS */
-    .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:18px;
-    }
-    .card strong{display:block;font-size:16px;margin-bottom:6px}
-    .card p{margin:0;color:var(--muted);line-height:1.6;font-size:14px}
-    .meta{
-      margin-top:14px;
-      display:flex;gap:10px;flex-wrap:wrap;
-      color:var(--muted2);font-size:12px;
-    }
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-    }
-    .mini-dot{width:8px;height:8px;border-radius:50%;background:#fff;opacity:.7}
-    .card.action{cursor:pointer;transition:.18s ease;}
-    .card.action:hover{
-      transform: translateY(-2px);
-      background:var(--card2);
-      border-color:rgba(255,255,255,.28);
-    }
-
-    /* LIST */
-    .list{margin:0;padding-left:18px;color:var(--muted);line-height:1.75;font-size:14px}
-    .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
-    .kpi .k{
-      background:rgba(255,255,255,.04);
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:14px;
-      text-align:center;
-    }
-    .k .num{font-size:22px;font-weight:700}
-    .k .lab{margin-top:6px;color:var(--muted2);font-size:12px}
-    @media (max-width: 720px){ .kpi{grid-template-columns:1fr} }
-
-    footer{
-      padding:28px 0;
-      color:var(--muted2);
-      font-size:12px;
-      border-top:1px solid var(--line);
-      text-align:center;
-    }
-
-    /* MODAL */
-    .modal-overlay{
-      position:fixed;inset:0;
-      background:rgba(0,0,0,.75);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-      z-index:50;
-    }
-    .modal{
-      width:min(720px, 100%);
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(20,20,20,.92);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 25px 90px rgba(0,0,0,.7);
-      overflow:hidden;
-    }
-    .modal-head{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:16px 16px;
-      border-bottom:1px solid rgba(255,255,255,.12);
-    }
-    .modal-title{font-weight:700;letter-spacing:.2px}
-    .close{
-      background:transparent;border:1px solid rgba(255,255,255,.18);
-      color:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;
-    }
-    .close:hover{background:#fff;color:#000;border-color:#fff}
-    .modal-body{padding:16px}
-    .modal-body p{margin:0;color:var(--muted);line-height:1.75}
-    .modal-body .row{margin-top:14px;display:grid;gap:10px}
-    .modal-body .row .pill{justify-content:space-between}
-    .modal-foot{
-      padding:16px;
-      border-top:1px solid rgba(255,255,255,.12);
-      display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;
-    }
+    /* 안내 */
+    .note{margin-top:10px;color:rgba(255,255,255,.55);font-size:12px}
   </style>
 </head>
-
 <body>
-  <!-- NAV -->
-  <div class="nav">
-    <div class="wrap nav-inner">
-      <div class="brand">
-        <span class="dot"></span>
-        <span>KING MAKE</span>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>KING MAKE</h1>
+        <div class="sub">K-FOOD 카테고리 광고 타일 지도 (Million Dollar Homepage 방식)</div>
       </div>
-
-      <div class="menu">
-        <a href="#about">About</a>
-        <a href="#seats">Seats</a>
-        <a href="#contact">Contact</a>
-      </div>
-
       <a class="cta" href="mailto:contact@kingmake.kr">contact@kingmake.kr</a>
     </div>
+
+    <div class="board">
+      <div class="grid-wrap">
+        <div id="grid" class="grid" aria-label="Ad Tile Board"></div>
+      </div>
+    </div>
+    <div class="note">Tip: 타일을 클릭하면 상세가 뜹니다. (KING/프리미엄/스탠다드 / 핫·저평가 깜박임)</div>
   </div>
 
-  <!-- HERO -->
-  <div class="wrap hero" id="top">
-    <h1>치킨 브랜드의 왕좌를 선점하세요</h1>
-    <p>
-      <b>KING MAKE</b>는 대한민국 K-FOOD 브랜드를 한눈에 보여주는
-      <b>프리미엄 디지털 광고 지도</b>입니다.<br/>
-      이 화면이 곧 실제 광고 공간입니다.
-    </p>
-
-    <div class="hero-actions">
-      <a class="btn primary" href="#seats">좌석 보기</a>
-      <a class="btn" href="mailto:contact@kingmake.kr">제안서 요청</a>
-    </div>
-
-    <div class="hero-img">
-      <div class="img-wrap">
-        <!-- ✅ 이미지 파일 경로 -->
-        <img src="images/hero.png" alt="KING MAKE Brand Map" />
-
-        <!-- ✅ 핫스팟 3개 (좌표는 %로 조정) -->
-        <!-- KING: 중앙 상단 큰 영역 (예시) -->
-        <button class="hotspot" data-label="KING"
-          style="left:40%; top:26%; width:10%; height:10%;"
-          onclick="openModal('king')"></button>
-
-        <button class="hotspot" data-label="KING"
-          style="left:52%; top:26%; width:10%; height:10%;"
-          onclick="openModal('king')"></button>
-
-        <!-- Premium: 중앙 주변 영역 (예시) -->
-        <button class="hotspot" data-label="Premium"
-          style="left:22%; top:42%; width:12%; height:12%;"
-          onclick="openModal('premium')"></button>
-
-        <button class="hotspot" data-label="Premium"
-          style="left:36%; top:44%; width:12%; height:12%;"
-          onclick="openModal('premium')"></button>
-
-        <button class="hotspot" data-label="Premium"
-          style="left:50%; top:44%; width:12%; height:12%;"
-          onclick="openModal('premium')"></button>
-
-        <button class="hotspot" data-label="Premium"
-          style="left:64%; top:42%; width:12%; height:12%;"
-          onclick="openModal('premium')"></button>
-
-        <button class="hotspot" data-label="Premium"
-          style="left:30%; top:58%; width:12%; height:12%;"
-          onclick="openModal('premium')"></button>
-
-        <button class="hotspot" data-label="Premium"
-          style="left:58%; top:58%; width:12%; height:12%;"
-          onclick="openModal('premium')"></button>
-
-        <!-- Standard: 하단 일반 영역 (예시) -->
-       <button class="hotspot" data-label="Standard"
-         style="left:15%; top:70%; width:10%; height:10%;"
-         onclick="openModal('standard')"></button>
-
-       <button class="hotspot" data-label="Standard"
-         style="left:28%; top:72%; width:10%; height:10%;"
-         onclick="openModal('standard')"></button>
-
-       <button class="hotspot" data-label="Standard"
-         style="left:42%; top:74%; width:10%; height:10%;"
-         onclick="openModal('standard')"></button>
-
-       <button class="hotspot" data-label="Standard"
-         style="left:56%; top:74%; width:10%; height:10%;"
-         onclick="openModal('standard')"></button>
-
-       <button class="hotspot" data-label="Standard"
-         style="left:70%; top:72%; width:10%; height:10%;"
-         onclick="openModal('standard')"></button>
-
-       <button class="hotspot" data-label="Standard"
-         style="left:20%; top:82%; width:10%; height:10%;"
-         onclick="openModal('standard')"></button>
-
-       <button class="hotspot" data-label="Standard"
-         style="left:40%; top:84%; width:10%; height:10%;"
-         onclick="openModal('standard')"></button>
-
-       <button class="hotspot" data-label="Standard"
-         style="left:60%; top:82%; width:10%; height:10%;"
-         onclick="openModal('standard')"></button>
-
-      </div>
-    </div>
-
-    <div class="hero-note">Tip: 이미지 위 좌석 영역을 클릭해보세요.</div>
-  </div>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="wrap">
-      <div class="sec-title">
-        <div>
-          <h2>About KING MAKE</h2>
-          <p class="sub">브랜드가 ‘광고’를 사는 게 아니라, <b>‘자리(노출)’</b>를 선점하는 구조입니다.</p>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <strong>무엇을 제공하나요?</strong>
-          <p>
-            카테고리(예: 치킨) 안에서 브랜드 로고가 배치되는 위치를 임대합니다.
-            중앙 <b>KING SEAT</b>는 상징성과 주목도가 가장 높은 독점 자리입니다.
-          </p>
-          <div class="kpi">
-            <div class="k"><div class="num">2</div><div class="lab">KING SEAT (한정)</div></div>
-            <div class="k"><div class="num">48</div><div class="lab">Premium Seats</div></div>
-            <div class="k"><div class="num">50</div><div class="lab">Standard Seats</div></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <strong>왜 지금인가요?</strong>
-          <ul class="list">
-            <li>치킨 카테고리는 경쟁 강도가 가장 높아 <b>상단 노출</b> 가치가 큽니다.</li>
-            <li>좌석 수가 고정되어 <b>희소성</b>이 시간이 지날수록 커집니다.</li>
-            <li>브랜드 지도는 공유될수록 <b>인지도</b>와 <b>검색 유입</b>이 쌓입니다.</li>
-          </ul>
-          <div class="meta">
-            <span class="pill"><span class="mini-dot"></span> K-FOOD / Chicken</span>
-            <span class="pill"><span class="mini-dot"></span> Premium Placement</span>
-            <span class="pill"><span class="mini-dot"></span> Limited Inventory</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEATS -->
-  <section id="seats">
-    <div class="wrap">
-      <div class="sec-title">
-        <div>
-          <h2>Seats</h2>
-          <p class="sub">카드 클릭 또는 이미지 핫스팟 클릭으로 상세 설명을 확인하세요.</p>
-        </div>
-      </div>
-
-      <div class="grid-3">
-        <div class="card action" onclick="openModal('king')">
-          <strong>👑 KING SEAT</strong>
-          <p>중앙 대형 로고 독점. 치킨 카테고리의 ‘왕좌’ 자리.</p>
-          <div class="meta">
-            <span class="pill">한정 2석</span><span class="pill">최대 주목</span><span class="pill">독점 운영</span>
-          </div>
-        </div>
-
-        <div class="card action" onclick="openModal('premium')">
-          <strong>⭐ Premium Seat</strong>
-          <p>상단/중심권 배치. 경쟁 브랜드 대비 프리미엄 위치 확보.</p>
-          <div class="meta">
-            <span class="pill">48석</span><span class="pill">강조 노출</span><span class="pill">추천</span>
-          </div>
-        </div>
-
-        <div class="card action" onclick="openModal('standard')">
-          <strong>⬜ Standard Seat</strong>
-          <p>기본 동일 픽셀. 카테고리 참여 및 진입용 좌석.</p>
-          <div class="meta">
-            <span class="pill">50석</span><span class="pill">동일 크기</span><span class="pill">진입용</span>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top:18px" class="card">
-        <strong>초기 참여 혜택 (예시)</strong>
-        <p>초기 참여 브랜드는 카테고리 오픈 시점에 맞춰 우선 배치됩니다. 상세 조건은 메일로 안내드립니다.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="wrap">
-      <div class="sec-title">
-        <div>
-          <h2>Contact</h2>
-          <p class="sub">가장 빠른 답변은 이메일입니다.</p>
-        </div>
-      </div>
-
-      <div class="card" style="text-align:center">
-        <p style="margin:0;color:var(--muted);line-height:1.8">
-          문의: <b>contact@kingmake.kr</b><br/>
-          홈페이지: <b>https://kingmake.kr</b>
-        </p>
-        <div class="hero-actions" style="justify-content:center;margin-top:18px">
-          <a class="btn primary" href="mailto:contact@kingmake.kr?subject=%5BKING%20MAKE%5D%20%EC%B9%98%ED%82%A8%20%EC%B9%B4%ED%85%8C%EA%B3%A0%EB%A6%AC%20%EC%A2%8C%EC%84%9D%20%EB%AC%B8%EC%9D%98&body=%EC%95%88%EB%85%95%ED%95%98%EC%84%B8%EC%9A%94.%0A%EB%B8%8C%EB%9E%9C%EB%93%9C%EB%AA%85%3A%20%0A%EB%8B%B4%EB%8B%B9%EC%9E%90%20%EC%84%B1%ED%95%A8%2F%EC%A7%81%EC%B1%85%3A%20%0A%ED%9D%AC%EB%A7%9D%20%EC%A2%8C%EC%84%9D%3A%20(KING%2FPremium%2FStandard)%0A%EC%97%B0%EB%9D%BD%EC%B2%98%3A%20%0A">
-            제안서 요청 메일 열기
-          </a>
-          <a class="btn" href="#top">맨 위로</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    © 2026 KING MAKE · The Official K-FOOD Brand Map
-  </footer>
-
-  <!-- MODAL -->
-  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <!-- Modal -->
+  <div class="overlay" id="overlay" onclick="closeModal(event)">
     <div class="modal" onclick="event.stopPropagation()">
-      <div class="modal-head">
-        <div class="modal-title" id="modalTitle">Seat</div>
+      <div class="mhead">
+        <b id="mTitle">Seat</b>
         <button class="close" onclick="closeModal()">닫기</button>
       </div>
-      <div class="modal-body">
-        <p id="modalDesc"></p>
-        <div class="row" id="modalMeta"></div>
+      <div class="mbody">
+        <p id="mDesc"></p>
+        <div class="row" id="mMeta"></div>
       </div>
-      <div class="modal-foot">
-        <a class="btn primary" href="mailto:contact@kingmake.kr">메일로 문의</a>
-        <button class="btn" onclick="closeModal()">닫기</button>
+      <div class="mfoot">
+        <a class="btn primary" id="mailBtn" href="mailto:contact@kingmake.kr">문의하기</a>
+        <a class="btn" id="linkBtn" href="#" target="_blank" rel="noreferrer">링크 열기</a>
       </div>
     </div>
   </div>
 
   <script>
-    const modalData = {
-      king: {
-        title: "👑 KING SEAT",
-        desc: "치킨 카테고리의 중앙 ‘왕좌’ 자리입니다. 대형 로고로 독점 노출되며, 카테고리의 상징 자리로 브랜드 파워를 가장 강하게 보여줍니다.",
-        meta: ["한정 2석", "중앙 대형 노출", "독점 운영", "최고 주목도"]
-      },
-      premium: {
-        title: "⭐ Premium Seat",
-        desc: "상단/중심권에 배치되는 프리미엄 좌석입니다. 경쟁 브랜드 대비 좋은 위치를 선점할 수 있으며, 카테고리 초기 운영에서 가장 추천되는 좌석입니다.",
-        meta: ["48석", "강조 노출", "추천 좌석", "상단/중심권"]
-      },
-      standard: {
-        title: "⬜ Standard Seat",
-        desc: "동일 픽셀 크기의 기본 좌석입니다. 카테고리 참여 및 진입용으로 적합하며, 초기 참여 시 브랜드 인지도를 빠르게 쌓을 수 있습니다.",
-        meta: ["50석", "동일 크기", "진입용", "카테고리 참여"]
+    // ====== 데모 데이터 (나중에 실제 브랜드 DB로 교체) ======
+    // 각 "블록"은 타일 범위로 표현 (x,y,w,h) : 0~99 기준
+    const blocks = [
+      // KING 2석 (큰 블록)
+      { id:"KING-1", grade:"KING", title:"KING SEAT", brand:"(예약 가능)", cat:"치킨", x:40, y:12, w:10, h:10, status:"available", trend:"hot", url:"https://kingmake.kr" },
+      { id:"KING-2", grade:"KING", title:"KING SEAT", brand:"(예약 가능)", cat:"치킨", x:52, y:12, w:10, h:10, status:"available", trend:"hot", url:"https://kingmake.kr" },
+
+      // Premium 예시 6개
+      { id:"P-1", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:20, y:30, w:12, h:12, status:"available", trend:"", url:"https://kingmake.kr" },
+      { id:"P-2", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:36, y:30, w:12, h:12, status:"available", trend:"hot", url:"https://kingmake.kr" },
+      { id:"P-3", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:52, y:30, w:12, h:12, status:"available", trend:"", url:"https://kingmake.kr" },
+      { id:"P-4", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:68, y:30, w:12, h:12, status:"available", trend:"cold", url:"https://kingmake.kr" },
+      { id:"P-5", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:28, y:46, w:12, h:12, status:"available", trend:"", url:"https://kingmake.kr" },
+      { id:"P-6", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:60, y:46, w:12, h:12, status:"available", trend:"", url:"https://kingmake.kr" },
+
+      // Standard 예시 8개
+      { id:"S-1", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:12, y:66, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
+      { id:"S-2", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:26, y:66, w:10, h:10, status:"available", trend:"cold", url:"https://kingmake.kr" },
+      { id:"S-3", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:40, y:66, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
+      { id:"S-4", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:54, y:66, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
+      { id:"S-5", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:68, y:66, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
+      { id:"S-6", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:18, y:80, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
+      { id:"S-7", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:40, y:82, w:10, h:10, status:"available", trend:"hot", url:"https://kingmake.kr" },
+      { id:"S-8", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:62, y:80, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
+    ];
+
+    // ====== GRID 생성 ======
+    const gridEl = document.getElementById("grid");
+    const cells = new Array(100*100).fill(null);
+
+    // 블록이 차지하는 셀에 block 참조 넣기
+    blocks.forEach(b=>{
+      for(let yy=b.y; yy<b.y+b.h; yy++){
+        for(let xx=b.x; xx<b.x+b.w; xx++){
+          if(xx<0||yy<0||xx>99||yy>99) continue;
+          cells[yy*100 + xx] = b;
+        }
       }
-    };
+    });
 
-    function openModal(type){
-      const d = modalData[type];
-      document.getElementById("modalTitle").textContent = d.title;
-      document.getElementById("modalDesc").textContent = d.desc;
+    // 10,000 타일 렌더
+    const frag = document.createDocumentFragment();
+    for(let i=0;i<10000;i++){
+      const div = document.createElement("div");
+      div.className = "tile";
+      const b = cells[i];
+      if(b){
+        if(b.grade==="KING") div.classList.add("king");
+        else div.classList.add("owned");
 
-      const metaWrap = document.getElementById("modalMeta");
-      metaWrap.innerHTML = "";
-      d.meta.forEach(t=>{
-        const span = document.createElement("span");
-        span.className = "pill";
-        span.innerHTML = `<span class="mini-dot"></span>${t}`;
-        metaWrap.appendChild(span);
+        if(b.trend==="hot") div.classList.add("hot");
+        if(b.trend==="cold") div.classList.add("cold");
+
+        div.addEventListener("click", ()=> openModal(b));
+        div.title = `${b.grade} · ${b.cat} · ${b.id}`;
+      } else {
+        div.addEventListener("click", ()=> openModal({
+          title:"Available Tile",
+          brand:"(예약 가능)",
+          grade:"Standard",
+          cat:"치킨",
+          id:"FREE",
+          url:"https://kingmake.kr",
+          trend:""
+        }));
+      }
+      frag.appendChild(div);
+    }
+    gridEl.appendChild(frag);
+
+    // ====== MODAL ======
+    const overlay = document.getElementById("overlay");
+    const mTitle = document.getElementById("mTitle");
+    const mDesc = document.getElementById("mDesc");
+    const mMeta = document.getElementById("mMeta");
+    const linkBtn = document.getElementById("linkBtn");
+    const mailBtn = document.getElementById("mailBtn");
+
+    function openModal(b){
+      const grade = b.grade || "Standard";
+      const brand = b.brand || "(예약 가능)";
+      const cat = b.cat || "치킨";
+      const id = b.id || "FREE";
+      const trend = b.trend || "";
+
+      mTitle.textContent = `${grade} · ${cat}`;
+      mDesc.textContent = `${brand} / Seat ID: ${id}`;
+
+      mMeta.innerHTML = "";
+      const metaItems = [
+        `등급: ${grade}`,
+        `카테고리: ${cat}`,
+        `상태: ${brand.includes("예약") ? "Available" : "Occupied"}`,
+        trend ? `상태표시: ${trend==="hot" ? "Hot(빨강)" : "Cold(파랑)"}` : "상태표시: None"
+      ];
+      metaItems.forEach(t=>{
+        const s = document.createElement("span");
+        s.className = "pill";
+        s.textContent = t;
+        mMeta.appendChild(s);
       });
 
-      document.getElementById("modalOverlay").style.display = "flex";
+      const url = b.url || "https://kingmake.kr";
+      linkBtn.href = url;
+
+      const subject = encodeURIComponent(`[KING MAKE] ${cat} ${grade} 좌석 문의 (${id})`);
+      const body = encodeURIComponent(
+        `안녕하세요.\n브랜드명: \n담당자 성함/직책: \n희망 좌석: ${grade}\nSeat ID: ${id}\n연락처: \n\n(참고 링크) ${url}\n`
+      );
+      mailBtn.href = `mailto:contact@kingmake.kr?subject=${subject}&body=${body}`;
+
+      overlay.style.display = "flex";
     }
 
     function closeModal(e){
-      if(e && e.target && e.target.id !== "modalOverlay") return;
-      document.getElementById("modalOverlay").style.display = "none";
+      if(e && e.target && e.target.id !== "overlay") return;
+      overlay.style.display = "none";
     }
   </script>
 </body>
