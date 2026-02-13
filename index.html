@@ -38,14 +38,11 @@
       display:flex;align-items:center;justify-content:space-between;
       height:64px;
     }
-    .brand{
-      display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.5px;
-    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.5px}
     .dot{width:10px;height:10px;border-radius:50%;background:#fff;opacity:.9}
     .menu{display:flex;gap:18px;align-items:center;font-size:14px;color:var(--muted)}
     .menu a{padding:8px 10px;border-radius:10px}
     .menu a:hover{background:var(--card2);color:#fff}
-
     .cta{
       display:inline-flex;align-items:center;gap:10px;
       padding:10px 16px;border:1px solid var(--line);border-radius:999px;
@@ -57,27 +54,23 @@
     /* HERO */
     .hero{padding:76px 0 50px}
     .hero h1{
-      margin:0;
-      font-size:56px;
-      letter-spacing:-1px;
-      line-height:1.05;
+      margin:0;font-size:56px;letter-spacing:-1px;line-height:1.05;
     }
     .hero p{
-      margin:18px 0 0;
-      font-size:18px;
-      color:var(--muted);
-      line-height:1.6;
+      margin:18px 0 0;font-size:18px;color:var(--muted);line-height:1.6;
     }
     .hero-actions{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
     .btn{
       display:inline-flex;align-items:center;justify-content:center;
       padding:14px 22px;border-radius:999px;border:1px solid var(--line);
       font-size:15px;color:#fff;background:transparent;transition:.2s ease;
+      cursor:pointer;
     }
     .btn:hover{background:#fff;color:#000;border-color:#fff}
     .btn.primary{background:#fff;color:#000;border-color:#fff}
     .btn.primary:hover{opacity:.9}
 
+    /* IMAGE WRAP */
     .hero-img{
       margin-top:46px;
       border-radius:var(--radius);
@@ -86,7 +79,49 @@
       box-shadow:var(--shadow);
       background:var(--card);
     }
-    .hero-img img{width:100%;display:block}
+
+    /* ✅ 핫스팟을 위해 relative 래퍼 */
+    .img-wrap{
+      position:relative;
+      width:100%;
+    }
+    .img-wrap img{
+      width:100%;
+      display:block;
+    }
+
+    /* HOTSPOT */
+    .hotspot{
+      position:absolute;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.06);
+      backdrop-filter: blur(2px);
+      cursor:pointer;
+      transition:.18s ease;
+      outline:none;
+    }
+    .hotspot:hover{
+      border-color: rgba(255,255,255,.55);
+      background: rgba(255,255,255,.10);
+      transform: translateY(-1px);
+    }
+
+    /* 작은 라벨 (원하면 끌 수 있음) */
+    .hotspot::after{
+      content: attr(data-label);
+      position:absolute;
+      left:12px; bottom:10px;
+      font-size:12px;
+      color: rgba(255,255,255,.85);
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.18);
+      letter-spacing:.2px;
+    }
+
+    /* 힌트 텍스트 */
     .hero-note{
       text-align:center;
       margin:14px 0 0;
@@ -132,10 +167,7 @@
       background:rgba(255,255,255,.04);
     }
     .mini-dot{width:8px;height:8px;border-radius:50%;background:#fff;opacity:.7}
-    .card.action{
-      cursor:pointer;
-      transition:.18s ease;
-    }
+    .card.action{cursor:pointer;transition:.18s ease;}
     .card.action:hover{
       transform: translateY(-2px);
       background:var(--card2);
@@ -144,9 +176,7 @@
 
     /* LIST */
     .list{margin:0;padding-left:18px;color:var(--muted);line-height:1.75;font-size:14px}
-    .kpi{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px
-    }
+    .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
     .kpi .k{
       background:rgba(255,255,255,.04);
       border:1px solid var(--line);
@@ -156,12 +186,8 @@
     }
     .k .num{font-size:22px;font-weight:700}
     .k .lab{margin-top:6px;color:var(--muted2);font-size:12px}
+    @media (max-width: 720px){ .kpi{grid-template-columns:1fr} }
 
-    @media (max-width: 720px){
-      .kpi{grid-template-columns:1fr}
-    }
-
-    /* FOOTER */
     footer{
       padding:28px 0;
       color:var(--muted2);
@@ -246,10 +272,29 @@
     </div>
 
     <div class="hero-img">
-      <!-- 이미지 파일 경로: /images/hero.png -->
-      <img src="images/hero.png" alt="KING MAKE Brand Map" />
+      <div class="img-wrap">
+        <!-- ✅ 이미지 파일 경로 -->
+        <img src="images/hero.png" alt="KING MAKE Brand Map" />
+
+        <!-- ✅ 핫스팟 3개 (좌표는 %로 조정) -->
+        <!-- KING: 중앙 상단 큰 영역 (예시) -->
+        <button class="hotspot" data-label="KING SEAT"
+          style="left:42%; top:28%; width:16%; height:14%;"
+          onclick="openModal('king')"></button>
+
+        <!-- Premium: 중앙 주변 영역 (예시) -->
+        <button class="hotspot" data-label="Premium"
+          style="left:18%; top:46%; width:26%; height:18%;"
+          onclick="openModal('premium')"></button>
+
+        <!-- Standard: 하단 일반 영역 (예시) -->
+        <button class="hotspot" data-label="Standard"
+          style="left:56%; top:62%; width:26%; height:18%;"
+          onclick="openModal('standard')"></button>
+      </div>
     </div>
-    <div class="hero-note">This is not a mockup. This is the actual advertising space.</div>
+
+    <div class="hero-note">Tip: 이미지 위 좌석 영역을 클릭해보세요.</div>
   </div>
 
   <!-- ABOUT -->
@@ -270,18 +315,9 @@
             중앙 <b>KING SEAT</b>는 상징성과 주목도가 가장 높은 독점 자리입니다.
           </p>
           <div class="kpi">
-            <div class="k">
-              <div class="num">2</div>
-              <div class="lab">KING SEAT (한정)</div>
-            </div>
-            <div class="k">
-              <div class="num">48</div>
-              <div class="lab">Premium Seats</div>
-            </div>
-            <div class="k">
-              <div class="num">50</div>
-              <div class="lab">Standard Seats</div>
-            </div>
+            <div class="k"><div class="num">2</div><div class="lab">KING SEAT (한정)</div></div>
+            <div class="k"><div class="num">48</div><div class="lab">Premium Seats</div></div>
+            <div class="k"><div class="num">50</div><div class="lab">Standard Seats</div></div>
           </div>
         </div>
 
@@ -308,7 +344,7 @@
       <div class="sec-title">
         <div>
           <h2>Seats</h2>
-          <p class="sub">카드 클릭 시 상세 설명이 열립니다. (영업용 확인 화면)</p>
+          <p class="sub">카드 클릭 또는 이미지 핫스팟 클릭으로 상세 설명을 확인하세요.</p>
         </div>
       </div>
 
@@ -317,9 +353,7 @@
           <strong>👑 KING SEAT</strong>
           <p>중앙 대형 로고 독점. 치킨 카테고리의 ‘왕좌’ 자리.</p>
           <div class="meta">
-            <span class="pill">한정 2석</span>
-            <span class="pill">최대 주목</span>
-            <span class="pill">독점 운영</span>
+            <span class="pill">한정 2석</span><span class="pill">최대 주목</span><span class="pill">독점 운영</span>
           </div>
         </div>
 
@@ -327,9 +361,7 @@
           <strong>⭐ Premium Seat</strong>
           <p>상단/중심권 배치. 경쟁 브랜드 대비 프리미엄 위치 확보.</p>
           <div class="meta">
-            <span class="pill">48석</span>
-            <span class="pill">강조 노출</span>
-            <span class="pill">추천</span>
+            <span class="pill">48석</span><span class="pill">강조 노출</span><span class="pill">추천</span>
           </div>
         </div>
 
@@ -337,19 +369,14 @@
           <strong>⬜ Standard Seat</strong>
           <p>기본 동일 픽셀. 카테고리 참여 및 진입용 좌석.</p>
           <div class="meta">
-            <span class="pill">50석</span>
-            <span class="pill">동일 크기</span>
-            <span class="pill">진입용</span>
+            <span class="pill">50석</span><span class="pill">동일 크기</span><span class="pill">진입용</span>
           </div>
         </div>
       </div>
 
       <div style="margin-top:18px" class="card">
         <strong>초기 참여 혜택 (예시)</strong>
-        <p>
-          초기 참여 브랜드는 카테고리 오픈 시점에 맞춰 우선 배치됩니다.
-          상세 조건은 메일로 안내드립니다.
-        </p>
+        <p>초기 참여 브랜드는 카테고리 오픈 시점에 맞춰 우선 배치됩니다. 상세 조건은 메일로 안내드립니다.</p>
       </div>
     </div>
   </section>
