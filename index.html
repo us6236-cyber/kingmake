@@ -1,234 +1,182 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KING MAKE</title>
-  <style>
-    :root{
-      --bg:#000; --fg:#fff; --line:rgba(255,255,255,.14);
-      --card:rgba(255,255,255,.06);
-      --muted:rgba(255,255,255,.7);
-      --r:16px;
-      --tile:10px; /* 타일 크기(픽셀 느낌) */
-    }
-    body{margin:0;background:var(--bg);color:var(--fg);
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
-    .wrap{max-width:1100px;margin:0 auto;padding:22px 20px 40px;}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    h1{margin:0;font-size:28px;letter-spacing:-.3px}
-    .sub{color:var(--muted);margin:6px 0 0;font-size:14px}
-    .cta{border:1px solid var(--line);padding:10px 14px;border-radius:999px;text-decoration:none;color:#fff}
-    .cta:hover{background:#fff;color:#000;border-color:#fff}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KING MAKE</title>
 
-    /* ===== GRID ===== */
-    .board{
-      margin-top:18px;
-      border:1px solid var(--line);
-      border-radius:var(--r);
-      overflow:hidden;
-      background:rgba(255,255,255,.03);
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(100, var(--tile));
-      grid-auto-rows: var(--tile);
-      width: calc(100 * var(--tile));
-      max-width: 100%;
-      transform-origin: top left;
-    }
-    /* 화면 좁으면 축소 */
-    .grid-wrap{display:flex;justify-content:center;overflow:auto}
-    .tile{
-      border-right:1px solid rgba(255,255,255,.04);
-      border-bottom:1px solid rgba(255,255,255,.04);
-      background:rgba(255,255,255,.02);
-      cursor:pointer;
-    }
-    .tile:hover{background:rgba(255,255,255,.10)}
-    .owned{background:rgba(255,255,255,.12)}
-    .king{background:rgba(255,255,255,.18)}
-    .hot{animation: blinkRed 1s infinite;}
-    .cold{animation: blinkBlue 1.2s infinite;}
-    @keyframes blinkRed{0%,100%{box-shadow: inset 0 0 0 1px rgba(255,0,0,.0)}50%{box-shadow: inset 0 0 0 1px rgba(255,0,0,.9)}}
-    @keyframes blinkBlue{0%,100%{box-shadow: inset 0 0 0 1px rgba(0,140,255,.0)}50%{box-shadow: inset 0 0 0 1px rgba(0,140,255,.9)}}
+<style>
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+  background:#000;
+  color:#fff;
+  text-align:center;
+}
 
-    /* ===== MODAL ===== */
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;padding:16px}
-    .modal{width:min(560px,100%);background:rgba(20,20,20,.95);border:1px solid rgba(255,255,255,.18);border-radius:18px;overflow:hidden}
-    .mhead{display:flex;justify-content:space-between;align-items:center;padding:14px 14px;border-bottom:1px solid rgba(255,255,255,.12)}
-    .mhead b{letter-spacing:.2px}
-    .close{border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;border-radius:12px;padding:8px 10px;cursor:pointer}
-    .close:hover{background:#fff;color:#000;border-color:#fff}
-    .mbody{padding:14px}
-    .mbody p{margin:0;color:var(--muted);line-height:1.7}
-    .row{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
-    .pill{border:1px solid var(--line);background:rgba(255,255,255,.05);padding:8px 10px;border-radius:999px;font-size:12px;color:rgba(255,255,255,.82)}
-    .mfoot{padding:14px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
-    .btn{border:1px solid var(--line);background:transparent;color:#fff;border-radius:999px;padding:10px 14px;cursor:pointer;text-decoration:none}
-    .btn:hover{background:#fff;color:#000;border-color:#fff}
-    .btn.primary{background:#fff;color:#000;border-color:#fff}
-    .btn.primary:hover{opacity:.9}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:80px 20px;
+}
 
-    /* 안내 */
-    .note{margin-top:10px;color:rgba(255,255,255,.55);font-size:12px}
-  </style>
+h1{
+  font-size:52px;
+  margin:0;
+  letter-spacing:-1px;
+}
+
+h2{
+  font-weight:400;
+  opacity:0.7;
+  margin-top:16px;
+}
+
+.section{
+  margin-top:120px;
+}
+
+.map img{
+  width:100%;
+  max-width:1000px;
+  border-radius:14px;
+  margin-top:50px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+
+.btn{
+  display:inline-block;
+  margin:20px 10px 0;
+  padding:16px 42px;
+  border-radius:30px;
+  border:1px solid #fff;
+  text-decoration:none;
+  color:#fff;
+  transition:0.2s;
+}
+
+.btn:hover{
+  background:#fff;
+  color:#000;
+}
+
+.card-wrap{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-top:40px;
+}
+
+.card{
+  border:1px solid rgba(255,255,255,0.2);
+  padding:30px;
+  border-radius:16px;
+  width:260px;
+  background:rgba(255,255,255,0.03);
+}
+
+.card h3{
+  margin-top:0;
+}
+
+.highlight{
+  font-size:26px;
+  margin-top:20px;
+}
+
+footer{
+  margin-top:120px;
+  opacity:0.4;
+  font-size:13px;
+}
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div>
-        <h1>KING MAKE</h1>
-        <div class="sub">K-FOOD 카테고리 광고 타일 지도 (Million Dollar Homepage 방식)</div>
-      </div>
-      <a class="cta" href="mailto:contact@kingmake.kr">contact@kingmake.kr</a>
-    </div>
 
-    <div class="board">
-      <div class="grid-wrap">
-        <div id="grid" class="grid" aria-label="Ad Tile Board"></div>
-      </div>
-    </div>
-    <div class="note">Tip: 타일을 클릭하면 상세가 뜹니다. (KING/프리미엄/스탠다드 / 핫·저평가 깜박임)</div>
+<div class="container">
+
+  <!-- HERO -->
+  <h1>브랜드가 보이는 자리가,<br>매출이 됩니다.</h1>
+  <h2>대한민국 음식 브랜드를 위한 프리미엄 디지털 광고 지도</h2>
+
+  <a class="btn" href="#map">좌석 보기</a>
+  <a class="btn" href="mailto:contact@kingmake.kr">제안서 요청</a>
+
+  <div class="map" id="map">
+    <img src="images/hero.png" alt="KING MAKE MAP">
   </div>
 
-  <!-- Modal -->
-  <div class="overlay" id="overlay" onclick="closeModal(event)">
-    <div class="modal" onclick="event.stopPropagation()">
-      <div class="mhead">
-        <b id="mTitle">Seat</b>
-        <button class="close" onclick="closeModal()">닫기</button>
-      </div>
-      <div class="mbody">
-        <p id="mDesc"></p>
-        <div class="row" id="mMeta"></div>
-      </div>
-      <div class="mfoot">
-        <a class="btn primary" id="mailBtn" href="mailto:contact@kingmake.kr">문의하기</a>
-        <a class="btn" id="linkBtn" href="#" target="_blank" rel="noreferrer">링크 열기</a>
-      </div>
+  <!-- WHAT IS -->
+  <div class="section">
+    <h1>KING MAKE는 광고가 아니라,<br>디지털 상권을 선점하는 플랫폼입니다.</h1>
+
+    <div class="highlight">
+      ✔ 카테고리 상단 노출<br>
+      ✔ 경쟁 브랜드 대비 위치 선점<br>
+      ✔ 한정 좌석 기반 희소성
     </div>
   </div>
 
-  <script>
-    // ====== 데모 데이터 (나중에 실제 브랜드 DB로 교체) ======
-    // 각 "블록"은 타일 범위로 표현 (x,y,w,h) : 0~99 기준
-    const blocks = [
-      // KING 2석 (큰 블록)
-      { id:"KING-1", grade:"KING", title:"KING SEAT", brand:"(예약 가능)", cat:"치킨", x:40, y:12, w:10, h:10, status:"available", trend:"hot", url:"https://kingmake.kr" },
-      { id:"KING-2", grade:"KING", title:"KING SEAT", brand:"(예약 가능)", cat:"치킨", x:52, y:12, w:10, h:10, status:"available", trend:"hot", url:"https://kingmake.kr" },
+  <!-- SEAT CONCEPT -->
+  <div class="section">
+    <h1>좌석 개념</h1>
 
-      // Premium 예시 6개
-      { id:"P-1", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:20, y:30, w:12, h:12, status:"available", trend:"", url:"https://kingmake.kr" },
-      { id:"P-2", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:36, y:30, w:12, h:12, status:"available", trend:"hot", url:"https://kingmake.kr" },
-      { id:"P-3", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:52, y:30, w:12, h:12, status:"available", trend:"", url:"https://kingmake.kr" },
-      { id:"P-4", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:68, y:30, w:12, h:12, status:"available", trend:"cold", url:"https://kingmake.kr" },
-      { id:"P-5", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:28, y:46, w:12, h:12, status:"available", trend:"", url:"https://kingmake.kr" },
-      { id:"P-6", grade:"Premium", title:"Premium Seat", brand:"(예약 가능)", cat:"치킨", x:60, y:46, w:12, h:12, status:"available", trend:"", url:"https://kingmake.kr" },
+    <div class="card-wrap">
+      <div class="card">
+        <h3>👑 KING SEAT</h3>
+        중앙 왕좌 자리<br>
+        독점 상징 노출
+      </div>
 
-      // Standard 예시 8개
-      { id:"S-1", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:12, y:66, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
-      { id:"S-2", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:26, y:66, w:10, h:10, status:"available", trend:"cold", url:"https://kingmake.kr" },
-      { id:"S-3", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:40, y:66, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
-      { id:"S-4", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:54, y:66, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
-      { id:"S-5", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:68, y:66, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
-      { id:"S-6", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:18, y:80, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
-      { id:"S-7", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:40, y:82, w:10, h:10, status:"available", trend:"hot", url:"https://kingmake.kr" },
-      { id:"S-8", grade:"Standard", title:"Standard Seat", brand:"(예약 가능)", cat:"치킨", x:62, y:80, w:10, h:10, status:"available", trend:"", url:"https://kingmake.kr" },
-    ];
+      <div class="card">
+        <h3>⭐ Premium</h3>
+        상단 강조 위치<br>
+        높은 주목도
+      </div>
 
-    // ====== GRID 생성 ======
-    const gridEl = document.getElementById("grid");
-    const cells = new Array(100*100).fill(null);
+      <div class="card">
+        <h3>⬜ Standard</h3>
+        카테고리 참여<br>
+        동일 노출 크기
+      </div>
+    </div>
+  </div>
 
-    // 블록이 차지하는 셀에 block 참조 넣기
-    blocks.forEach(b=>{
-      for(let yy=b.y; yy<b.y+b.h; yy++){
-        for(let xx=b.x; xx<b.x+b.w; xx++){
-          if(xx<0||yy<0||xx>99||yy>99) continue;
-          cells[yy*100 + xx] = b;
-        }
-      }
-    });
+  <!-- FIRST CATEGORY -->
+  <div class="section">
+    <h1>첫 오픈 카테고리</h1>
+    <h2>CHICKEN</h2>
 
-    // 10,000 타일 렌더
-    const frag = document.createDocumentFragment();
-    for(let i=0;i<10000;i++){
-      const div = document.createElement("div");
-      div.className = "tile";
-      const b = cells[i];
-      if(b){
-        if(b.grade==="KING") div.classList.add("king");
-        else div.classList.add("owned");
+    <div class="highlight">
+      대한민국 치킨 브랜드의<br>
+      디지털 왕좌를 선점하세요.
+    </div>
+  </div>
 
-        if(b.trend==="hot") div.classList.add("hot");
-        if(b.trend==="cold") div.classList.add("cold");
+  <!-- WHY NOW -->
+  <div class="section">
+    <h1>왜 지금인가?</h1>
 
-        div.addEventListener("click", ()=> openModal(b));
-        div.title = `${b.grade} · ${b.cat} · ${b.id}`;
-      } else {
-        div.addEventListener("click", ()=> openModal({
-          title:"Available Tile",
-          brand:"(예약 가능)",
-          grade:"Standard",
-          cat:"치킨",
-          id:"FREE",
-          url:"https://kingmake.kr",
-          trend:""
-        }));
-      }
-      frag.appendChild(div);
-    }
-    gridEl.appendChild(frag);
+    <div class="highlight">
+      ✔ 치킨 시장 경쟁 심화<br>
+      ✔ 브랜드 인지도 경쟁 가속<br>
+      ✔ 상단 노출의 중요성 증가
+    </div>
+  </div>
 
-    // ====== MODAL ======
-    const overlay = document.getElementById("overlay");
-    const mTitle = document.getElementById("mTitle");
-    const mDesc = document.getElementById("mDesc");
-    const mMeta = document.getElementById("mMeta");
-    const linkBtn = document.getElementById("linkBtn");
-    const mailBtn = document.getElementById("mailBtn");
+  <!-- CTA -->
+  <div class="section">
+    <h1>프리미엄 좌석 상담</h1>
+    <a class="btn" href="mailto:contact@kingmake.kr">contact@kingmake.kr</a>
+  </div>
 
-    function openModal(b){
-      const grade = b.grade || "Standard";
-      const brand = b.brand || "(예약 가능)";
-      const cat = b.cat || "치킨";
-      const id = b.id || "FREE";
-      const trend = b.trend || "";
+  <footer>
+    © 2026 KING MAKE
+  </footer>
 
-      mTitle.textContent = `${grade} · ${cat}`;
-      mDesc.textContent = `${brand} / Seat ID: ${id}`;
+</div>
 
-      mMeta.innerHTML = "";
-      const metaItems = [
-        `등급: ${grade}`,
-        `카테고리: ${cat}`,
-        `상태: ${brand.includes("예약") ? "Available" : "Occupied"}`,
-        trend ? `상태표시: ${trend==="hot" ? "Hot(빨강)" : "Cold(파랑)"}` : "상태표시: None"
-      ];
-      metaItems.forEach(t=>{
-        const s = document.createElement("span");
-        s.className = "pill";
-        s.textContent = t;
-        mMeta.appendChild(s);
-      });
-
-      const url = b.url || "https://kingmake.kr";
-      linkBtn.href = url;
-
-      const subject = encodeURIComponent(`[KING MAKE] ${cat} ${grade} 좌석 문의 (${id})`);
-      const body = encodeURIComponent(
-        `안녕하세요.\n브랜드명: \n담당자 성함/직책: \n희망 좌석: ${grade}\nSeat ID: ${id}\n연락처: \n\n(참고 링크) ${url}\n`
-      );
-      mailBtn.href = `mailto:contact@kingmake.kr?subject=${subject}&body=${body}`;
-
-      overlay.style.display = "flex";
-    }
-
-    function closeModal(e){
-      if(e && e.target && e.target.id !== "overlay") return;
-      overlay.style.display = "none";
-    }
-  </script>
 </body>
 </html>
