@@ -6,221 +6,143 @@
 <title>KING MAKE</title>
 
 <style>
-  body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-    background:#000;
-    color:#fff;
-    overflow-x:hidden;
-  }
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+  background:#000;
+  color:#fff;
+  overflow-x:hidden;
+}
 
-  /* NAV */
-  .nav{
-    position:fixed;
-    top:0;
-    width:100%;
-    background:rgba(0,0,0,0.65);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid rgba(255,255,255,0.08);
-    z-index:1000;
-  }
-  .nav-inner{
-    max-width:1600px;
-    margin:auto;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px 40px;
-  }
-  .logo{font-weight:700;letter-spacing:1px;font-size:18px}
+/* NAV */
+.nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  z-index:1000;
+}
+.nav-inner{
+  max-width:1600px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 40px;
+}
+.logo{font-weight:700;letter-spacing:1px;font-size:18px}
 
-  /* LAYOUT */
-  .container{
-    max-width:1600px;
-    margin:auto;
-    padding:140px 60px 80px;
-    text-align:center;
-  }
+/* LAYOUT */
+.container{
+  max-width:1600px;
+  margin:auto;
+  padding:140px 60px 80px;
+  text-align:center;
+}
 
-  /* HERO */
-  .hero-title{
-    font-size:64px;
-    letter-spacing:-1.5px;
-    margin:0;
-    animation:fadeUp 1.2s ease forwards;
-  }
-  .hero-sub{
-    margin-top:20px;
-    font-size:24px;
-    opacity:0.85;
-  }
-  @keyframes fadeUp{
-    from{opacity:0; transform:translateY(40px)}
-    to{opacity:1; transform:translateY(0)}
-  }
+/* HERO */
+.hero-title{
+  font-size:64px;
+  letter-spacing:-1.5px;
+  margin:0;
+}
+.hero-sub{
+  margin-top:20px;
+  font-size:24px;
+  opacity:0.85;
+}
 
-  /* 대한민국 최초 배지 */
-  .badge{
-    display:inline-block;
-    margin-top:18px;
-    padding:10px 14px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.22);
-    background:rgba(255,255,255,.06);
-    color:rgba(255,255,255,.9);
-    font-size:14px;
-    letter-spacing:.2px;
-  }
+/* BADGE */
+.badge{
+  display:inline-block;
+  margin-top:18px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.06);
+  font-size:14px;
+}
 
-  /* 희소성 */
-  .scarcity{
-    margin-top:28px;
-    font-size:20px;
-    color:#ffd700;
-  }
-  .pulse{
-    animation:pulseText 1.2s infinite;
-    font-weight:700;
-  }
-  @keyframes pulseText{
-    0%{opacity:0.4}
-    50%{opacity:1}
-    100%{opacity:0.4}
-  }
+/* BUTTON */
+.hero-buttons{margin-top:40px}
+.btn{
+  display:inline-block;
+  margin:10px;
+  padding:18px 46px;
+  border-radius:40px;
+  border:1px solid #fff;
+  text-decoration:none;
+  color:#fff;
+  transition:0.25s;
+}
+.btn.primary{
+  background:#fff;
+  color:#000;
+}
+.btn:hover{
+  background:#fff;
+  color:#000;
+}
 
-  /* 경쟁 문구 */
-  .competition{
-    margin-top:20px;
-    opacity:0.6;
-    font-size:16px;
-    line-height:1.6;
-  }
+/* MAP */
+.map img{
+  width:100%;
+  max-width:1400px;
+  margin-top:70px;
+  border-radius:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.7);
+}
 
-  /* 버튼 */
-  .hero-buttons{margin-top:40px}
-  .btn{
-    display:inline-block;
-    margin:10px;
-    padding:18px 46px;
-    border-radius:40px;
-    border:1px solid #fff;
-    text-decoration:none;
-    color:#fff;
-    transition:0.25s;
-  }
-  .btn.primary{
-    background:#fff;
-    color:#000;
-    border-color:#fff;
-  }
-  .btn:hover{
-    background:#fff;
-    color:#000;
-  }
+/* SECTION */
+.section{margin-top:140px}
+.section h1{font-size:40px;margin-bottom:20px}
+.highlight{font-size:22px;opacity:0.85;line-height:1.8}
 
-  /* MAP */
-  .map{
-    position:relative;
-  }
-  .map img{
-    width:100%;
-    max-width:1400px;
-    margin-top:70px;
-    border-radius:18px;
-    box-shadow:0 30px 80px rgba(0,0,0,0.7);
-  }
+/* CARDS */
+.card-wrap{
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  flex-wrap:wrap;
+  margin-top:50px;
+}
+.card{
+  border:1px solid rgba(255,255,255,0.15);
+  padding:40px;
+  border-radius:18px;
+  width:260px;
+  background:rgba(255,255,255,0.03);
+}
 
-  /* 왕좌 네온 */
-  .king-glow{
-    position:absolute;
-    top:25%;
-    left:47%;
-    width:6%;
-    height:6%;
-    border-radius:50%;
-    box-shadow:
-      0 0 15px #ffd700,
-      0 0 30px #ffd700,
-      0 0 60px rgba(255,215,0,0.6);
-    animation:kingPulse 1.6s infinite;
-  }
-  @keyframes kingPulse{
-    0%{transform:scale(0.9); opacity:0.6}
-    50%{transform:scale(1.1); opacity:1}
-    100%{transform:scale(0.9); opacity:0.6}
-  }
+/* CATEGORY TAG */
+.tag{
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.2);
+  margin:6px;
+  font-size:14px;
+  opacity:0.85;
+}
 
-  /* SECTION */
-  .section{margin-top:140px}
-  .section h1{font-size:40px;margin-bottom:20px}
-  .highlight{font-size:22px;opacity:0.85;line-height:1.8}
+/* FOOTER */
+footer{
+  margin-top:160px;
+  text-align:center;
+  opacity:0.4;
+  font-size:13px;
+}
 
-  /* CARDS */
-  .card-wrap{
-    display:flex;
-    justify-content:center;
-    gap:30px;
-    flex-wrap:wrap;
-    margin-top:50px;
-  }
-  .card{
-    border:1px solid rgba(255,255,255,0.15);
-    padding:40px;
-    border-radius:18px;
-    width:300px;
-    background:rgba(255,255,255,0.03);
-    backdrop-filter:blur(10px);
-    transition:0.3s;
-  }
-  .card:hover{
-    transform:translateY(-6px);
-    border-color:rgba(255,255,255,0.4);
-  }
-
-  /* 로고 슬라이드 안내 문구 */
-  .microcopy{
-    margin-top:70px;
-    font-size:14px;
-    opacity:.6;
-  }
-
-  /* 로고 슬라이드 */
-  .logo-slider{
-    margin-top:18px;
-    overflow:hidden;
-    white-space:nowrap;
-  }
-  .logo-track{
-    display:inline-block;
-    animation:scroll 18s linear infinite;
-  }
-  .logo-track img{
-    height:40px;
-    margin:0 30px;
-    opacity:0.7;
-  }
-  @keyframes scroll{
-    from{transform:translateX(0)}
-    to{transform:translateX(-50%)}
-  }
-
-  /* FOOTER */
-  footer{
-    margin-top:160px;
-    text-align:center;
-    opacity:0.4;
-    font-size:13px;
-  }
-
-  /* MOBILE */
-  @media (max-width:768px){
-    .container{padding:120px 20px 60px}
-    .hero-title{font-size:36px}
-    .hero-sub{font-size:18px}
-    .section h1{font-size:28px}
-    .highlight{font-size:18px}
-    .nav-inner{padding:16px 20px}
-  }
+/* MOBILE */
+@media (max-width:768px){
+  .container{padding:120px 20px 60px}
+  .hero-title{font-size:36px}
+  .hero-sub{font-size:18px}
+  .section h1{font-size:28px}
+  .highlight{font-size:18px}
+}
 </style>
 </head>
 
@@ -241,69 +163,71 @@
   </h1>
 
   <h2 class="hero-sub">
-    선택은 당신의 브랜드입니다.
+    대한민국 K-브랜드 경쟁의 중심,<br>
+    새로운 광고지도가 시작됩니다.
   </h2>
 
-  <!-- 대한민국 최초 배지 -->
-  <div class="badge">대한민국 최초 · 브랜드 광고 지도 플랫폼</div>
-
-  <div class="scarcity">
-    👑 KING 왕좌석 단 <span class="pulse">2자리</span>만 남았습니다
-  </div>
-
-  <div class="competition">
-    경쟁은 이미 시작되었습니다.<br>
-    왕좌는 선택된 브랜드만 차지합니다.
-  </div>
+  <div class="badge">대한민국 최초 K-브랜드 광고 플랫폼</div>
 
   <div class="hero-buttons">
-    <a class="btn primary" href="#seats">왕좌 위치 보기</a>
+    <a class="btn primary" href="#platform">플랫폼 소개</a>
     <a class="btn" href="mailto:contact@kingmake.kr">상담 요청</a>
   </div>
 
   <!-- MAP -->
   <div class="map">
     <img src="images/hero.png" alt="KING MAKE MAP">
-    <div class="king-glow" aria-hidden="true"></div>
   </div>
 
-  <!-- MICRO COPY -->
-  <div class="microcopy">지금, K-FOOD 카테고리부터 최초로 오픈됩니다.</div>
+  <!-- PLATFORM -->
+  <div class="section" id="platform">
+    <h1>K-BRAND PLATFORM</h1>
 
-  <!-- LOGO SLIDER (샘플) -->
-  <div class="logo-slider">
-    <div class="logo-track">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/KFC_logo.svg" alt="logo">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/McDonald%27s_Golden_Arches.svg" alt="logo">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Starbucks_Logo.svg" alt="logo">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Burger_King_2020.svg" alt="logo">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/KFC_logo.svg" alt="logo">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/McDonald%27s_Golden_Arches.svg" alt="logo">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Starbucks_Logo.svg" alt="logo">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Burger_King_2020.svg" alt="logo">
+    <div class="highlight">
+      KING MAKE는 대한민국을 대표하는 브랜드가<br>
+      세계 시장을 향해 경쟁하는 위치를 시각화한<br>
+      새로운 광고지도 플랫폼입니다.
     </div>
   </div>
 
-  <!-- SEATS -->
-  <div class="section" id="seats">
-    <h1>좌석 개념</h1>
+  <!-- SEAT -->
+  <div class="section">
+    <h1>왕좌 구조</h1>
     <div class="card-wrap">
-      <div class="card">👑 KING 왕좌<br>브랜드 1위 상징 자리</div>
-      <div class="card">⭐ Premium<br>높은 주목도 위치</div>
+      <div class="card">👑 KING 왕좌<br>브랜드 상징 자리</div>
+      <div class="card">⭐ Premium<br>주목도 높은 위치</div>
       <div class="card">⬜ Standard<br>카테고리 참여 노출</div>
     </div>
   </div>
 
-  <!-- CATEGORY -->
+  <!-- CURRENT CATEGORY -->
   <div class="section">
-    <h1>K-FOOD</h1>
-    <div class="highlight">
-      대한민국 대표 음식 브랜드가 모이는 자리<br>
-      이곳에서 브랜드 경쟁이 시작됩니다.
-    </div>
+    <h1>첫 시범 카테고리</h1>
+    <div class="highlight">K-FOOD</div>
+    <p style="opacity:0.6">대한민국 대표 음식 브랜드부터 시작합니다.</p>
   </div>
 
-  <footer>© 2026 KING MAKE · 대한민국 최초 브랜드 광고 지도</footer>
+  <!-- FUTURE EXPANSION -->
+  <div class="section">
+    <h1>확장 예정 K-BRAND</h1>
+
+    <div>
+      <span class="tag">K-BEAUTY</span>
+      <span class="tag">K-CULTURE</span>
+      <span class="tag">K-FASHION</span>
+      <span class="tag">K-LIFESTYLE</span>
+      <span class="tag">K-TECH</span>
+    </div>
+
+    <p style="margin-top:25px; opacity:0.6">
+      시대 흐름과 글로벌 관심에 맞춰<br>
+      카테고리는 지속적으로 확장됩니다.
+    </p>
+  </div>
+
+  <footer>
+    © 2026 KING MAKE · 대한민국 최초 K-브랜드 광고 플랫폼
+  </footer>
 
 </div>
 
