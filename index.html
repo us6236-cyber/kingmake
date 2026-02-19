@@ -19,9 +19,9 @@ body{
   position:fixed;
   top:0;
   width:100%;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,0.65);
   backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(255,255,255,0.1);
+  border-bottom:1px solid rgba(255,255,255,0.08);
   z-index:1000;
 }
 .nav-inner{
@@ -32,23 +32,7 @@ body{
   align-items:center;
   padding:18px 40px;
 }
-.logo{font-weight:700;letter-spacing:1px}
-.menu a{
-  margin-left:25px;
-  text-decoration:none;
-  color:#fff;
-  opacity:0.8;
-  font-size:14px;
-}
-.menu a:hover{opacity:1}
-
-/* LANGUAGE */
-.lang-toggle{
-  margin-left:20px;
-  cursor:pointer;
-  opacity:0.6;
-}
-.lang-toggle:hover{opacity:1}
+.logo{font-weight:700;letter-spacing:1px;font-size:18px}
 
 /* LAYOUT */
 .container{
@@ -59,19 +43,16 @@ body{
 }
 
 /* HERO */
-.hero{
-  animation:fadeUp 1.2s ease forwards;
-}
-.hero h1{
+.hero-title{
   font-size:64px;
   letter-spacing:-1.5px;
   margin:0;
+  animation:fadeUp 1.2s ease forwards;
 }
-.hero h2{
-  font-weight:400;
-  opacity:0.7;
+.hero-sub{
   margin-top:20px;
-  font-size:22px;
+  font-size:24px;
+  opacity:0.85;
 }
 
 @keyframes fadeUp{
@@ -79,6 +60,32 @@ body{
   to{opacity:1; transform:translateY(0)}
 }
 
+/* 희소성 */
+.scarcity{
+  margin-top:28px;
+  font-size:20px;
+  color:#ffd700;
+}
+
+.pulse{
+  animation:pulseText 1.2s infinite;
+  font-weight:700;
+}
+
+@keyframes pulseText{
+  0%{opacity:0.4}
+  50%{opacity:1}
+  100%{opacity:0.4}
+}
+
+/* 경쟁 문구 */
+.competition{
+  margin-top:20px;
+  opacity:0.6;
+  font-size:16px;
+}
+
+/* 버튼 */
 .hero-buttons{margin-top:40px}
 
 .btn{
@@ -90,6 +97,10 @@ body{
   text-decoration:none;
   color:#fff;
   transition:0.25s;
+}
+.btn.primary{
+  background:#fff;
+  color:#000;
 }
 .btn:hover{
   background:#fff;
@@ -108,7 +119,7 @@ body{
   box-shadow:0 30px 80px rgba(0,0,0,0.7);
 }
 
-/* KING SEAT NEON */
+/* 왕좌 네온 */
 .king-glow{
   position:absolute;
   top:25%;
@@ -116,16 +127,19 @@ body{
   width:6%;
   height:6%;
   border-radius:50%;
-  box-shadow:0 0 20px #ffd700,0 0 40px #ffd700;
-  animation:pulse 1.8s infinite;
+  box-shadow:
+    0 0 15px #ffd700,
+    0 0 30px #ffd700,
+    0 0 60px rgba(255,215,0,0.6);
+  animation:kingPulse 1.6s infinite;
 }
-@keyframes pulse{
-  0%{opacity:0.5}
-  50%{opacity:1}
-  100%{opacity:0.5}
+@keyframes kingPulse{
+  0%{transform:scale(0.9); opacity:0.6}
+  50%{transform:scale(1.1); opacity:1}
+  100%{transform:scale(0.9); opacity:0.6}
 }
 
-/* SECTIONS */
+/* SECTION */
 .section{margin-top:140px}
 .section h1{font-size:40px;margin-bottom:20px}
 .highlight{font-size:22px;opacity:0.85;line-height:1.8}
@@ -152,7 +166,7 @@ body{
   border-color:rgba(255,255,255,0.4);
 }
 
-/* LOGO SLIDER */
+/* 로고 슬라이드 */
 .logo-slider{
   margin-top:60px;
   overflow:hidden;
@@ -182,10 +196,9 @@ footer{
 
 /* MOBILE */
 @media (max-width:768px){
-  .menu{display:none}
   .container{padding:120px 20px 60px}
-  .hero h1{font-size:38px}
-  .hero h2{font-size:18px}
+  .hero-title{font-size:36px}
+  .hero-sub{font-size:18px}
   .section h1{font-size:28px}
   .highlight{font-size:18px}
 }
@@ -197,23 +210,33 @@ footer{
 <div class="nav">
   <div class="nav-inner">
     <div class="logo">KING MAKE</div>
-    <div>
-      <span class="lang-toggle" onclick="toggleLang()">EN</span>
-    </div>
   </div>
 </div>
 
 <div class="container">
 
   <!-- HERO -->
-  <div class="hero">
-    <h1 id="title">브랜드가 보이는 자리가,<br>매출이 됩니다.</h1>
-    <h2 id="subtitle">대한민국 대표 브랜드를 위한 프리미엄 디지털 광고 지도</h2>
+  <h1 class="hero-title">
+    왕좌에 오르는 순간,<br>
+    브랜드는 달라집니다.
+  </h1>
 
-    <div class="hero-buttons">
-      <a class="btn" href="#seats">Seats</a>
-      <a class="btn" href="mailto:contact@kingmake.kr">Contact</a>
-    </div>
+  <h2 class="hero-sub">
+    선택은 당신의 브랜드입니다.
+  </h2>
+
+  <div class="scarcity">
+    👑 KING 왕좌석 단 <span class="pulse">2자리</span>만 남았습니다
+  </div>
+
+  <div class="competition">
+    경쟁은 이미 시작되었습니다.<br>
+    왕좌는 선택된 브랜드만 차지합니다.
+  </div>
+
+  <div class="hero-buttons">
+    <a class="btn primary" href="#seats">왕좌 위치 보기</a>
+    <a class="btn" href="mailto:contact@kingmake.kr">상담 요청</a>
   </div>
 
   <!-- MAP -->
@@ -225,24 +248,22 @@ footer{
   <!-- LOGO SLIDER -->
   <div class="logo-slider">
     <div class="logo-track">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Starbucks_Logo.svg">
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/KFC_logo.svg">
       <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/McDonald%27s_Golden_Arches.svg">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Burger_King_2020.svg">
       <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Starbucks_Logo.svg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Burger_King_2020.svg">
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/KFC_logo.svg">
       <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/McDonald%27s_Golden_Arches.svg">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Burger_King_2020.svg">
     </div>
   </div>
 
   <!-- SEATS -->
   <div class="section" id="seats">
-    <h1>Seat Concept</h1>
+    <h1>좌석 개념</h1>
     <div class="card-wrap">
-      <div class="card">👑 KING SEAT<br>Exclusive Crown Position</div>
-      <div class="card">⭐ Premium<br>High Visibility Placement</div>
-      <div class="card">⬜ Standard<br>Category Participation</div>
+      <div class="card">👑 KING 왕좌<br>브랜드 1위 상징 자리</div>
+      <div class="card">⭐ Premium<br>높은 주목도 위치</div>
+      <div class="card">⬜ Standard<br>카테고리 참여 노출</div>
     </div>
   </div>
 
@@ -250,29 +271,14 @@ footer{
   <div class="section">
     <h1>K-FOOD</h1>
     <div class="highlight">
-      Korea’s leading food brands,<br>
-      mapped in one powerful digital space.
+      대한민국 대표 음식 브랜드가 모이는 자리<br>
+      이곳에서 브랜드 경쟁이 시작됩니다.
     </div>
   </div>
 
   <footer>© 2026 KING MAKE</footer>
 
 </div>
-
-<script>
-function toggleLang(){
-  const title=document.getElementById("title");
-  const subtitle=document.getElementById("subtitle");
-
-  if(title.innerHTML.includes("매출")){
-    title.innerHTML="Where your brand appears,<br>sales begin.";
-    subtitle.innerHTML="Premium digital map for Korea’s food brands";
-  }else{
-    title.innerHTML="브랜드가 보이는 자리가,<br>매출이 됩니다.";
-    subtitle.innerHTML="대한민국 대표 브랜드를 위한 프리미엄 디지털 광고 지도";
-  }
-}
-</script>
 
 </body>
 </html>
