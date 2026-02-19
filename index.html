@@ -11,41 +11,76 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
   background:#000;
   color:#fff;
-  text-align:center;
 }
 
+/* ===== NAV ===== */
+.nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  z-index:1000;
+}
+
+.nav-inner{
+  max-width:1600px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 40px;
+}
+
+.logo{
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+.menu a{
+  margin-left:25px;
+  text-decoration:none;
+  color:#fff;
+  opacity:0.8;
+  font-size:14px;
+}
+
+.menu a:hover{
+  opacity:1;
+}
+
+/* ===== LAYOUT ===== */
 .container{
   max-width:1600px;
   margin:auto;
-  padding:80px 60px;
+  padding:140px 60px 80px;
+  text-align:center;
 }
 
-h1{
-  font-size:52px;
+/* HERO */
+.hero h1{
+  font-size:64px;
+  letter-spacing:-1.5px;
   margin:0;
-  letter-spacing:-1px;
 }
 
-h2{
+.hero h2{
   font-weight:400;
   opacity:0.7;
-  margin-top:16px;
+  margin-top:20px;
+  font-size:22px;
 }
 
-.section{
-  margin-top:120px;
-}
-
-.map img{
-  width:100%;
-  max-width:1400px;
+.hero-buttons{
+  margin-top:40px;
 }
 
 .btn{
   display:inline-block;
-  margin:20px 10px 0;
-  padding:16px 42px;
-  border-radius:30px;
+  margin:10px;
+  padding:18px 46px;
+  border-radius:40px;
   border:1px solid #fff;
   text-decoration:none;
   color:#fff;
@@ -57,58 +92,133 @@ h2{
   color:#000;
 }
 
-.card-wrap{
-  display:flex;
-  justify-content:center;
-  gap:20px;
-  flex-wrap:wrap;
-  margin-top:40px;
+/* MAP IMAGE */
+.map img{
+  width:100%;
+  max-width:1400px;
+  margin-top:70px;
+  border-radius:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.7);
 }
 
-.card{
-  border:1px solid rgba(255,255,255,0.2);
-  padding:30px;
-  border-radius:16px;
-  width:260px;
-  background:rgba(255,255,255,0.03);
+/* SECTIONS */
+.section{
+  margin-top:140px;
 }
 
-.card h3{
-  margin-top:0;
+.section h1{
+  font-size:40px;
+  margin-bottom:20px;
 }
 
 .highlight{
-  font-size:26px;
-  margin-top:20px;
+  font-size:22px;
+  opacity:0.85;
+  line-height:1.8;
 }
 
+/* CARDS */
+.card-wrap{
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  flex-wrap:wrap;
+  margin-top:50px;
+}
+
+.card{
+  border:1px solid rgba(255,255,255,0.15);
+  padding:40px;
+  border-radius:18px;
+  width:300px;
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(10px);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(255,255,255,0.4);
+}
+
+/* FOOTER */
 footer{
-  margin-top:120px;
+  margin-top:160px;
+  text-align:center;
   opacity:0.4;
   font-size:13px;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width:768px){
+
+  .nav-inner{
+    padding:16px 20px;
+  }
+
+  .menu{
+    display:none;
+  }
+
+  .container{
+    padding:120px 20px 60px;
+  }
+
+  .hero h1{
+    font-size:38px;
+  }
+
+  .hero h2{
+    font-size:18px;
+  }
+
+  .section h1{
+    font-size:28px;
+  }
+
+  .highlight{
+    font-size:18px;
+  }
+
 }
 </style>
 </head>
 
 <body>
 
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <div class="logo">KING MAKE</div>
+    <div class="menu">
+      <a href="#about">About</a>
+      <a href="#seats">Seats</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</div>
+
 <div class="container">
 
   <!-- HERO -->
-  <h1>브랜드가 보이는 자리가,<br>매출이 됩니다.</h1>
-  <h2>대한민국 음식 브랜드를 위한 프리미엄 디지털 광고 지도</h2>
+  <div class="hero">
+    <h1>브랜드가 보이는 자리가,<br>매출이 됩니다.</h1>
+    <h2>대한민국 음식 브랜드를 위한 프리미엄 디지털 광고 지도</h2>
 
-  <a class="btn" href="#map">좌석 보기</a>
-  <a class="btn" href="mailto:contact@kingmake.kr">제안서 요청</a>
+    <div class="hero-buttons">
+      <a class="btn" href="#map">좌석 보기</a>
+      <a class="btn" href="mailto:contact@kingmake.kr">제안서 요청</a>
+    </div>
+  </div>
 
+  <!-- MAP -->
   <div class="map" id="map">
     <img src="images/hero.png" alt="KING MAKE MAP">
   </div>
 
-  <!-- WHAT IS -->
-  <div class="section">
+  <!-- ABOUT -->
+  <div class="section" id="about">
     <h1>KING MAKE는 광고가 아니라,<br>디지털 상권을 선점하는 플랫폼입니다.</h1>
-
     <div class="highlight">
       ✔ 카테고리 상단 노출<br>
       ✔ 경쟁 브랜드 대비 위치 선점<br>
@@ -116,55 +226,51 @@ footer{
     </div>
   </div>
 
-  <!-- SEAT CONCEPT -->
-  <div class="section">
+  <!-- SEAT -->
+  <div class="section" id="seats">
     <h1>좌석 개념</h1>
 
     <div class="card-wrap">
       <div class="card">
         <h3>👑 KING SEAT</h3>
-        중앙 왕좌 자리<br>
-        독점 상징 노출
+        중앙 왕좌 자리<br>독점 상징 노출
       </div>
 
       <div class="card">
         <h3>⭐ Premium</h3>
-        상단 강조 위치<br>
-        높은 주목도
+        상단 강조 위치<br>높은 주목도
       </div>
 
       <div class="card">
         <h3>⬜ Standard</h3>
-        카테고리 참여<br>
-        동일 노출 크기
+        카테고리 참여<br>동일 노출 크기
       </div>
     </div>
   </div>
 
-  <!-- FIRST CATEGORY -->
+  <!-- CATEGORY -->
   <div class="section">
     <h1>첫 오픈 카테고리</h1>
     <h2>K-FOOD</h2>
 
     <div class="highlight">
       대한민국 대표 음식 브랜드의<br>
-      디지털 왕좌를 선점하세요.
+      디지털 상권을 선점하세요.
     </div>
   </div>
 
-  <!-- WHY NOW -->
+  <!-- WHY -->
   <div class="section">
     <h1>왜 지금인가?</h1>
-
     <div class="highlight">
-      ✔ 시장 경쟁 심화<br>
-      ✔ 브랜드 인지도 경쟁 가속<br>
-      ✔ 상단 노출의 중요성 증가
+      ✔ K-FOOD 글로벌 성장 가속<br>
+      ✔ 브랜드 인지도 경쟁 심화<br>
+      ✔ 상단 노출의 가치 상승
     </div>
   </div>
 
-  <!-- CTA -->
-  <div class="section">
+  <!-- CONTACT -->
+  <div class="section" id="contact">
     <h1>프리미엄 좌석 상담</h1>
     <a class="btn" href="mailto:contact@kingmake.kr">contact@kingmake.kr</a>
   </div>
