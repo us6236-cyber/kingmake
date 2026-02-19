@@ -11,9 +11,10 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
   background:#000;
   color:#fff;
+  overflow-x:hidden;
 }
 
-/* ===== NAV ===== */
+/* NAV */
 .nav{
   position:fixed;
   top:0;
@@ -23,7 +24,6 @@ body{
   border-bottom:1px solid rgba(255,255,255,0.1);
   z-index:1000;
 }
-
 .nav-inner{
   max-width:1600px;
   margin:auto;
@@ -32,12 +32,7 @@ body{
   align-items:center;
   padding:18px 40px;
 }
-
-.logo{
-  font-weight:700;
-  letter-spacing:1px;
-}
-
+.logo{font-weight:700;letter-spacing:1px}
 .menu a{
   margin-left:25px;
   text-decoration:none;
@@ -45,12 +40,17 @@ body{
   opacity:0.8;
   font-size:14px;
 }
+.menu a:hover{opacity:1}
 
-.menu a:hover{
-  opacity:1;
+/* LANGUAGE */
+.lang-toggle{
+  margin-left:20px;
+  cursor:pointer;
+  opacity:0.6;
 }
+.lang-toggle:hover{opacity:1}
 
-/* ===== LAYOUT ===== */
+/* LAYOUT */
 .container{
   max-width:1600px;
   margin:auto;
@@ -59,12 +59,14 @@ body{
 }
 
 /* HERO */
+.hero{
+  animation:fadeUp 1.2s ease forwards;
+}
 .hero h1{
   font-size:64px;
   letter-spacing:-1.5px;
   margin:0;
 }
-
 .hero h2{
   font-weight:400;
   opacity:0.7;
@@ -72,9 +74,12 @@ body{
   font-size:22px;
 }
 
-.hero-buttons{
-  margin-top:40px;
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(40px)}
+  to{opacity:1; transform:translateY(0)}
 }
+
+.hero-buttons{margin-top:40px}
 
 .btn{
   display:inline-block;
@@ -84,15 +89,17 @@ body{
   border:1px solid #fff;
   text-decoration:none;
   color:#fff;
-  transition:0.2s;
+  transition:0.25s;
 }
-
 .btn:hover{
   background:#fff;
   color:#000;
 }
 
-/* MAP IMAGE */
+/* MAP */
+.map{
+  position:relative;
+}
 .map img{
   width:100%;
   max-width:1400px;
@@ -101,21 +108,27 @@ body{
   box-shadow:0 30px 80px rgba(0,0,0,0.7);
 }
 
+/* KING SEAT NEON */
+.king-glow{
+  position:absolute;
+  top:25%;
+  left:47%;
+  width:6%;
+  height:6%;
+  border-radius:50%;
+  box-shadow:0 0 20px #ffd700,0 0 40px #ffd700;
+  animation:pulse 1.8s infinite;
+}
+@keyframes pulse{
+  0%{opacity:0.5}
+  50%{opacity:1}
+  100%{opacity:0.5}
+}
+
 /* SECTIONS */
-.section{
-  margin-top:140px;
-}
-
-.section h1{
-  font-size:40px;
-  margin-bottom:20px;
-}
-
-.highlight{
-  font-size:22px;
-  opacity:0.85;
-  line-height:1.8;
-}
+.section{margin-top:140px}
+.section h1{font-size:40px;margin-bottom:20px}
+.highlight{font-size:22px;opacity:0.85;line-height:1.8}
 
 /* CARDS */
 .card-wrap{
@@ -125,7 +138,6 @@ body{
   flex-wrap:wrap;
   margin-top:50px;
 }
-
 .card{
   border:1px solid rgba(255,255,255,0.15);
   padding:40px;
@@ -135,10 +147,29 @@ body{
   backdrop-filter:blur(10px);
   transition:0.3s;
 }
-
 .card:hover{
   transform:translateY(-6px);
   border-color:rgba(255,255,255,0.4);
+}
+
+/* LOGO SLIDER */
+.logo-slider{
+  margin-top:60px;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.logo-track{
+  display:inline-block;
+  animation:scroll 18s linear infinite;
+}
+.logo-track img{
+  height:40px;
+  margin:0 30px;
+  opacity:0.7;
+}
+@keyframes scroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
 }
 
 /* FOOTER */
@@ -149,51 +180,25 @@ footer{
   font-size:13px;
 }
 
-/* ===== MOBILE ===== */
+/* MOBILE */
 @media (max-width:768px){
-
-  .nav-inner{
-    padding:16px 20px;
-  }
-
-  .menu{
-    display:none;
-  }
-
-  .container{
-    padding:120px 20px 60px;
-  }
-
-  .hero h1{
-    font-size:38px;
-  }
-
-  .hero h2{
-    font-size:18px;
-  }
-
-  .section h1{
-    font-size:28px;
-  }
-
-  .highlight{
-    font-size:18px;
-  }
-
+  .menu{display:none}
+  .container{padding:120px 20px 60px}
+  .hero h1{font-size:38px}
+  .hero h2{font-size:18px}
+  .section h1{font-size:28px}
+  .highlight{font-size:18px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAV -->
 <div class="nav">
   <div class="nav-inner">
     <div class="logo">KING MAKE</div>
-    <div class="menu">
-      <a href="#about">About</a>
-      <a href="#seats">Seats</a>
-      <a href="#contact">Contact</a>
+    <div>
+      <span class="lang-toggle" onclick="toggleLang()">EN</span>
     </div>
   </div>
 </div>
@@ -202,84 +207,72 @@ footer{
 
   <!-- HERO -->
   <div class="hero">
-    <h1>브랜드가 보이는 자리가,<br>매출이 됩니다.</h1>
-    <h2>대한민국 대표 브랜드를 위한 프리미엄 디지털 광고 지도</h2>
+    <h1 id="title">브랜드가 보이는 자리가,<br>매출이 됩니다.</h1>
+    <h2 id="subtitle">대한민국 대표 브랜드를 위한 프리미엄 디지털 광고 지도</h2>
 
     <div class="hero-buttons">
-      <a class="btn" href="#map">좌석 보기</a>
-      <a class="btn" href="mailto:contact@kingmake.kr">제안서 요청</a>
+      <a class="btn" href="#seats">Seats</a>
+      <a class="btn" href="mailto:contact@kingmake.kr">Contact</a>
     </div>
   </div>
 
   <!-- MAP -->
-  <div class="map" id="map">
-    <img src="images/hero.png" alt="KING MAKE MAP">
+  <div class="map">
+    <img src="images/hero.png">
+    <div class="king-glow"></div>
   </div>
 
-  <!-- ABOUT -->
-  <div class="section" id="about">
-    <h1>KING MAKE는 광고가 아니라,<br>디지털 상권을 선점하는 플랫폼입니다.</h1>
-    <div class="highlight">
-      ✔ 카테고리 상단 노출<br>
-      ✔ 경쟁 브랜드 대비 위치 선점<br>
-      ✔ 한정 좌석 기반 희소성
+  <!-- LOGO SLIDER -->
+  <div class="logo-slider">
+    <div class="logo-track">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Starbucks_Logo.svg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/KFC_logo.svg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/McDonald%27s_Golden_Arches.svg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Burger_King_2020.svg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/79/Starbucks_Logo.svg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/KFC_logo.svg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/McDonald%27s_Golden_Arches.svg">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Burger_King_2020.svg">
     </div>
   </div>
 
-  <!-- SEAT -->
+  <!-- SEATS -->
   <div class="section" id="seats">
-    <h1>좌석 개념</h1>
-
+    <h1>Seat Concept</h1>
     <div class="card-wrap">
-      <div class="card">
-        <h3>👑 KING SEAT</h3>
-        중앙 왕좌 자리<br>독점 상징 노출
-      </div>
-
-      <div class="card">
-        <h3>⭐ Premium</h3>
-        상단 강조 위치<br>높은 주목도
-      </div>
-
-      <div class="card">
-        <h3>⬜ Standard</h3>
-        카테고리 참여<br>동일 노출 크기
-      </div>
+      <div class="card">👑 KING SEAT<br>Exclusive Crown Position</div>
+      <div class="card">⭐ Premium<br>High Visibility Placement</div>
+      <div class="card">⬜ Standard<br>Category Participation</div>
     </div>
   </div>
 
   <!-- CATEGORY -->
   <div class="section">
-    <h1>첫 오픈 카테고리</h1>
-    <h2>K-FOOD</h2>
-
+    <h1>K-FOOD</h1>
     <div class="highlight">
-      대한민국 대표 음식 브랜드의<br>
-      디지털 상권을 선점하세요.
+      Korea’s leading food brands,<br>
+      mapped in one powerful digital space.
     </div>
   </div>
 
-  <!-- WHY -->
-  <div class="section">
-    <h1>왜 지금인가?</h1>
-    <div class="highlight">
-      ✔ K-브랜드 글로벌 성장 가속<br>
-      ✔ 브랜드 인지도 경쟁 심화<br>
-      ✔ 상단 노출의 가치 상승
-    </div>
-  </div>
-
-  <!-- CONTACT -->
-  <div class="section" id="contact">
-    <h1>프리미엄 좌석 상담</h1>
-    <a class="btn" href="mailto:contact@kingmake.kr">contact@kingmake.kr</a>
-  </div>
-
-  <footer>
-    © 2026 KING MAKE
-  </footer>
+  <footer>© 2026 KING MAKE</footer>
 
 </div>
+
+<script>
+function toggleLang(){
+  const title=document.getElementById("title");
+  const subtitle=document.getElementById("subtitle");
+
+  if(title.innerHTML.includes("매출")){
+    title.innerHTML="Where your brand appears,<br>sales begin.";
+    subtitle.innerHTML="Premium digital map for Korea’s food brands";
+  }else{
+    title.innerHTML="브랜드가 보이는 자리가,<br>매출이 됩니다.";
+    subtitle.innerHTML="대한민국 대표 브랜드를 위한 프리미엄 디지털 광고 지도";
+  }
+}
+</script>
 
 </body>
 </html>
