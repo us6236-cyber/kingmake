@@ -19,45 +19,42 @@ body{
   position:fixed;
   top:0;
   width:100%;
-  background:rgba(0,0,0,0.65);
+  background:rgba(0,0,0,0.7);
   backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(255,255,255,0.08);
 }
 .nav-inner{
-  max-width:1400px;
+  max-width:1200px;
   margin:auto;
-  padding:16px 20px;
+  padding:14px 20px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
 }
 .logo{font-weight:700}
 
 /* HERO */
 .container{
-  padding:120px 20px 60px;
+  padding:100px 20px 40px;
 }
 
 .hero-title{
-  font-size:44px;
+  font-size:40px;
   margin:0;
 }
 
 .hero-sub{
   opacity:0.7;
-  margin-top:14px;
-  font-size:18px;
+  margin-top:10px;
 }
 
 .btn{
   display:inline-block;
-  margin-top:30px;
-  padding:14px 34px;
+  margin-top:25px;
+  padding:12px 28px;
   border-radius:30px;
   border:1px solid #fff;
   text-decoration:none;
   color:#fff;
-  transition:0.25s;
+  transition:.2s;
 }
 .btn:hover{
   background:#fff;
@@ -68,58 +65,108 @@ body{
 .map img{
   width:100%;
   max-width:900px;
-  margin-top:50px;
+  margin-top:40px;
   border-radius:16px;
   box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  cursor:pointer;
 }
 
 /* HOT BRAND */
-.section{
-  margin-top:90px;
-}
+.section{margin-top:70px}
 
 .hot-wrap{
   display:flex;
   justify-content:center;
-  gap:12px;
+  gap:10px;
   flex-wrap:wrap;
   margin-top:20px;
 }
 
 .hot{
   border:1px solid rgba(255,255,255,0.2);
-  padding:10px 16px;
+  padding:8px 14px;
   border-radius:20px;
   font-size:14px;
-  background:rgba(255,255,255,0.05);
+}
+
+.hot-now{
+  border-color:#ff3b3b;
+  animation:blinkHot 1.2s infinite;
+}
+
+@keyframes blinkHot{
+  0%{box-shadow:0 0 0px #ff3b3b}
+  50%{box-shadow:0 0 14px #ff3b3b}
+  100%{box-shadow:0 0 0px #ff3b3b}
 }
 
 /* CATEGORY */
 .category{
   display:flex;
   justify-content:center;
-  gap:10px;
+  gap:8px;
   flex-wrap:wrap;
-  margin-top:25px;
+  margin-top:20px;
 }
 
 .tag{
-  padding:10px 16px;
+  padding:10px 14px;
   border-radius:20px;
   border:1px solid rgba(255,255,255,0.2);
-  font-size:14px;
-  opacity:0.85;
+  font-size:13px;
+  cursor:pointer;
 }
 
-/* SHARE */
-.share{
-  margin-top:30px;
-  opacity:0.6;
-  font-size:14px;
+/* BRAND CARD */
+.brand-card{
+  margin-top:25px;
+  padding:20px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.2);
+  max-width:320px;
+  margin-left:auto;
+  margin-right:auto;
+  background:rgba(255,255,255,0.04);
 }
 
+/* LIKE & SHARE */
+.actions{
+  margin-top:10px;
+  opacity:0.8;
+  font-size:14px;
+}
+.actions span{
+  margin:0 10px;
+  cursor:pointer;
+}
+.actions span:hover{opacity:1}
+
+/* POPUP */
+.popup{
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.7);
+}
+
+.popup-content{
+  background:#111;
+  padding:30px;
+  border-radius:14px;
+  width:280px;
+  margin:20% auto;
+}
+
+.close{
+  float:right;
+  cursor:pointer;
+  font-size:18px;
+}
+
+/* FOOTER */
 footer{
-  margin-top:80px;
+  margin-top:70px;
   opacity:0.4;
   font-size:13px;
 }
@@ -136,27 +183,22 @@ footer{
 
 <div class="container">
 
-  <!-- HERO -->
-  <h1 class="hero-title">
-    K-Brand Map을 만나보세요
-  </h1>
-
-  <div class="hero-sub">
-    대한민국 브랜드를 한눈에 발견하는 새로운 경험
-  </div>
+  <h1 class="hero-title">K-Brand Map을 만나보세요</h1>
+  <div class="hero-sub">대한민국 브랜드를 한눈에 발견하는 새로운 경험</div>
 
   <a class="btn" href="#map">🗺 지도 탐험 시작</a>
 
   <!-- MAP -->
   <div class="map" id="map">
-    <img src="images/hero.png" alt="Brand Map">
+    <img src="images/hero.png"
+     onclick="showBrand('BHC 치킨','대한민국 대표 프리미엄 치킨 브랜드')">
   </div>
 
   <!-- HOT BRAND -->
   <div class="section">
-    <h2>🔥 지금 주목받는 브랜드</h2>
+    <h2>🔥 지금 HOT 브랜드</h2>
     <div class="hot-wrap">
-      <div class="hot">BHC</div>
+      <div class="hot hot-now">BHC</div>
       <div class="hot">교촌치킨</div>
       <div class="hot">BBQ</div>
       <div class="hot">스타벅스</div>
@@ -168,24 +210,65 @@ footer{
   <div class="section">
     <h2>카테고리 탐험</h2>
     <div class="category">
-      <div class="tag">🍗 K-FOOD</div>
-      <div class="tag">💄 K-BEAUTY</div>
-      <div class="tag">🎬 K-CULTURE</div>
-      <div class="tag">👕 K-FASHION</div>
-      <div class="tag">📱 K-TECH</div>
+      <div class="tag" onclick="alert('K-FOOD')">🍗 K-FOOD</div>
+      <div class="tag" onclick="alert('K-BEAUTY 준비중')">💄 K-BEAUTY</div>
+      <div class="tag" onclick="alert('K-CULTURE 준비중')">🎬 K-CULTURE</div>
+      <div class="tag" onclick="alert('K-FASHION 준비중')">👕 K-FASHION</div>
+      <div class="tag" onclick="alert('K-TECH 준비중')">📱 K-TECH</div>
     </div>
   </div>
 
-  <!-- SHARE -->
-  <div class="share">
-    우리나라 브랜드 지도를 친구와 공유해보세요
+  <!-- BRAND CARD -->
+  <div class="brand-card">
+    <h3>BHC 치킨</h3>
+    <p>대한민국 대표 프리미엄 치킨 브랜드</p>
+
+    <div class="actions">
+      <span onclick="likeBrand()">❤️ <span id="likeCount">12</span></span>
+      <span onclick="toggleFav()">⭐</span>
+      <span onclick="sharePage()">📤</span>
+    </div>
   </div>
 
-  <footer>
-    © 2026 KING MAKE
-  </footer>
+  <footer>© 2026 KING MAKE</footer>
 
 </div>
+
+<!-- POPUP -->
+<div id="brandPopup" class="popup">
+  <div class="popup-content">
+    <span class="close" onclick="closePopup()">×</span>
+    <h3 id="brandName"></h3>
+    <p id="brandDesc"></p>
+  </div>
+</div>
+
+<script>
+function showBrand(name, desc){
+  document.getElementById("brandName").innerText = name;
+  document.getElementById("brandDesc").innerText = desc;
+  document.getElementById("brandPopup").style.display = "block";
+}
+
+function closePopup(){
+  document.getElementById("brandPopup").style.display = "none";
+}
+
+let likes = 12;
+function likeBrand(){
+  likes++;
+  document.getElementById("likeCount").innerText = likes;
+}
+
+function toggleFav(){
+  alert("즐겨찾기에 추가되었습니다 ⭐");
+}
+
+function sharePage(){
+  navigator.clipboard.writeText(window.location.href);
+  alert("링크가 복사되었습니다!");
+}
+</script>
 
 </body>
 </html>
