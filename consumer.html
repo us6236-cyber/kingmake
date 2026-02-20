@@ -1,1 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-Brand Map</title>
 
+<style>
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+  background:#000;
+  color:#fff;
+  text-align:center;
+}
+
+/* NAV */
+.nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.nav-inner{
+  max-width:1400px;
+  margin:auto;
+  padding:16px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.logo{font-weight:700}
+
+/* HERO */
+.container{
+  padding:120px 20px 60px;
+}
+
+.hero-title{
+  font-size:44px;
+  margin:0;
+}
+
+.hero-sub{
+  opacity:0.7;
+  margin-top:14px;
+  font-size:18px;
+}
+
+.btn{
+  display:inline-block;
+  margin-top:30px;
+  padding:14px 34px;
+  border-radius:30px;
+  border:1px solid #fff;
+  text-decoration:none;
+  color:#fff;
+  transition:0.25s;
+}
+.btn:hover{
+  background:#fff;
+  color:#000;
+}
+
+/* MAP */
+.map img{
+  width:100%;
+  max-width:900px;
+  margin-top:50px;
+  border-radius:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* HOT BRAND */
+.section{
+  margin-top:90px;
+}
+
+.hot-wrap{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+.hot{
+  border:1px solid rgba(255,255,255,0.2);
+  padding:10px 16px;
+  border-radius:20px;
+  font-size:14px;
+  background:rgba(255,255,255,0.05);
+}
+
+/* CATEGORY */
+.category{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:25px;
+}
+
+.tag{
+  padding:10px 16px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.2);
+  font-size:14px;
+  opacity:0.85;
+}
+
+/* SHARE */
+.share{
+  margin-top:30px;
+  opacity:0.6;
+  font-size:14px;
+}
+
+footer{
+  margin-top:80px;
+  opacity:0.4;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <div class="logo">KING MAKE</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <h1 class="hero-title">
+    K-Brand Map을 만나보세요
+  </h1>
+
+  <div class="hero-sub">
+    대한민국 브랜드를 한눈에 발견하는 새로운 경험
+  </div>
+
+  <a class="btn" href="#map">🗺 지도 탐험 시작</a>
+
+  <!-- MAP -->
+  <div class="map" id="map">
+    <img src="images/hero.png" alt="Brand Map">
+  </div>
+
+  <!-- HOT BRAND -->
+  <div class="section">
+    <h2>🔥 지금 주목받는 브랜드</h2>
+    <div class="hot-wrap">
+      <div class="hot">BHC</div>
+      <div class="hot">교촌치킨</div>
+      <div class="hot">BBQ</div>
+      <div class="hot">스타벅스</div>
+      <div class="hot">이디야</div>
+    </div>
+  </div>
+
+  <!-- CATEGORY -->
+  <div class="section">
+    <h2>카테고리 탐험</h2>
+    <div class="category">
+      <div class="tag">🍗 K-FOOD</div>
+      <div class="tag">💄 K-BEAUTY</div>
+      <div class="tag">🎬 K-CULTURE</div>
+      <div class="tag">👕 K-FASHION</div>
+      <div class="tag">📱 K-TECH</div>
+    </div>
+  </div>
+
+  <!-- SHARE -->
+  <div class="share">
+    우리나라 브랜드 지도를 친구와 공유해보세요
+  </div>
+
+  <footer>
+    © 2026 KING MAKE
+  </footer>
+
+</div>
+
+</body>
+</html>
