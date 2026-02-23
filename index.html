@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>KING MAKE</title>
+
+<!-- 파비콘(선택) -->
+<!-- <link rel="icon" href="images/favicon.png"> -->
 
 <style>
   body{
@@ -28,15 +31,31 @@
   .nav-inner{
     max-width:1200px;
     margin:auto;
-    padding:16px 20px;
+    padding:14px 20px;
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:flex-start;
+    gap:12px;
   }
-  .logo{
+
+  /* LOGO (이미지) */
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:#fff;
+  }
+  .brand img{
+    height:28px;
+    width:auto;
+    display:block;
+  }
+  .brand .wordmark{
     font-weight:700;
     letter-spacing:1px;
     font-size:18px;
+    line-height:1;
   }
 
   /* LAYOUT */
@@ -70,6 +89,7 @@
     max-width:900px;
     border-radius:18px;
     box-shadow:0 24px 80px rgba(0,0,0,0.75);
+    display:block;
   }
 
   /* CATEGORIES (BOTTOM) */
@@ -102,6 +122,7 @@
     cursor:pointer;
     transition:0.25s;
     background:rgba(255,255,255,0.03);
+    user-select:none;
   }
 
   .cat:hover{
@@ -129,6 +150,9 @@
     .hero-sub{font-size:16px}
     .cat{width:46vw; min-width:160px; height:120px; font-size:16px}
     .cat span{font-size:28px}
+    .nav-inner{padding:12px 16px}
+    .brand img{height:26px}
+    .brand .wordmark{font-size:16px}
   }
 </style>
 </head>
@@ -137,7 +161,13 @@
 
 <div class="nav">
   <div class="nav-inner">
-    <div class="logo">KING MAKE</div>
+    <!-- ✅ 로고 파일을 아래 경로로 올려주세요:
+         /images/logo.png  (프리미엄 왕관 심볼 + KING MAKE)
+         만약 파일명이 다르면 src만 바꾸면 됩니다. -->
+    <a class="brand" href="index.html" aria-label="KING MAKE Home">
+      <img src="images/logo.png" alt="KING MAKE 로고" onerror="this.style.display='none'; document.getElementById('wm').style.display='block';">
+      <span id="wm" class="wordmark" style="display:none;">👑 KING MAKE</span>
+    </a>
   </div>
 </div>
 
@@ -151,8 +181,8 @@
 
   <!-- HERO IMAGE (CENTER) -->
   <div class="hero-image">
-    <!-- 이미지 파일 경로: /images/hero1.png -->
-    <img src="images/hero1.png" alt="KING MAKE HERO">
+    <!-- ✅ HERO 이미지 파일: /images/hero1.png -->
+    <img src="images/hero1.png" alt="K-Brand Map Hero">
   </div>
 
   <!-- CATEGORIES (BOTTOM) -->
@@ -188,7 +218,6 @@
   </div>
 
   <footer>© 2026 KING MAKE</footer>
-
 </div>
 
 </body>
