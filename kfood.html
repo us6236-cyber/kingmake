@@ -1,545 +1,365 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>K-FOOD 광고판 | KINGMAKE</title>
-  <style>
-    :root{
-      --bg:#0b0f17;
-      --border:rgba(255,255,255,.10);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.65);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius:16px;
-      --gap:12px;
-      --good:#2ee59d;
-      --warn:#ffb020;
-      --bad:#ff4d6d;
-    }
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      background: radial-gradient(1200px 500px at 10% 0%, rgba(255,215,0,.12), transparent 60%),
-                  radial-gradient(900px 500px at 90% 10%, rgba(0,200,255,.10), transparent 55%),
-                  var(--bg);
-      color:var(--text);
-    }
-    .wrap{ width:min(1750px, calc(100vw - 48px)); margin: 24px auto 64px; }
-    header{ display:flex; gap:16px; align-items:flex-start; justify-content:space-between; margin-bottom:16px; }
-    .brand{ display:flex; flex-direction:column; gap:6px; }
-    .brand h1{ margin:0; font-size:26px; letter-spacing:.4px; }
-    .brand p{ margin:0; color:var(--muted); font-size:14px; line-height:1.45; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>K-FOOD | KING MAKE</title>
 
-    .controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
-    .pill{
-      background: rgba(255,255,255,.06);
-      border:1px solid var(--border);
-      padding:10px 12px;
-      border-radius:999px;
-      display:flex; align-items:center; gap:10px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.18);
-      backdrop-filter: blur(8px);
-    }
-    .pill label{ font-size:12px; color:var(--muted); white-space:nowrap; }
-    select, input[type="text"], input[type="number"], input[type="date"], input[type="password"]{
-      background: rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.14);
-      color:var(--text);
-      padding:8px 10px;
-      border-radius:10px;
-      outline:none;
-      font-size:13px;
-      min-width: 150px;
-    }
-    button{
-      background: linear-gradient(135deg, rgba(255,215,0,.20), rgba(0,200,255,.16));
-      border:1px solid rgba(255,255,255,.16);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      transition: transform .15s ease, filter .15s ease;
-      white-space:nowrap;
-    }
-    button:hover{ transform: translateY(-1px); filter: brightness(1.08); }
-    button:active{ transform: translateY(0px); }
-    .btn-ghost{ background: rgba(255,255,255,.06); }
-    .btn-bad{ background: rgba(255,77,109,.14); border-color: rgba(255,77,109,.25); }
+<style>
+  :root{
+    --bg:#000;
+    --panel:rgba(255,255,255,0.03);
+    --line:rgba(255,255,255,0.12);
+    --gold:#D4AF37;
+    --premium:#ff3b3b;
+    --standard:#ffffff;
+  }
 
-    .stats{ display:flex; gap:10px; flex-wrap:wrap; margin: 10px 0 16px; }
-    .stat{
-      background: rgba(255,255,255,.05);
-      border:1px solid var(--border);
-      border-radius: 14px;
-      padding:10px 12px;
-      box-shadow: var(--shadow);
-      font-size:13px;
-      color:var(--muted);
-    }
-    .stat b{ color: var(--text); font-weight:900; }
-    .ok{ color: var(--good); font-weight:900; }
-    .warn{ color: var(--warn); font-weight:900; }
-    .bad{ color: var(--bad); font-weight:900; }
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+    background:var(--bg);
+    color:#fff;
+  }
 
-    .board{ background: rgba(255,255,255,.03); border:1px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
-    .grid{ display:grid; gap: var(--gap); grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); align-items:stretch; }
+  .top{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter:blur(10px);
+    background:rgba(0,0,0,0.78);
+    border-bottom:1px solid var(--line);
+  }
+  .top-inner{
+    max-width:1800px;
+    margin:auto;
+    padding:14px 18px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    text-decoration:none; color:#fff;
+  }
+  .brand img{height:26px;width:auto;display:block;}
+  .brand b{letter-spacing:1px}
+  .page-title{font-size:13px; opacity:0.75;}
 
-    .seat{
-      position:relative;
-      display:flex; align-items:center; justify-content:center;
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      cursor:pointer;
-      overflow:hidden;
-      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease, filter .15s ease;
-      min-height: 110px;
-      user-select:none;
-    }
-    .seat:hover{ transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,.35); border-color: rgba(255,255,255,.22); }
-    .seat.king{ min-height: 170px; }
-    .seat.premium{ min-height: 130px; }
-    .seat.standard{ min-height: 110px; }
+  .wrap{
+    max-width:1800px;
+    margin:0 auto;
+    padding:26px 18px 70px;
+    text-align:center;
+  }
+  .hero h1{margin:0; font-size:34px; letter-spacing:-0.5px;}
+  .hero p{margin:12px 0 0; opacity:0.7; line-height:1.6;}
 
-    .badge{
-      position:absolute; top:10px; left:10px;
-      font-size:11px; padding:6px 8px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.25);
-      color: rgba(255,255,255,.85);
-      backdrop-filter: blur(6px);
-      display:flex; gap:6px; align-items:center;
-    }
-    .badge.king{ border-color: rgba(255,215,0,.45); }
-    .badge.premium{ border-color: rgba(0,200,255,.45); }
-    .badge.standard{ border-color: rgba(255,255,255,.18); }
-    .badge .cat{ opacity:.85; padding-left:6px; border-left:1px solid rgba(255,255,255,.18); }
+  .legend{
+    margin:18px auto 0;
+    display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+    font-size:13px; opacity:0.9;
+  }
+  .pill{
+    display:flex; align-items:center; gap:8px;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:rgba(255,255,255,0.04);
+  }
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  .dot.king{background:var(--gold)}
+  .dot.premium{background:var(--premium)}
+  .dot.standard{background:var(--standard)}
+  .dot.hot{background:var(--premium)}
 
-    .tag{
-      position:absolute; top:10px; right:10px;
-      font-size:11px; padding:6px 8px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.22);
-      color: rgba(255,255,255,.88);
-      display:flex; gap:6px; align-items:center;
-    }
-    .tag.hot{ border-color: rgba(255,120,0,.55); background: rgba(255,120,0,.14); color: rgba(255,230,200,.95); }
-    .tag.disabled{ border-color: rgba(255,77,109,.5); background: rgba(255,77,109,.12); }
-    .tag.expired{ border-color: rgba(255,176,32,.55); background: rgba(255,176,32,.12); }
+  .heatmap{
+    margin:26px auto 0;
+    max-width:1740px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:var(--panel);
+    box-shadow:0 24px 80px rgba(0,0,0,0.65);
+    overflow:hidden;
+  }
+  .grid{
+    display:grid;
+    gap:10px;
+    padding:16px;
+    grid-template-columns: repeat(22, 1fr);
+    grid-auto-rows: 56px;
+  }
 
-    .seat.is-hot::before{
-      content:"";
-      position:absolute; inset:-40%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,215,0,.35), transparent 55%),
-                  radial-gradient(circle at 70% 60%, rgba(255,80,0,.22), transparent 60%);
-      filter: blur(6px);
-      opacity: .45;
-      animation: hotPulse 1.2s ease-in-out infinite;
-      pointer-events:none;
-    }
-    .seat.is-hot{ border-color: rgba(255,215,0,.35); box-shadow: 0 0 0 1px rgba(255,215,0,.10), 0 18px 45px rgba(0,0,0,.42); }
-    @keyframes hotPulse{
-      0%{ transform: scale(0.96) rotate(0deg); opacity:.35; }
-      50%{ transform: scale(1.03) rotate(6deg); opacity:.60; }
-      100%{ transform: scale(0.96) rotate(0deg); opacity:.35; }
-    }
+  .tile{
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:14px;
+    background:rgba(255,255,255,0.04);
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:flex-end;
+    justify-content:flex-start;
+    padding:12px;
+    transition:transform .18s ease, border-color .18s ease, background .18s ease;
+    user-select:none;
+  }
+  .tile:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,255,255,0.35);
+    background:rgba(255,255,255,0.07);
+  }
 
-    .seat.is-disabled{ filter: grayscale(0.65) brightness(0.8); cursor:not-allowed; }
-    .seat.is-expired{ filter: grayscale(0.35) brightness(0.92); }
+  .tile.king{ border-color:rgba(212,175,55,0.55); }
+  .tile.premium{ border-color:rgba(255,59,59,0.55); }
+  .tile.standard{ border-color:rgba(255,255,255,0.30); }
 
-    .logo{ width: 78%; height: 78%; object-fit: contain; filter: drop-shadow(0 10px 14px rgba(0,0,0,.30)); }
-    .fallback{ padding: 10px; text-align:center; }
-    .fallback .name{ font-weight:900; font-size:14px; letter-spacing:.2px; }
-    .fallback .url{ margin-top:6px; font-size:12px; color: rgba(255,255,255,.65); word-break: break-all; }
+  .tile.hot{ animation:blinkHot 1.2s infinite; }
+  @keyframes blinkHot{
+    0%   { box-shadow:0 0 0 rgba(255,59,59,0); }
+    50%  { box-shadow:0 0 18px rgba(255,59,59,0.85); border-color:rgba(255,59,59,0.9); }
+    100% { box-shadow:0 0 0 rgba(255,59,59,0); }
+  }
 
-    dialog{
-      border:1px solid rgba(255,255,255,.18);
-      border-radius: 18px;
-      padding: 0;
-      background: rgba(15,22,36,.96);
-      color: var(--text);
-      box-shadow: 0 30px 80px rgba(0,0,0,.55);
-      width:min(860px, calc(100vw - 32px));
-    }
-    dialog::backdrop{ background: rgba(0,0,0,.55); backdrop-filter: blur(4px); }
-    .modal{ padding: 16px; }
-    .modal h3{ margin:0 0 6px; font-size:18px; }
-    .hint{ margin:0 0 14px; color: var(--muted); font-size:13px; line-height:1.45; }
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 10px; }
-    .row a{
-      color: var(--text);
-      text-decoration:none;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.06);
-      padding: 10px 12px;
-      border-radius: 12px;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-    .row a:hover{ filter: brightness(1.10); }
+  .badge{
+    position:absolute;
+    top:10px; left:10px;
+    font-size:11px;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.16);
+    background:rgba(0,0,0,0.35);
+    opacity:0.92;
+    display:flex; align-items:center; gap:6px;
+    white-space:nowrap;
+  }
+  .badge .mini-dot{width:8px;height:8px;border-radius:3px;display:inline-block;background:rgba(255,255,255,0.4);}
+  .badge.king{border-color:rgba(212,175,55,0.55)}
+  .badge.king .mini-dot{background:var(--gold)}
+  .badge.premium{border-color:rgba(255,59,59,0.55)}
+  .badge.premium .mini-dot{background:var(--premium)}
+  .badge.standard{border-color:rgba(255,255,255,0.25)}
+  .badge.standard .mini-dot{background:var(--standard)}
+  .badge.hot .mini-dot{background:var(--premium)}
 
-    .split{ display:grid; grid-template-columns: 1.1fr .9fr; gap:12px; margin-top: 10px; }
-    .card{ border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); border-radius: 14px; padding: 12px; }
-    .card h4{ margin:0 0 10px; font-size:14px; }
-    .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
-    .field label{ font-size:12px; color: var(--muted); }
-    .field small{ color: rgba(255,255,255,.55); }
-    pre{ margin:0; white-space:pre-wrap; word-break:break-all; }
+  /* ✅ 로고 배지(오른쪽 상단) */
+  .logo-badge{
+    position:absolute;
+    top:10px; right:10px;
+    width:34px; height:34px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.12);
+    background:rgba(0,0,0,0.35);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .logo-badge img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:6px;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.55));
+  }
 
-    table{ width:100%; border-collapse:collapse; font-size:13px; }
-    th, td{ padding:8px 6px; border-bottom:1px solid rgba(255,255,255,.10); text-align:left; }
-    th{ color: rgba(255,255,255,.78); font-weight:800; }
-    td{ color: rgba(255,255,255,.78); }
+  .name{font-weight:800; letter-spacing:0.2px; line-height:1.1; text-align:left;}
+  .sub{margin-top:6px; font-size:12px; color:rgba(255,255,255,0.7); text-align:left;}
 
-    .tiny{ font-size:12px; color: rgba(255,255,255,.58); }
+  /* 등급별 동일 사이즈 */
+  .kingSize{ grid-column: span 7; grid-row: span 2; }
+  .premSize{ grid-column: span 3; grid-row: span 2; }
+  .stdSize{  grid-column: span 2; grid-row: span 1; }
 
-    @media (max-width: 980px){
-      header{ flex-direction:column; align-items:stretch; }
-      .controls{ justify-content:flex-start; }
-      .split{ grid-template-columns: 1fr; }
-    }
-  </style>
+  @media (max-width:1200px){
+    .grid{ grid-template-columns: repeat(14, 1fr); }
+    .kingSize{ grid-column: span 14; grid-row: span 2; }
+    .premSize{ grid-column: span 7; grid-row: span 2; }
+    .stdSize{  grid-column: span 7; grid-row: span 1; }
+  }
+  @media (max-width:520px){
+    .grid{ grid-template-columns: repeat(6, 1fr); gap:8px; padding:12px; grid-auto-rows:52px; }
+    .kingSize{ grid-column: span 6; grid-row: span 2; }
+    .premSize{ grid-column: span 3; grid-row: span 2; }
+    .stdSize{  grid-column: span 3; grid-row: span 1; }
+  }
+</style>
 </head>
+
 <body>
-<div class="wrap">
-  <header>
-    <div class="brand">
-      <h1>🍗 K-FOOD 광고판 | KINGMAKE</h1>
-      <p>
-        100석(치킨20/버거10/분식20/카페20/한식20/중식10) · KING 3 / PREMIUM 47 / STANDARD 50 · 랜덤 배치<br/>
-        ✅ 관리자 모드 + ✅ 로컬 분석 + ✅ Google Sheet 서버리스 적재(C)
-      </p>
-      <div class="tiny">
-        ※ 로고: <b>/logos</b> 폴더에 PNG 넣고, 관리자에서 로고 경로를 지정하거나 자동(slug).png를 사용하세요.
-      </div>
-    </div>
-
-    <div class="controls">
-      <div class="pill">
-        <label>보기</label>
-        <select id="filter">
-          <option value="all">전체</option>
-          <option value="king">KING</option>
-          <option value="premium">PREMIUM</option>
-          <option value="standard">STANDARD</option>
-          <option value="hot">HOT(유료)</option>
-          <option value="disabled">비활성</option>
-          <option value="expired">만료</option>
-        </select>
-      </div>
-
-      <div class="pill">
-        <label>카테고리</label>
-        <select id="catFilter">
-          <option value="all">전체</option>
-        </select>
-      </div>
-
-      <div class="pill">
-        <label>검색</label>
-        <input id="q" type="text" placeholder="브랜드/URL/ID" />
-      </div>
-
-      <button id="shuffleBtn">🔀 랜덤 재배치</button>
-      <button id="exportBtn" class="btn-ghost">🧾 Export(JSON)</button>
-
-      <button id="adminBtn" class="btn-ghost">🔒 관리자 OFF</button>
-      <button id="resetAllBtn" class="btn-bad">♻ 전체 카운트 리셋</button>
-    </div>
-  </header>
-
-  <div class="stats" id="stats"></div>
-
-  <section class="board">
-    <div class="grid" id="grid"></div>
-  </section>
+<div class="top">
+  <div class="top-inner">
+    <a class="brand" href="index.html" aria-label="KING MAKE Home">
+      <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
+      <b>KING MAKE</b>
+    </a>
+    <div class="page-title">K-FOOD • HEATMAP (KING 3 / Premium 47 / Standard 50)</div>
+  </div>
 </div>
 
-<!-- 상세/관리 모달 -->
-<dialog id="detailDialog">
-  <div class="modal">
-    <h3 id="dTitle">브랜드</h3>
-    <p id="dMeta" class="hint">등급 · 카테고리 · URL · 좌석ID</p>
-
-    <div class="split">
-      <div class="card">
-        <h4>📊 분석(해당 좌석)</h4>
-        <table>
-          <tr><th>노출(View)</th><td id="mViews">0</td></tr>
-          <tr><th>클릭(Click)</th><td id="mClicks">0</td></tr>
-          <tr><th>CTR</th><td id="mCtr">0%</td></tr>
-          <tr><th>상태</th><td id="mState">ACTIVE</td></tr>
-          <tr><th>만료일</th><td id="mExpire">-</td></tr>
-        </table>
-
-        <div class="row">
-          <a id="dGo" href="#" target="_blank" rel="noopener noreferrer">🔗 사이트 열기</a>
-          <button id="dClose" class="btn-ghost">닫기</button>
-          <button id="resetSeatBtn" class="btn-bad">이 좌석 리셋</button>
-        </div>
-
-        <p class="hint" style="margin-top:10px">
-          • 일반 사용자: 클릭 시 사이트 이동(비활성/만료는 이동 차단)<br/>
-          • 관리자: “관리자 설정”에서 상태/만료일/HOT/브랜드/URL/로고 변경<br/>
-          • 시트 적재: view(1일 1회) / click / admin_update / export 이벤트가 기록됩니다.
-        </p>
-      </div>
-
-      <div class="card">
-        <h4>🛠 관리자 설정 <span id="adminBadge" class="bad" style="font-weight:900; margin-left:8px;">OFF</span></h4>
-
-        <div class="field">
-          <label>상태</label>
-          <select id="aStatus">
-            <option value="active">활성(Active)</option>
-            <option value="disabled">비활성(Disabled)</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>유료 HOT</label>
-          <select id="aHot">
-            <option value="no">아님</option>
-            <option value="yes">HOT(유료)</option>
-          </select>
-          <small>HOT는 반짝+태그 표시</small>
-        </div>
-
-        <div class="field">
-          <label>만료일</label>
-          <input id="aExpire" type="date" />
-          <small>오늘보다 이전이면 “만료” 처리되어 클릭 차단</small>
-        </div>
-
-        <div class="field">
-          <label>브랜드명</label>
-          <input id="aName" type="text" placeholder="예) BHC치킨" />
-        </div>
-
-        <div class="field">
-          <label>공식 URL (https://)</label>
-          <input id="aUrl" type="text" placeholder="예) https://www.bhc.co.kr" />
-        </div>
-
-        <div class="field">
-          <label>로고 경로(선택)</label>
-          <input id="aLogo" type="text" placeholder="예) logos/bhc.png" />
-          <small>비워두면 자동 슬러그(브랜드명).png 적용</small>
-        </div>
-
-        <div class="row">
-          <button id="saveAdminBtn">💾 저장</button>
-          <button id="copySeatJsonBtn" class="btn-ghost">📋 좌석 JSON 복사</button>
-        </div>
-
-        <pre id="seatJson" class="card" style="margin-top:10px;"></pre>
-      </div>
-    </div>
+<div class="wrap">
+  <div class="hero">
+    <h1>🍗 K-FOOD Brand Heatmap</h1>
+    <p>
+      좌석 클릭 → 브랜드 공식 페이지로 이동<br>
+      로고는 자동 적용(로컬 로고 우선 → 없으면 도메인 기반 자동 로고 시도)
+    </p>
   </div>
-</dialog>
+
+  <div class="legend">
+    <div class="pill"><span class="dot king"></span> KING 3</div>
+    <div class="pill"><span class="dot premium"></span> Premium 47</div>
+    <div class="pill"><span class="dot standard"></span> Standard 50</div>
+    <div class="pill"><span class="dot hot"></span> HOT (반짝)</div>
+  </div>
+
+  <div class="heatmap">
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
 
 <script>
-/* ============================================================
-   ✅ (C) Google Sheet 서버리스 적재 설정 (여기만 바꾸면 됨)
-   ============================================================ */
-const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/XXXXX/exec"; // TODO: 본인 웹앱 URL
-const API_KEY = "CHANGE_ME_TO_STRONG_KEY"; // TODO: Apps Script CONFIG.API_KEY와 동일
+/* 좌석 수 */
+const SEAT_COUNTS = { king: 3, premium: 47, standard: 50 };
+const HOT_COUNT = 12;
 
-async function sendToSheet(payload) {
-  // URL을 안 넣었으면 조용히 종료 (개발 중 편의)
-  if (!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.includes("XXXXX")) return;
+/* 브랜드 100개 (치킨20/버거10/분식20/카페20/한식20/중식10) */
+const brands100 = [
+  // 치킨 20
+  { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
+  { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
+  { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
+  { cat:"치킨", name:"굽네치킨", url:"https://www.goobne.co.kr/" },
+  { cat:"치킨", name:"네네치킨", url:"https://www.nenechicken.com/" },
+  { cat:"치킨", name:"푸라닭", url:"https://puradakchicken.com/" },
+  { cat:"치킨", name:"노랑통닭", url:"https://www.norangtongdak.co.kr/" },
+  { cat:"치킨", name:"멕시카나", url:"https://www.mexicana.co.kr/" },
+  { cat:"치킨", name:"페리카나", url:"https://www.pelicana.co.kr/" },
+  { cat:"치킨", name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr/main.php" },
+  { cat:"치킨", name:"자담치킨", url:"https://www.ejadam.co.kr/" },
+  { cat:"치킨", name:"치킨플러스", url:"https://chickenplus.co.kr/" },
+  { cat:"치킨", name:"60계치킨", url:"https://www.60chicken.co.kr/" },
+  { cat:"치킨", name:"호식이두마리치킨", url:"https://www.9922.co.kr/" },
+  { cat:"치킨", name:"또래오래", url:"https://www.toreore.com/" },
+  { cat:"치킨", name:"지코바", url:"https://www.zicoba.co.kr/" },
+  { cat:"치킨", name:"부어치킨", url:"https://www.boor.co.kr/" },
+  { cat:"치킨", name:"깐부치킨", url:"https://www.kkanbu.co.kr/" },
+  { cat:"치킨", name:"누구나홀딱반한닭", url:"https://www.whodak.com/" },
+  { cat:"치킨", name:"훌랄라참숯바베큐치킨", url:"https://www.hoolala.co.kr/" },
 
-  try {
-    await fetch(SHEET_WEBAPP_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-KEY": API_KEY
-      },
-      body: JSON.stringify(payload)
-    });
-  } catch (e) {
-    console.warn("sheet log fail", e);
-  }
-}
+  // 버거 10
+  { cat:"버거", name:"맥도날드", url:"https://www.mcdonalds.co.kr/" },
+  { cat:"버거", name:"버거킹", url:"https://www.burgerking.co.kr/" },
+  { cat:"버거", name:"KFC", url:"https://www.kfckorea.com/" },
+  { cat:"버거", name:"써브웨이", url:"https://www.subway.co.kr/" },
+  { cat:"버거", name:"롯데리아(롯데잇츠)", url:"https://www.lotteeatz.com/brand/ria" },
+  { cat:"버거", name:"맘스터치", url:"https://www.momstouch.co.kr/" },
+  { cat:"버거", name:"쉐이크쉑(코리아)", url:"https://www.shakeshack.kr/" },
+  { cat:"버거", name:"노브랜드버거", url:"https://www.nobrandburger.com/" },
+  { cat:"버거", name:"프랭크버거", url:"https://www.frankburger.co.kr/" },
+  { cat:"버거", name:"롯데잇츠", url:"https://www.lotteeatz.com/" },
 
-function oncePerDayKey(seatId){
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,"0");
-  const dd = String(d.getDate()).padStart(2,"0");
-  return `VIEWED_${seatId}_${y}-${m}-${dd}`;
-}
-function logViewOncePerDay(seat){
-  const k = oncePerDayKey(seat.id);
-  if(localStorage.getItem(k)) return;
-  localStorage.setItem(k, "1");
+  // 분식 20
+  { cat:"분식", name:"동대문엽기떡볶이", url:"https://www.yupdduk.com/" },
+  { cat:"분식", name:"신전떡볶이", url:"https://sinjeon.co.kr/" },
+  { cat:"분식", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr/" },
+  { cat:"분식", name:"청년다방", url:"https://www.youngdabang.com/" },
+  { cat:"분식", name:"명랑핫도그", url:"https://myungranghotdog.com/" },
+  { cat:"분식", name:"김가네", url:"https://www.gimgane.co.kr/" },
+  { cat:"분식", name:"김밥천국", url:"https://www.gimbapcheonguk.co.kr/" },
+  { cat:"분식", name:"고봉민김밥", url:"https://www.gbmgimbap.com/" },
+  { cat:"분식", name:"국대떡볶이", url:"https://www.kookdae.co.kr/" },
+  { cat:"분식", name:"바르다김선생", url:"https://www.bareun.co.kr/" },
+  { cat:"분식", name:"봉구스밥버거", url:"https://www.bongousse.co.kr/" },
+  { cat:"분식", name:"한솥도시락", url:"https://www.hsd.co.kr/" },
+  { cat:"분식", name:"삼첩분식", url:"https://samcheop.com/" },
+  { cat:"분식", name:"두끼떡볶이", url:"https://www.dookki.co.kr/" },
+  { cat:"분식", name:"뚜레쥬르", url:"https://www.tlj.co.kr/" },
+  { cat:"분식", name:"파리바게뜨", url:"https://www.paris.co.kr/" },
+  { cat:"분식", name:"크리스피크림", url:"https://www.krispykreme.co.kr/" },
+  { cat:"분식", name:"던킨", url:"https://www.dunkindonuts.co.kr/" },
+  { cat:"분식", name:"배스킨라빈스", url:"https://www.baskinrobbins.co.kr/" },
+  { cat:"분식", name:"요거프레소", url:"https://www.yogerpresso.co.kr/" },
 
-  sendToSheet({
-    type: "event",
-    eventType: "view",
-    seatId: seat.id,
-    grade: seat.type,
-    category: seat.category,
-    brand: seat.name,
-    url: seat.url,
-    ua: navigator.userAgent,
-    ref: document.referrer,
-    meta: { hotPaid: !!seat.hotPaid, status: seat.status || "active", expireDate: seat.expireDate || "" }
-  });
-}
-function logClick(seat){
-  sendToSheet({
-    type: "event",
-    eventType: "click",
-    seatId: seat.id,
-    grade: seat.type,
-    category: seat.category,
-    brand: seat.name,
-    url: seat.url,
-    ua: navigator.userAgent,
-    ref: document.referrer,
-    meta: { hotPaid: !!seat.hotPaid, status: seat.status || "active", expireDate: seat.expireDate || "" }
-  });
-}
-function logAdminUpdate(seat){
-  sendToSheet({
-    type: "event",
-    eventType: "admin_update",
-    seatId: seat.id,
-    grade: seat.type,
-    category: seat.category,
-    brand: seat.name,
-    url: seat.url,
-    ua: navigator.userAgent,
-    ref: document.referrer,
-    meta: { hotPaid: !!seat.hotPaid, status: seat.status || "active", expireDate: seat.expireDate || "", logo: seat.logo || "" }
-  });
-}
-function logExport(){
-  sendToSheet({
-    type: "event",
-    eventType: "export",
-    seatId: "",
-    grade: "",
-    category: "",
-    brand: "",
-    url: location.href,
-    ua: navigator.userAgent,
-    ref: document.referrer,
-    meta: { page: "k-food.html" }
-  });
-}
+  // 카페 20
+  { cat:"카페", name:"스타벅스 코리아", url:"https://www.starbucks.co.kr/" },
+  { cat:"카페", name:"이디야커피", url:"https://www.ediya.com/" },
+  { cat:"카페", name:"메가MGC커피", url:"https://www.mega-mgccoffee.com/" },
+  { cat:"카페", name:"컴포즈커피", url:"https://composecoffee.com/" },
+  { cat:"카페", name:"빽다방", url:"https://www.paikdabang.com/" },
+  { cat:"카페", name:"투썸플레이스", url:"https://www.twosome.co.kr/" },
+  { cat:"카페", name:"할리스", url:"https://www.hollys.co.kr/" },
+  { cat:"카페", name:"탐앤탐스", url:"https://www.tomntoms.com/" },
+  { cat:"카페", name:"카페베네", url:"https://www.caffebene.co.kr/" },
+  { cat:"카페", name:"공차코리아", url:"https://www.gong-cha.co.kr/" },
+  { cat:"카페", name:"더벤티", url:"https://www.theventi.co.kr/" },
+  { cat:"카페", name:"폴 바셋", url:"https://www.baristapaulbassett.co.kr/" },
+  { cat:"카페", name:"커피빈 코리아", url:"https://www.coffeebeankorea.com/" },
+  { cat:"카페", name:"달.콤커피", url:"https://www.dalkomm.com/" },
+  { cat:"카페", name:"블루보틀(코리아)", url:"https://bluebottlecoffee.com/kr/" },
+  { cat:"카페", name:"엔제리너스(롯데잇츠)", url:"https://www.lotteeatz.com/brand/angel" },
+  { cat:"카페", name:"드롭탑", url:"https://www.droptop.co.kr/" },
+  { cat:"카페", name:"파스쿠찌", url:"https://www.caffe-pascucci.co.kr/" },
+  { cat:"카페", name:"아티제", url:"https://www.cafeartisee.com/" },
+  { cat:"카페", name:"할리스몰", url:"https://www.hollysmall.com/" },
 
-/* =========================
-   설정 / 데이터
-========================= */
-const SETTINGS = {
-  totalSeats: 100,
-  gradeCounts: { king: 3, premium: 47, standard: 50 },
-  categoryCounts: { "치킨":20, "버거":10, "분식":20, "카페":20, "한식":20, "중식":10 },
-  hotPaidCount: 12,
-  logosFolder: "logos",
-  defaultLogo: "logos/default.png",
-  httpsOnly: true,
+  // 한식 20
+  { cat:"한식", name:"본죽", url:"https://www.bonif.co.kr/" },
+  { cat:"한식", name:"원할머니보쌈", url:"https://www.bossam.co.kr/" },
+  { cat:"한식", name:"명륜진사갈비", url:"https://www.mrg.kr/" },
+  { cat:"한식", name:"놀부", url:"https://www.nolboo.co.kr/" },
+  { cat:"한식", name:"채선당", url:"https://www.chae-seon-dang.com/" },
+  { cat:"한식", name:"더본코리아", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"새마을식당", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"한신포차", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"역전우동0410", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"인생설렁탕", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"연돈볼카츠", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"이차돌", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"미정국수0410", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"리춘시장", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"본도시락", url:"https://www.bondosirak.com/" },
+  { cat:"한식", name:"본죽&비빔밥", url:"https://www.bonif.co.kr/" },
+  { cat:"한식", name:"한솥(한식도시락)", url:"https://www.hsd.co.kr/" },
+  { cat:"한식", name:"고봉삼계탕", url:"https://www.gobong.co.kr/" },
+  { cat:"한식", name:"본전주비빔밥", url:"https://www.bonif.co.kr/" },
+  { cat:"한식", name:"청기와타운", url:"https://www.cheonggiwa.co.kr/" },
 
-  // 관리자 비밀번호 (원하면 변경)
-  adminPassword: "kingmake2026",
+  // 중식 10
+  { cat:"중식", name:"홍콩반점0410", url:"https://www.theborn.co.kr/" },
+  { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
+  { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" },
+  { cat:"중식", name:"짬뽕지존", url:"https://www.zzambbongjijon.com/" },
+  { cat:"중식", name:"만강홍", url:"https://www.mankanghong.co.kr/" },
+  { cat:"중식", name:"홍짜장", url:"https://www.hongjajang.com/" },
+  { cat:"중식", name:"더본(중식)", url:"https://www.theborn.co.kr/" },
+  { cat:"중식", name:"리춘시장(중화)", url:"https://www.theborn.co.kr/" },
+  { cat:"중식", name:"교동짬뽕", url:"https://www.gyodongjjambbong.com/" },
+  { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
+];
 
-  // localStorage keys
-  keySeats: "KFOOD_SEATS_V1",
-  keyMetrics: "KFOOD_METRICS_V1",
-  keyAdmin: "KFOOD_ADMIN_ON_V1"
-};
-
-const BRANDS_BY_CATEGORY = {
-  "치킨":[
-    { name:"BHC치킨", url:"https://www.bhc.co.kr" },
-    { name:"BBQ", url:"https://www.bbq.co.kr" },
-    { name:"교촌치킨", url:"https://www.kyochon.com" },
-    { name:"굽네치킨", url:"https://www.goobne.co.kr" },
-    { name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr" }
-  ],
-  "버거":[
-    { name:"맥도날드", url:"https://www.mcdonalds.co.kr" },
-    { name:"롯데리아", url:"https://www.lotteria.com" },
-    { name:"버거킹", url:"https://www.burgerking.co.kr" },
-    { name:"맘스터치", url:"https://www.momstouch.co.kr" },
-    { name:"KFC", url:"https://www.kfc.co.kr" }
-  ],
-  "분식":[
-    { name:"신전떡볶이", url:"https://sinjeon.co.kr" },
-    { name:"엽기떡볶이", url:"https://www.yupdduk.com" },
-    { name:"김밥천국", url:"https://www.gimbab1009.com" },
-    { name:"죠스떡볶이", url:"https://www.jawsfood.co.kr" }
-  ],
-  "카페":[
-    { name:"스타벅스", url:"https://www.starbucks.co.kr" },
-    { name:"이디야", url:"https://www.ediya.com" },
-    { name:"메가커피", url:"https://www.mega-mgccoffee.com" },
-    { name:"투썸플레이스", url:"https://www.twosome.co.kr" },
-    { name:"빽다방", url:"https://www.theborn.co.kr" }
-  ],
-  "한식":[
-    { name:"본죽", url:"https://www.bonif.co.kr" },
-    { name:"한솥도시락", url:"https://www.hsd.co.kr" },
-    { name:"원할머니보쌈", url:"https://www.wonandone.co.kr" }
-  ],
-  "중식":[
-    { name:"홍콩반점", url:"https://www.theborn.co.kr" },
-    { name:"역전우동", url:"https://www.theborn.co.kr" }
-  ],
-};
-
-/* =========================
-   DOM
-========================= */
-const grid = document.getElementById("grid");
-const stats = document.getElementById("stats");
-const filterEl = document.getElementById("filter");
-const catFilterEl = document.getElementById("catFilter");
-const qEl = document.getElementById("q");
-const shuffleBtn = document.getElementById("shuffleBtn");
-const exportBtn = document.getElementById("exportBtn");
-const adminBtn = document.getElementById("adminBtn");
-const resetAllBtn = document.getElementById("resetAllBtn");
-
-const dialog = document.getElementById("detailDialog");
-const dTitle = document.getElementById("dTitle");
-const dMeta = document.getElementById("dMeta");
-const dGo = document.getElementById("dGo");
-const dClose = document.getElementById("dClose");
-const resetSeatBtn = document.getElementById("resetSeatBtn");
-
-const mViews = document.getElementById("mViews");
-const mClicks = document.getElementById("mClicks");
-const mCtr = document.getElementById("mCtr");
-const mState = document.getElementById("mState");
-const mExpire = document.getElementById("mExpire");
-
-const adminBadge = document.getElementById("adminBadge");
-const aStatus = document.getElementById("aStatus");
-const aHot = document.getElementById("aHot");
-const aExpire = document.getElementById("aExpire");
-const aName = document.getElementById("aName");
-const aUrl = document.getElementById("aUrl");
-const aLogo = document.getElementById("aLogo");
-const saveAdminBtn = document.getElementById("saveAdminBtn");
-const copySeatJsonBtn = document.getElementById("copySeatJsonBtn");
-const seatJson = document.getElementById("seatJson");
-
-/* =========================
-   유틸
-========================= */
+/* ---- 유틸 ---- */
 function shuffle(arr){
-  for(let i = arr.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
+  return arr.map(v => ({ v, r: Math.random() }))
+            .sort((a,b) => a.r - b.r)
+            .map(o => o.v);
+}
+function pickHotIndexes(items, hotCount){
+  const candidates = [];
+  items.forEach((b, i) => {
+    if (b.tier === "premium" || b.tier === "king") candidates.push(i);
+  });
+  const shuffled = shuffle(candidates);
+  return new Set(shuffled.slice(0, Math.min(hotCount, shuffled.length)));
+}
+function go(url){
+  if(!url) return;
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+function labelFor(tier){
+  if(tier === "king") return "👑 KING";
+  if(tier === "premium") return "⭐ Premium";
+  return "⬜ Standard";
+}
+function sizeClassFor(tier){
+  if(tier === "king") return "kingSize";
+  if(tier === "premium") return "premSize";
+  return "stdSize";
 }
 function escapeHtml(str){
   return String(str)
@@ -549,569 +369,96 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-function isValidHttpsUrl(u){
+
+/* ✅ 로고 자동 적용
+   1) 로컬 로고: /logos/<domain>.png
+   2) 없으면 자동 로고(도메인): https://logo.clearbit.com/<domain>
+*/
+function domainFromUrl(url){
   try{
-    const url = new URL(u);
-    if(SETTINGS.httpsOnly) return url.protocol === "https:" && !!url.hostname;
-    return (url.protocol === "https:" || url.protocol === "http:") && !!url.hostname;
-  }catch(e){ return false; }
-}
-function slugify(name){
-  return name.trim().toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[\/\\?%*:|"<>]/g, "")
-    .replace(/[^0-9a-z가-힣\-_.]/g, "");
-}
-function autoLogoPath(name, logoOverride){
-  if(logoOverride && logoOverride.trim()) return logoOverride.trim();
-  const slug = slugify(name);
-  return `${SETTINGS.logosFolder}/${slug}.png`;
-}
-function todayYmd(){
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,"0");
-  const dd = String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${dd}`;
-}
-function isExpired(expireDateYmd){
-  if(!expireDateYmd) return false;
-  return expireDateYmd < todayYmd();
-}
-function pct(n){ return (Math.round(n*1000)/10).toFixed(1) + "%"; }
-
-/* =========================
-   Metrics (로컬 저장)
-========================= */
-function loadMetrics(){
-  try{
-    const raw = localStorage.getItem(SETTINGS.keyMetrics);
-    return raw ? JSON.parse(raw) : {};
-  }catch(e){ return {}; }
-}
-function saveMetrics(metrics){
-  localStorage.setItem(SETTINGS.keyMetrics, JSON.stringify(metrics));
-}
-let metrics = loadMetrics();
-
-function incViewLocal(seatId){
-  metrics[seatId] = metrics[seatId] || { views:0, clicks:0 };
-  metrics[seatId].views += 1;
-  saveMetrics(metrics);
-}
-function incClickLocal(seatId){
-  metrics[seatId] = metrics[seatId] || { views:0, clicks:0 };
-  metrics[seatId].clicks += 1;
-  saveMetrics(metrics);
-}
-function resetSeatMetrics(seatId){
-  metrics[seatId] = { views:0, clicks:0 };
-  saveMetrics(metrics);
-}
-function resetAllMetrics(){
-  metrics = {};
-  saveMetrics(metrics);
-}
-
-/* =========================
-   Seats 저장(관리자 설정 포함)
-========================= */
-function buildDefaultSeats(){
-  const seats = [];
-  let idx = 0;
-
-  for(const [cat, count] of Object.entries(SETTINGS.categoryCounts)){
-    const pool = (BRANDS_BY_CATEGORY[cat] && BRANDS_BY_CATEGORY[cat].length)
-      ? BRANDS_BY_CATEGORY[cat]
-      : [{ name:`${cat} 광고주`, url:"https://example.com" }];
-
-    for(let i=0;i<count;i++){
-      const b = pool[i % pool.length];
-      const id = `S-${String(++idx).padStart(3,"0")}`;
-      seats.push({
-        id,
-        category: cat,
-        type: "standard",
-        name: b.name,
-        url: b.url,
-        logo: autoLogoPath(b.name, ""),
-        status: "active",      // active|disabled
-        hotPaid: false,        // HOT 유료
-        expireDate: "",        // YYYY-MM-DD
-      });
-    }
-  }
-
-  // 총 100 보정
-  if(seats.length !== SETTINGS.totalSeats){
-    if(seats.length < SETTINGS.totalSeats){
-      const missing = SETTINGS.totalSeats - seats.length;
-      for(let i=0;i<missing;i++){
-        const id = `S-${String(++idx).padStart(3,"0")}`;
-        seats.push({
-          id, category:"기타", type:"standard",
-          name:"광고주 모집중", url:"https://example.com",
-          logo: SETTINGS.defaultLogo, status:"active", hotPaid:false, expireDate:""
-        });
-      }
-    }else{
-      seats.length = SETTINGS.totalSeats;
-    }
-  }
-
-  // 등급 배분
-  const order = shuffle(seats.slice());
-  const { king, premium, standard } = SETTINGS.gradeCounts;
-  let p=0;
-  order.slice(p,p+king).forEach(s=>s.type="king"); p+=king;
-  order.slice(p,p+premium).forEach(s=>s.type="premium"); p+=premium;
-  order.slice(p,p+standard).forEach(s=>s.type="standard"); p+=standard;
-
-  // HOT 기본 할당(상위 등급부터)
-  const hotTargets = order
-    .filter(s=>s.type==="king")
-    .concat(order.filter(s=>s.type==="premium"))
-    .concat(order.filter(s=>s.type==="standard"))
-    .slice(0, SETTINGS.hotPaidCount);
-  hotTargets.forEach(s=>s.hotPaid=true);
-
-  return shuffle(order);
-}
-
-function loadSeats(){
-  try{
-    const raw = localStorage.getItem(SETTINGS.keySeats);
-    if(!raw) return null;
-    const parsed = JSON.parse(raw);
-    if(!Array.isArray(parsed) || parsed.length < 1) return null;
-    return parsed;
-  }catch(e){ return null; }
-}
-function saveSeats(seats){
-  localStorage.setItem(SETTINGS.keySeats, JSON.stringify(seats));
-}
-
-let allSeats = loadSeats() || buildDefaultSeats();
-saveSeats(allSeats);
-
-/* =========================
-   Admin state
-========================= */
-function loadAdminOn(){
-  return localStorage.getItem(SETTINGS.keyAdmin) === "1";
-}
-function saveAdminOn(on){
-  localStorage.setItem(SETTINGS.keyAdmin, on ? "1" : "0");
-}
-let adminOn = loadAdminOn();
-
-/* =========================
-   필터 초기화
-========================= */
-function initCategoryFilter(){
-  const cats = Object.keys(SETTINGS.categoryCounts);
-  cats.forEach(c=>{
-    const opt=document.createElement("option");
-    opt.value=c; opt.textContent=c;
-    catFilterEl.appendChild(opt);
-  });
-}
-
-/* =========================
-   파생 상태(만료 계산)
-========================= */
-function seatDerivedState(seat){
-  const expired = isExpired(seat.expireDate);
-  const disabled = seat.status === "disabled";
-  return { expired, disabled };
-}
-
-/* =========================
-   렌더(통계)
-========================= */
-function sumMetrics(){
-  let views=0, clicks=0;
-  for(const k of Object.keys(metrics)){
-    views += (metrics[k]?.views || 0);
-    clicks += (metrics[k]?.clicks || 0);
-  }
-  const ctr = views ? (clicks / views) : 0;
-  return { views, clicks, ctr };
-}
-function renderStats(){
-  const total = allSeats.length;
-  const hot = allSeats.filter(s=>s.hotPaid).length;
-  const disabled = allSeats.filter(s=>s.status==="disabled").length;
-  const expired = allSeats.filter(s=>isExpired(s.expireDate)).length;
-
-  const k = allSeats.filter(s=>s.type==="king").length;
-  const p = allSeats.filter(s=>s.type==="premium").length;
-  const st = allSeats.filter(s=>s.type==="standard").length;
-
-  const sm = sumMetrics();
-
-  stats.innerHTML = `
-    <div class="stat">총 좌석: <b>${total}</b></div>
-    <div class="stat">KING: <b>${k}</b> · PREMIUM: <b>${p}</b> · STANDARD: <b>${st}</b></div>
-    <div class="stat">HOT(유료): <b>${hot}</b></div>
-    <div class="stat">비활성: <b class="${disabled? "warn":"ok"}">${disabled}</b> · 만료: <b class="${expired? "warn":"ok"}">${expired}</b></div>
-    <div class="stat">로컬 노출: <b>${sm.views}</b> · 로컬 클릭: <b>${sm.clicks}</b> · CTR: <b>${pct(sm.ctr)}</b></div>
-  `;
-}
-
-/* =========================
-   필터 매칭
-========================= */
-function seatMatches(seat){
-  const f = filterEl.value;
-  const cf = catFilterEl.value;
-  const q = (qEl.value||"").trim().toLowerCase();
-  const ds = seatDerivedState(seat);
-
-  const okFilter =
-    (f==="all") ||
-    (f==="hot" && seat.hotPaid) ||
-    (f==="disabled" && ds.disabled) ||
-    (f==="expired" && ds.expired) ||
-    (f===seat.type);
-
-  const okCat = (cf==="all") || (seat.category===cf);
-
-  const okQuery = (!q) ||
-    seat.name.toLowerCase().includes(q) ||
-    seat.url.toLowerCase().includes(q) ||
-    seat.id.toLowerCase().includes(q);
-
-  return okFilter && okCat && okQuery;
-}
-
-/* =========================
-   상세 모달
-========================= */
-let currentSeat = null;
-
-function seatToJson(seat){
-  const m = metrics[seat.id] || { views:0, clicks:0 };
-  const ctr = m.views ? (m.clicks / m.views) : 0;
-  return {
-    ...seat,
-    derived: seatDerivedState(seat),
-    metrics: { ...m, ctr }
-  };
-}
-
-function refreshModal(){
-  if(!currentSeat) return;
-  const m = metrics[currentSeat.id] || { views:0, clicks:0 };
-  const ctr = m.views ? (m.clicks / m.views) : 0;
-
-  const ds = seatDerivedState(currentSeat);
-  const stateText = ds.disabled ? "DISABLED" : (ds.expired ? "EXPIRED" : "ACTIVE");
-
-  mViews.textContent = m.views || 0;
-  mClicks.textContent = m.clicks || 0;
-  mCtr.textContent = pct(ctr);
-  mState.textContent = stateText;
-  mExpire.textContent = currentSeat.expireDate || "-";
-
-  adminBadge.textContent = adminOn ? "ON" : "OFF";
-  adminBadge.className = adminOn ? "ok" : "bad";
-
-  aStatus.value = currentSeat.status || "active";
-  aHot.value = currentSeat.hotPaid ? "yes" : "no";
-  aExpire.value = currentSeat.expireDate || "";
-  aName.value = currentSeat.name || "";
-  aUrl.value = currentSeat.url || "";
-  aLogo.value = (currentSeat.logo || "").trim();
-
-  seatJson.textContent = JSON.stringify(seatToJson(currentSeat), null, 2);
-
-  const urlOk = isValidHttpsUrl(currentSeat.url);
-  const blocked = ds.disabled || ds.expired || !urlOk;
-  if(blocked){
-    dGo.href = "#";
-    dGo.style.pointerEvents = "none";
-    dGo.style.opacity = ".5";
-  }else{
-    dGo.href = currentSeat.url;
-    dGo.style.pointerEvents = "auto";
-    dGo.style.opacity = "1";
-  }
-}
-
-function openSeatModal(seat){
-  currentSeat = seat;
-  dTitle.textContent = seat.name;
-  dMeta.textContent = `${seat.type.toUpperCase()} · ${seat.category} · ${seat.url} · ${seat.id}`;
-  refreshModal();
-  dialog.showModal();
-}
-
-/* =========================
-   그리드 렌더
-   - 로컬 노출 증가 + 시트 view(1일 1회)
-========================= */
-function render(){
-  grid.innerHTML = "";
-  const visible = allSeats.filter(seatMatches);
-
-  // 노출(로컬 + 시트 1일 1회)
-  visible.forEach(seat => {
-    incViewLocal(seat.id);
-    logViewOncePerDay(seat);
-  });
-
-  for(const seat of visible){
-    const ds = seatDerivedState(seat);
-
-    const el = document.createElement("div");
-    const hotClass = seat.hotPaid ? " is-hot" : "";
-    const disClass = ds.disabled ? " is-disabled" : "";
-    const expClass = ds.expired ? " is-expired" : "";
-    el.className = `seat ${seat.type}${hotClass}${disClass}${expClass}`;
-
-    const badge = document.createElement("div");
-    badge.className = `badge ${seat.type}`;
-    badge.innerHTML = `${seat.type.toUpperCase()} <span class="cat">${escapeHtml(seat.category)}</span>`;
-    el.appendChild(badge);
-
-    if(ds.disabled){
-      const tag = document.createElement("div");
-      tag.className = "tag disabled";
-      tag.textContent = "비활성";
-      el.appendChild(tag);
-    }else if(ds.expired){
-      const tag = document.createElement("div");
-      tag.className = "tag expired";
-      tag.textContent = "만료";
-      el.appendChild(tag);
-    }else if(seat.hotPaid){
-      const tag = document.createElement("div");
-      tag.className = "tag hot";
-      tag.textContent = "HOT · 유료";
-      el.appendChild(tag);
-    }
-
-    const img = document.createElement("img");
-    img.className = "logo";
-    img.alt = seat.name;
-    img.loading = "lazy";
-    img.src = (seat.logo && seat.logo.trim()) ? seat.logo.trim() : autoLogoPath(seat.name, "");
-
-    let triedDefault = false;
-    img.onerror = () => {
-      if(!triedDefault && SETTINGS.defaultLogo && img.src.indexOf(SETTINGS.defaultLogo) === -1){
-        triedDefault = true;
-        img.src = SETTINGS.defaultLogo;
-        return;
-      }
-      img.remove();
-      const fb = document.createElement("div");
-      fb.className = "fallback";
-      fb.innerHTML = `<div class="name">${escapeHtml(seat.name)}</div><div class="url">${escapeHtml(seat.url)}</div>`;
-      el.appendChild(fb);
-    };
-    el.appendChild(img);
-
-    el.addEventListener("click", () => {
-      if(adminOn){
-        openSeatModal(seat);
-        return;
-      }
-
-      const urlOk = isValidHttpsUrl(seat.url);
-      const blocked = ds.disabled || ds.expired || !urlOk;
-
-      if(blocked){
-        openSeatModal(seat);
-        return;
-      }
-
-      // 클릭(로컬 + 시트)
-      incClickLocal(seat.id);
-      logClick(seat);
-
-      window.open(seat.url, "_blank", "noopener,noreferrer");
-    });
-
-    el.addEventListener("contextmenu", (e)=>{ e.preventDefault(); openSeatModal(seat); });
-
-    grid.appendChild(el);
-  }
-
-  if(visible.length === 0){
-    const empty = document.createElement("div");
-    empty.style.padding = "18px 6px";
-    empty.style.color = "rgba(255,255,255,.65)";
-    empty.textContent = "조건에 맞는 좌석이 없습니다.";
-    grid.appendChild(empty);
-  }
-
-  renderStats();
-}
-
-/* =========================
-   관리자 토글
-========================= */
-function syncAdminUi(){
-  adminBtn.textContent = adminOn ? "🔓 관리자 ON" : "🔒 관리자 OFF";
-}
-adminBtn.addEventListener("click", () => {
-  if(adminOn){
-    adminOn = false;
-    saveAdminOn(false);
-    syncAdminUi();
-    render();
-    return;
-  }
-  const pw = prompt("관리자 비밀번호를 입력하세요:");
-  if(pw === null) return;
-  if(pw === SETTINGS.adminPassword){
-    adminOn = true;
-    saveAdminOn(true);
-    syncAdminUi();
-    render();
-  }else{
-    alert("비밀번호가 틀렸습니다.");
-  }
-});
-
-/* =========================
-   관리자 저장(좌석 상태 변경) + 시트 기록
-========================= */
-saveAdminBtn.addEventListener("click", () => {
-  if(!adminOn){
-    alert("관리자 모드를 켜주세요.");
-    return;
-  }
-  if(!currentSeat) return;
-
-  const newName = (aName.value||"").trim();
-  const newUrl = (aUrl.value||"").trim();
-
-  if(!newName){
-    alert("브랜드명을 입력하세요.");
-    return;
-  }
-  if(!isValidHttpsUrl(newUrl)){
-    alert("공식 URL을 https:// 로 정확히 입력하세요.");
-    return;
-  }
-
-  currentSeat.status = aStatus.value;
-  currentSeat.hotPaid = (aHot.value === "yes");
-  currentSeat.expireDate = (aExpire.value || "").trim();
-  currentSeat.name = newName;
-  currentSeat.url = newUrl;
-  currentSeat.logo = autoLogoPath(newName, (aLogo.value||"").trim());
-
-  allSeats = allSeats.map(s => s.id === currentSeat.id ? currentSeat : s);
-  saveSeats(allSeats);
-
-  // ✅ 시트에 관리자 업데이트 이벤트 기록
-  logAdminUpdate(currentSeat);
-
-  refreshModal();
-  render();
-  alert("저장 완료!");
-});
-
-copySeatJsonBtn.addEventListener("click", async () => {
-  if(!currentSeat) return;
-  const txt = seatJson.textContent.trim();
-  try{
-    await navigator.clipboard.writeText(txt);
-    alert("복사 완료!");
+    const u = new URL(url);
+    let host = u.hostname.toLowerCase();
+    host = host.replace(/^www\./, "");
+    return host;
   }catch(e){
-    alert("복사 실패: 브라우저 권한을 확인해주세요.");
+    return "";
   }
-});
+}
+function localLogo(domain){
+  return `logos/${domain}.png`;
+}
+function autoLogo(domain){
+  return `https://logo.clearbit.com/${domain}`;
+}
 
-/* =========================
-   좌석/전체 카운트 리셋
-========================= */
-resetSeatBtn.addEventListener("click", () => {
-  if(!currentSeat) return;
-  if(!confirm(`${currentSeat.id} 좌석 카운트를 0으로 리셋할까요?`)) return;
-  resetSeatMetrics(currentSeat.id);
-  refreshModal();
-  renderStats();
-  alert("리셋 완료!");
-});
+/* ---- 좌석 등급 100개 만들고 브랜드 100개 매칭 ---- */
+let tiers = [];
+for(let i=0;i<SEAT_COUNTS.king;i++) tiers.push("king");
+for(let i=0;i<SEAT_COUNTS.premium;i++) tiers.push("premium");
+for(let i=0;i<SEAT_COUNTS.standard;i++) tiers.push("standard");
 
-resetAllBtn.addEventListener("click", () => {
-  if(!confirm("전체 좌석의 조회/클릭 카운트를 모두 0으로 리셋할까요?")) return;
-  resetAllMetrics();
-  renderStats();
-  alert("전체 리셋 완료!");
-});
+const tierShuffled = shuffle(tiers);
+const brandShuffled = shuffle(brands100);
 
-/* =========================
-   Export JSON (좌석+메트릭) + 시트 기록
-========================= */
-exportBtn.addEventListener("click", async () => {
-  const exportData = {
-    kind: "KFOOD_EXPORT_V1",
-    created_at: new Date().toISOString(),
-    seats: allSeats,
-    metrics
+const seats = tierShuffled.map((tier, idx) => {
+  const b = brandShuffled[idx];
+  const domain = domainFromUrl(b.url);
+  return {
+    tier,
+    cat: b.cat,
+    name: b.name,
+    url: b.url,
+    domain
   };
-  const txt = JSON.stringify(exportData, null, 2);
-
-  // 다운로드
-  const blob = new Blob([txt], { type:"application/json;charset=utf-8" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "k-food_export.json";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(a.href);
-
-  // 복사
-  try{
-    await navigator.clipboard.writeText(txt);
-  }catch(e){ /* ignore */ }
-
-  // ✅ 시트 기록
-  logExport();
-
-  alert("Export 완료! (다운로드 + 가능하면 클립보드 복사 + 시트 기록)");
 });
 
-/* =========================
-   랜덤 재배치(순서만 셔플: ID 유지)
-========================= */
-shuffleBtn.addEventListener("click", () => {
-  allSeats = shuffle(allSeats.slice());
-  saveSeats(allSeats);
-  render();
+const hotSet = pickHotIndexes(seats, HOT_COUNT);
+
+/* ---- 렌더 ---- */
+const grid = document.getElementById("grid");
+
+seats.forEach((b, i) => {
+  const label = labelFor(b.tier);
+  const sizeCls = sizeClassFor(b.tier);
+  const isHot = hotSet.has(i);
+
+  const tile = document.createElement("div");
+  tile.className = `tile ${b.tier} ${sizeCls}` + (isHot ? " hot" : "");
+  tile.setAttribute("role", "button");
+  tile.setAttribute("tabindex", "0");
+
+  // 로고 src는 "로컬 먼저"
+  const logoLocal = b.domain ? localLogo(b.domain) : "";
+  const logoAuto  = b.domain ? autoLogo(b.domain)  : "";
+
+  tile.innerHTML = `
+    <div class="badge ${b.tier} ${isHot ? "hot" : ""}">
+      <span class="mini-dot"></span>
+      ${label}${isHot ? " • HOT" : ""}
+    </div>
+
+    <div class="logo-badge" title="${escapeHtml(b.domain || '')}">
+      <img
+        src="${escapeHtml(logoLocal)}"
+        alt="${escapeHtml(b.name)} 로고"
+        onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';"
+      />
+    </div>
+
+    <div>
+      <div class="name">${escapeHtml(b.name)}</div>
+      <div class="sub">${escapeHtml(b.cat)} · 클릭하여 이동</div>
+    </div>
+  `;
+
+  tile.addEventListener("click", () => go(b.url));
+  tile.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" || e.key === " ") go(b.url);
+  });
+
+  grid.appendChild(tile);
 });
-
-/* =========================
-   모달 닫기
-========================= */
-dClose.addEventListener("click", () => dialog.close());
-dialog.addEventListener("click", (e) => {
-  const rect = dialog.getBoundingClientRect();
-  const inDialog = rect.top <= e.clientY && e.clientY <= rect.bottom &&
-                   rect.left <= e.clientX && e.clientX <= rect.right;
-  if(!inDialog) dialog.close();
-});
-
-/* =========================
-   필터 이벤트
-========================= */
-filterEl.addEventListener("change", render);
-catFilterEl.addEventListener("change", render);
-qEl.addEventListener("input", render);
-
-/* =========================
-   초기 구동
-========================= */
-initCategoryFilter();
-syncAdminUi();
-render();
 </script>
+
 </body>
 </html>
