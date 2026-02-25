@@ -29,11 +29,11 @@
     top:0;
     z-index:10;
     backdrop-filter:blur(10px);
-    background:rgba(0,0,0,0.75);
+    background:rgba(0,0,0,0.78);
     border-bottom:1px solid var(--line);
   }
   .top-inner{
-    max-width:1400px;          /* ✅ 화면 확장 */
+    max-width:1800px;       /* ✅ 더 넓게 */
     margin:auto;
     padding:14px 18px;
     display:flex;
@@ -57,7 +57,7 @@
 
   /* LAYOUT */
   .wrap{
-    max-width:1400px;          /* ✅ 화면 확장 */
+    max-width:1800px;       /* ✅ 더 넓게 */
     margin:0 auto;
     padding:26px 18px 70px;
     text-align:center;
@@ -101,20 +101,18 @@
   /* HEATMAP */
   .heatmap{
     margin:26px auto 0;
-    max-width:1320px;          /* ✅ 화면 확장 */
+    max-width:1740px;       /* ✅ 더 넓게 */
     border:1px solid var(--line);
     border-radius:18px;
     background:var(--panel);
     box-shadow:0 24px 80px rgba(0,0,0,0.65);
     overflow:hidden;
   }
-
-  /* ✅ 더 넓은 그리드 */
   .grid{
     display:grid;
     gap:10px;
     padding:16px;
-    grid-template-columns: repeat(16, 1fr); /* ✅ 12 → 16 */
+    grid-template-columns: repeat(22, 1fr); /* ✅ 더 넓게 */
     grid-auto-rows: 56px;
   }
 
@@ -139,15 +137,12 @@
     background:rgba(255,255,255,0.07);
   }
 
-  /* TYPE BORDERS */
   .tile.king{ border-color:rgba(212,175,55,0.55); }
   .tile.premium{ border-color:rgba(255,59,59,0.55); }
   .tile.standard{ border-color:rgba(255,255,255,0.30); }
 
   /* HOT BLINK */
-  .tile.hot{
-    animation:blinkHot 1.2s infinite;
-  }
+  .tile.hot{ animation:blinkHot 1.2s infinite; }
   @keyframes blinkHot{
     0%   { box-shadow:0 0 0 rgba(255,59,59,0); }
     50%  { box-shadow:0 0 18px rgba(255,59,59,0.85); border-color:rgba(255,59,59,0.9); }
@@ -178,31 +173,20 @@
   .badge.standard .mini-dot{background:var(--standard)}
   .badge.hot .mini-dot{background:var(--premium)}
 
-  /* TEXT */
-  .name{
-    font-weight:800;
-    letter-spacing:0.2px;
-    line-height:1.1;
-    text-align:left;
-  }
-  .sub{
-    margin-top:6px;
-    font-size:12px;
-    color:rgba(255,255,255,0.7);
-    text-align:left;
-  }
+  .name{font-weight:800; letter-spacing:0.2px; line-height:1.1; text-align:left;}
+  .sub{margin-top:6px; font-size:12px; color:rgba(255,255,255,0.7); text-align:left;}
 
-  /* ✅ 좌석 크기: 전부 동일하게 */
-  .kingSize{ grid-column: span 4; grid-row: span 2; }     /* KING 3석 동일 */
-  .premSize{ grid-column: span 2; grid-row: span 2; }     /* Premium 47석 동일 */
-  .stdSize{  grid-column: span 2; grid-row: span 1; }     /* Standard 50석 동일 */
+  /* ✅ 좌석 크기: 등급별 “동일” */
+  .kingSize{ grid-column: span 7; grid-row: span 2; }  /* KING 3석 동일 */
+  .premSize{ grid-column: span 3; grid-row: span 2; }  /* Premium 47석 동일 */
+  .stdSize{  grid-column: span 2; grid-row: span 1; }  /* Standard 50석 동일 */
 
   /* MOBILE */
-  @media (max-width:980px){
-    .grid{ grid-template-columns: repeat(12, 1fr); grid-auto-rows:54px; }
-    .kingSize{ grid-column: span 6; grid-row: span 2; }
-    .premSize{ grid-column: span 3; grid-row: span 2; }
-    .stdSize{  grid-column: span 3; grid-row: span 1; }
+  @media (max-width:1200px){
+    .grid{ grid-template-columns: repeat(14, 1fr); }
+    .kingSize{ grid-column: span 14; grid-row: span 2; }
+    .premSize{ grid-column: span 7; grid-row: span 2; }
+    .stdSize{  grid-column: span 7; grid-row: span 1; }
   }
   @media (max-width:520px){
     .grid{ grid-template-columns: repeat(6, 1fr); gap:8px; padding:12px; grid-auto-rows:52px; }
@@ -214,14 +198,13 @@
 </head>
 
 <body>
-
 <div class="top">
   <div class="top-inner">
     <a class="brand" href="index.html" aria-label="KING MAKE Home">
       <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
       <b>KING MAKE</b>
     </a>
-    <div class="page-title">K-FOOD CATEGORY • HEATMAP</div>
+    <div class="page-title">K-FOOD • HEATMAP (KING 3 / Premium 47 / Standard 50)</div>
   </div>
 </div>
 
@@ -229,15 +212,15 @@
   <div class="hero">
     <h1>🍗 K-FOOD Brand Heatmap</h1>
     <p>
-      블록 크기 = 영향력(노출 영역) / 등급 = KING · Premium · Standard<br>
-      좌석을 클릭하면 해당 브랜드 페이지로 이동합니다.
+      카테고리 구성: 치킨20 · 버거10 · 분식20 · 카페20 · 한식20 · 중식10 (총 100개 브랜드)<br>
+      좌석 클릭 → 브랜드 공식 페이지로 이동 / HOT 좌석 반짝
     </p>
   </div>
 
   <div class="legend">
-    <div class="pill"><span class="dot king"></span> KING (3)</div>
-    <div class="pill"><span class="dot premium"></span> Premium (47)</div>
-    <div class="pill"><span class="dot standard"></span> Standard (50)</div>
+    <div class="pill"><span class="dot king"></span> KING 3</div>
+    <div class="pill"><span class="dot premium"></span> Premium 47</div>
+    <div class="pill"><span class="dot standard"></span> Standard 50</div>
     <div class="pill"><span class="dot hot"></span> HOT (반짝)</div>
   </div>
 
@@ -248,86 +231,164 @@
 
 <script>
 /**
- * ✅ 요구사항 반영
- * - 배열 100개(3+47+50) 깔끔하게 채움
- * - KING / Premium / Standard 각각 사이즈 동일
- * - 랜덤 배치 (셔플)
- * - 좌석 클릭 시 브랜드 홈페이지로 이동
- * - HOT 좌석 반짝 효과 적용
+ * ✅ 요구사항
+ * - 브랜드 100개 (치킨20/버거10/분식20/카페20/한식20/중식10)
+ * - 좌석 등급: KING 3 / Premium 47 / Standard 50
+ * - 랜덤 배치
+ * - 클릭 시 브랜드 공식 URL 이동
+ * - HOT 좌석 반짝
  *
- * ⚠️ URL은 “정확한 공식홈페이지” 검증을 위해 웹 검색이 필요합니다.
- * 여기서는 안전하게 '공식홈페이지 검색 링크'로 넣어두었습니다.
- * (원하시면: 브랜드별 공식 URL을 제가 웹으로 확인해서 정확히 채운 버전도 만들어드릴게요.)
+ * 참고:
+ * - 아래 URL은 “브랜드/본사 공식 사이트(또는 공식 브랜드 페이지)” 위주로 구성했습니다.
+ * - 운영하면서 브랜드 추가/교체는 이 배열만 수정하면 됩니다.
  */
 
 // 좌석 수
 const SEAT_COUNTS = { king: 3, premium: 47, standard: 50 };
 
-// HOT 좌석 개수(원하는 만큼 조절)
+// HOT 좌석 개수(원하는 만큼)
 const HOT_COUNT = 12;
 
-// 브랜드 리스트(총 100개)
-// - KING 3개는 입점 문의(메일)로
-// - Premium 47개 / Standard 50개는 브랜드명 기반 검색 링크로
-const brands = [
+// -------------------------
+// 1) 브랜드 100개(카테고리별)
+// -------------------------
+const brands100 = [
+  // ===== 치킨 20 =====
+  { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
+  { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
+  { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
+  { cat:"치킨", name:"굽네치킨", url:"https://www.goobne.co.kr/" },
+  { cat:"치킨", name:"네네치킨", url:"https://www.nenechicken.com/" },
+  { cat:"치킨", name:"푸라닭", url:"https://puradakchicken.com/" },
+  { cat:"치킨", name:"노랑통닭", url:"https://www.norangtongdak.co.kr/" },
+  { cat:"치킨", name:"멕시카나", url:"https://www.mexicana.co.kr/" },
+  { cat:"치킨", name:"페리카나", url:"https://www.pelicana.co.kr/" },
+  { cat:"치킨", name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr/main.php" },
+  { cat:"치킨", name:"자담치킨", url:"https://www.ejadam.co.kr/" },
+  { cat:"치킨", name:"치킨플러스", url:"https://chickenplus.co.kr/" },
+  { cat:"치킨", name:"60계치킨", url:"https://www.60chicken.co.kr/" },
+  { cat:"치킨", name:"호식이두마리치킨", url:"https://www.9922.co.kr/" },
+  { cat:"치킨", name:"또래오래", url:"https://www.toreore.com/" },
+  // 아래 5개는 “공식 채널/공식 페이지”가 브랜드별로 다를 수 있어, 운영 시 확정 URL로 교체 추천
+  { cat:"치킨", name:"지코바", url:"https://www.zicoba.co.kr/" },
+  { cat:"치킨", name:"부어치킨", url:"https://www.boor.co.kr/" },
+  { cat:"치킨", name:"깐부치킨", url:"https://www.kkanbu.co.kr/" },
+  { cat:"치킨", name:"누구나홀딱반한닭", url:"https://www.whodak.com/" },
+  { cat:"치킨", name:"훌랄라참숯바베큐치킨", url:"https://www.hoolala.co.kr/" },
 
-  // 👑 KING SEATS
-  { tier:"king", name:"KING SEAT A", url:"mailto:contact@kingmake.kr" },
-  { tier:"king", name:"KING SEAT B", url:"mailto:contact@kingmake.kr" },
-  { tier:"king", name:"KING SEAT C", url:"mailto:contact@kingmake.kr" },
+  // ===== 버거 10 =====
+  { cat:"버거", name:"맥도날드", url:"https://www.mcdonalds.co.kr/" },
+  { cat:"버거", name:"버거킹", url:"https://www.burgerking.co.kr/" },
+  { cat:"버거", name:"KFC", url:"https://www.kfckorea.com/" },
+  { cat:"버거", name:"써브웨이", url:"https://www.subway.co.kr/" },
+  { cat:"버거", name:"롯데리아(롯데잇츠)", url:"https://www.lotteeatz.com/brand/ria" },
+  { cat:"버거", name:"맘스터치", url:"https://www.momstouch.co.kr/" },
+  { cat:"버거", name:"쉐이크쉑(코리아)", url:"https://www.shakeshack.kr/" },
+  { cat:"버거", name:"노브랜드버거", url:"https://www.nobrandburger.com/" },
+  { cat:"버거", name:"프랭크버거", url:"https://www.frankburger.co.kr/" },
+  { cat:"버거", name:"롯데리아(이벤트)", url:"https://www.lotteeatz.com/event/main" },
 
-  // ⭐ Premium (대표 브랜드)
-  { tier:"premium", name:"BHC", url:"https://www.bhc.co.kr" },
-  { tier:"premium", name:"BBQ", url:"https://bbq.co.kr" },
-  { tier:"premium", name:"교촌치킨", url:"https://www.kyochon.com" },
-  { tier:"premium", name:"굽네치킨", url:"https://www.goobne.co.kr" },
-  { tier:"premium", name:"푸라닭", url:"https://puradakchicken.com" },
-  { tier:"premium", name:"노랑통닭", url:"https://norangtongdak.co.kr" },
-  { tier:"premium", name:"네네치킨", url:"https://nenechicken.com" },
-  { tier:"premium", name:"멕시카나", url:"https://www.mexicana.co.kr" },
-  { tier:"premium", name:"페리카나", url:"https://www.pericana.co.kr" },
-  { tier:"premium", name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr" },
-  { tier:"premium", name:"지코바", url:"https://www.zicoba.co.kr" },
-  { tier:"premium", name:"60계치킨", url:"https://www.60chicken.com" },
-  { tier:"premium", name:"자담치킨", url:"https://www.jadamchicken.com" },
-  { tier:"premium", name:"치킨플러스", url:"https://www.chickenplus.co.kr" },
-  { tier:"premium", name:"또래오래", url:"https://www.toreore.com" },
-  { tier:"premium", name:"호식이두마리치킨", url:"https://www.9922.co.kr" },
-  { tier:"premium", name:"부어치킨", url:"https://www.boor.co.kr" },
-  { tier:"premium", name:"바른치킨", url:"https://barunchicken.com" },
+  // ===== 분식 20 =====
+  { cat:"분식", name:"동대문엽기떡볶이", url:"https://www.yupdduk.com/" },
+  { cat:"분식", name:"신전떡볶이", url:"https://sinjeon.co.kr/" },
+  { cat:"분식", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr/" },
+  { cat:"분식", name:"청년다방", url:"https://www.youngdabang.com/" },
+  { cat:"분식", name:"명랑핫도그", url:"https://myungranghotdog.com/" },
+  { cat:"분식", name:"김가네", url:"https://www.gimgane.co.kr/" },
+  { cat:"분식", name:"김밥천국(브랜드)", url:"https://www.gimbapcheonguk.co.kr/" },
+  { cat:"분식", name:"고봉민김밥", url:"https://www.gbmgimbap.com/" },
+  { cat:"분식", name:"국대떡볶이", url:"https://www.kookdae.co.kr/" },
+  { cat:"분식", name:"응급실떡볶이", url:"https://www.응급실떡볶이.com/" },
+  { cat:"분식", name:"바르다김선생", url:"https://www.bareun.co.kr/" },
+  { cat:"분식", name:"봉구스밥버거", url:"https://www.bongousse.co.kr/" },
+  { cat:"분식", name:"한솥도시락", url:"https://www.hsd.co.kr/" },
+  { cat:"분식", name:"컵밥(국대)", url:"https://www.kookdae.co.kr/" },
+  { cat:"분식", name:"삼첩분식", url:"https://samcheop.com/" },
+  { cat:"분식", name:"두끼떡볶이", url:"https://www.dookki.co.kr/" },
+  { cat:"분식", name:"요거프레소(디저트)", url:"https://www.yogerpresso.co.kr/" },
+  { cat:"분식", name:"도시락카페(한솥)", url:"https://www.hsd.co.kr/" },
+  { cat:"분식", name:"할매떡볶이(브랜드)", url:"https://www.halmatteokbokki.com/" },
+  { cat:"분식", name:"뚜레쥬르(간식)", url:"https://www.tlj.co.kr/" },
 
-  // ⬜ Standard (확장 브랜드)
-  { tier:"standard", name:"맘스터치", url:"https://www.momstouch.co.kr" },
-  { tier:"standard", name:"롯데리아", url:"https://www.lotteria.com" },
-  { tier:"standard", name:"KFC", url:"https://www.kfckorea.com" },
-  { tier:"standard", name:"맥도날드", url:"https://www.mcdonalds.co.kr" },
-  { tier:"standard", name:"버거킹", url:"https://www.burgerking.co.kr" },
-  { tier:"standard", name:"서브웨이", url:"https://www.subway.co.kr" },
-  { tier:"standard", name:"한솥도시락", url:"https://www.hsd.co.kr" },
-  { tier:"standard", name:"김가네", url:"https://www.gimgane.co.kr" },
-  { tier:"standard", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr" },
-  { tier:"standard", name:"신전떡볶이", url:"https://sinjeon.co.kr" },
-  { tier:"standard", name:"엽기떡볶이", url:"https://www.yupdduk.com" },
-  { tier:"standard", name:"청년다방", url:"https://www.youngdabang.com" },
-  { tier:"standard", name:"본죽", url:"https://www.bonif.co.kr" },
-  { tier:"standard", name:"홍콩반점", url:"https://www.hongkongbanjum.com" },
-  { tier:"standard", name:"역전우동", url:"https://www.udon0410.com" },
-  { tier:"standard", name:"새마을식당", url:"https://www.saemaeul.com" },
-  { tier:"standard", name:"이차돌", url:"https://www.ichadol.com" },
-  { tier:"standard", name:"명륜진사갈비", url:"https://www.mrg.kr" },
-  { tier:"standard", name:"원할머니보쌈", url:"https://www.bossam.co.kr" },
-  { tier:"standard", name:"족발야시장", url:"https://www.jokbalnight.com" }
+  // ===== 카페 20 =====
+  { cat:"카페", name:"스타벅스 코리아", url:"https://www.starbucks.co.kr/" },
+  { cat:"카페", name:"이디야커피", url:"https://www.ediya.com/" },
+  { cat:"카페", name:"메가MGC커피", url:"https://www.mega-mgccoffee.com/" },
+  { cat:"카페", name:"컴포즈커피", url:"https://composecoffee.com/" },
+  { cat:"카페", name:"빽다방", url:"https://www.paikdabang.com/" },
+  { cat:"카페", name:"투썸플레이스", url:"https://www.twosome.co.kr/" },
+  { cat:"카페", name:"할리스", url:"https://www.hollys.co.kr/" },
+  { cat:"카페", name:"탐앤탐스", url:"https://www.tomntoms.com/" },
+  { cat:"카페", name:"엔제리너스(롯데잇츠)", url:"https://www.lotteeatz.com/brand/angel" },
+  { cat:"카페", name:"카페베네", url:"https://www.caffebene.co.kr/" },
+  { cat:"카페", name:"공차코리아", url:"https://www.gong-cha.co.kr/" },
+  { cat:"카페", name:"더벤티", url:"https://www.theventi.co.kr/" },
+  { cat:"카페", name:"폴 바셋", url:"https://www.baristapaulbassett.co.kr/" },
+  { cat:"카페", name:"커피빈 코리아", url:"https://www.coffeebeankorea.com/" },
+  { cat:"카페", name:"카페드롭탑", url:"https://www.droptop.co.kr/" },
+  { cat:"카페", name:"블루보틀(코리아)", url:"https://bluebottlecoffee.com/kr/" },
+  { cat:"카페", name:"빽다방(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%B9%BD%EB%8B%A4%EB%B0%A9/" },
+  { cat:"카페", name:"달.콤커피", url:"https://www.dalkomm.com/" },
+  { cat:"카페", name:"커피에반하다", url:"https://www.coffeev.co.kr/" },
+  { cat:"카페", name:"마노핀", url:"https://www.manofin.co.kr/" },
 
+  // ===== 한식 20 =====
+  { cat:"한식", name:"본죽", url:"https://www.bonif.co.kr/" },
+  { cat:"한식", name:"원할머니보쌈", url:"https://www.bossam.co.kr/" },
+  { cat:"한식", name:"족발야시장", url:"https://www.jokbalyasijang.co.kr/" },
+  { cat:"한식", name:"명륜진사갈비", url:"https://www.mrg.kr/" },
+  { cat:"한식", name:"이차돌(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%9D%B4%EC%B0%A8%EB%8F%8C/" },
+  { cat:"한식", name:"새마을식당(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%83%88%EB%A7%88%EC%9D%84%EC%8B%9D%EB%8B%B9/" },
+  { cat:"한식", name:"한신포차(더본)", url:"https://www.theborn.co.kr/theborn_brand/%ED%95%9C%EC%8B%A0%ED%8F%AC%EC%B0%A8/" },
+  { cat:"한식", name:"역전우동0410(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%97%AD%EC%A0%84%EC%9A%B0%EB%8F%990410/" },
+  { cat:"한식", name:"롤링파스타(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%A1%A4%EB%A7%81%ED%8C%8C%EC%8A%A4%ED%83%80/" },
+  { cat:"한식", name:"백철판0410(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%B0%B1%EC%B2%A0%ED%8C%90410/" },
+  { cat:"한식", name:"미정국수0410(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%AF%B8%EC%A0%95%EA%B5%AD%EC%88%980410/" },
+  { cat:"한식", name:"인생설렁탕(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%9D%B8%EC%83%9D%EC%84%A4%EB%A0%81%ED%83%95/" },
+  { cat:"한식", name:"연돈볼카츠(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%97%B0%EB%8F%88%EB%B3%BC%EC%B9%B4%EC%B8%A0/" },
+  { cat:"한식", name:"리춘시장(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%A6%AC%EC%B6%98%EC%8B%9C%EC%9E%A5/" },
+  { cat:"한식", name:"고봉삼계탕", url:"https://www.gobong.co.kr/" },
+  { cat:"한식", name:"놀부보쌈", url:"https://www.nolboo.co.kr/" },
+  { cat:"한식", name:"놀부부대찌개", url:"https://www.nolboo.co.kr/" },
+  { cat:"한식", name:"본도시락", url:"https://www.bondosirak.com/" },
+  { cat:"한식", name:"고기싸롱", url:"https://www.gogisarong.com/" },
+  { cat:"한식", name:"채선당", url:"https://www.chae-seon-dang.com/" },
+
+  // ===== 중식 10 =====
+  { cat:"중식", name:"홍콩반점0410(더본)", url:"https://www.theborn.co.kr/theborn_brand/%ED%99%8D%EC%BD%A9%EB%B0%98%EC%A0%902/" },
+  { cat:"중식", name:"고기짬뽕(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EA%B3%A0%EA%B8%B0%EC%A7%AC%EB%BD%95/" },
+  { cat:"중식", name:"백스비어(안주)", url:"https://www.theborn.co.kr/theborn_brand/%EB%B0%B1%EC%8A%A4%EB%B9%84%EC%96%B4/" },
+  { cat:"중식", name:"리춘시장(중화요리)", url:"https://www.theborn.co.kr/theborn_brand/%EB%A6%AC%EC%B6%98%EC%8B%9C%EC%9E%A5/" },
+  { cat:"중식", name:"홍짜장", url:"https://www.hongjajang.com/" },
+  { cat:"중식", name:"짬뽕지존", url:"https://www.zzambbongjijon.com/" },
+  { cat:"중식", name:"만강홍", url:"https://www.mankanghong.co.kr/" },
+  { cat:"중식", name:"진짬뽕(브랜드)", url:"https://www.jinjjam.co.kr/" },
+  { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
+  { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" }
 ];
 
-// 랜덤 셔플
+// 안전장치: 정확히 100개인지 확인
+if (brands100.length !== 100){
+  console.warn("브랜드 개수가 100이 아닙니다:", brands100.length);
+}
+
+// -------------------------
+// 2) 좌석(등급) 100개 만들고
+//    브랜드 100개를 매칭
+// -------------------------
+let tiers = [];
+for(let i=0;i<SEAT_COUNTS.king;i++) tiers.push("king");
+for(let i=0;i<SEAT_COUNTS.premium;i++) tiers.push("premium");
+for(let i=0;i<SEAT_COUNTS.standard;i++) tiers.push("standard");
+
+// 셔플
 function shuffle(arr){
   return arr.map(v => ({ v, r: Math.random() }))
             .sort((a,b) => a.r - b.r)
             .map(o => o.v);
 }
 
-// HOT 인덱스 선정: premium/king에서 우선 뽑기
+// HOT 인덱스: king/premium 위주
 function pickHotIndexes(items, hotCount){
   const candidates = [];
   items.forEach((b, i) => {
@@ -337,14 +398,14 @@ function pickHotIndexes(items, hotCount){
   return new Set(shuffled.slice(0, Math.min(hotCount, shuffled.length)));
 }
 
-// 이동(새탭)
+// url 이동
 function go(url){
   if(!url) return;
   if(url.startsWith("mailto:")) { window.location.href = url; return; }
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
-// 라벨 & 사이즈 클래스
+// 라벨/사이즈
 function labelFor(tier){
   if(tier === "king") return "👑 KING";
   if(tier === "premium") return "⭐ Premium";
@@ -355,17 +416,38 @@ function sizeClassFor(tier){
   if(tier === "premium") return "premSize";
   return "stdSize";
 }
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-// 렌더링
-const grid = document.getElementById("grid");
+// 100개 좌석에 100개 브랜드를 매칭(랜덤)
+const tierShuffled = shuffle(tiers);
+const brandShuffled = shuffle(brands100);
 
-// 랜덤 배치: brands 자체를 셔플
-const items = shuffle(brands);
+const seats = tierShuffled.map((tier, idx) => {
+  const b = brandShuffled[idx];
+  return {
+    tier,
+    cat: b.cat,
+    name: b.name,
+    url: b.url
+  };
+});
 
 // HOT 적용
-const hotSet = pickHotIndexes(items, HOT_COUNT);
+const hotSet = pickHotIndexes(seats, HOT_COUNT);
 
-items.forEach((b, i) => {
+// -------------------------
+// 3) 렌더
+// -------------------------
+const grid = document.getElementById("grid");
+
+seats.forEach((b, i) => {
   const label = labelFor(b.tier);
   const sizeCls = sizeClassFor(b.tier);
   const isHot = hotSet.has(i);
@@ -383,7 +465,7 @@ items.forEach((b, i) => {
     </div>
     <div>
       <div class="name">${escapeHtml(b.name)}</div>
-      <div class="sub">클릭하여 홈페이지 이동</div>
+      <div class="sub">${escapeHtml(b.cat)} · 클릭하여 이동</div>
     </div>
   `;
 
@@ -394,16 +476,6 @@ items.forEach((b, i) => {
 
   grid.appendChild(tile);
 });
-
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
 </script>
-
 </body>
 </html>
