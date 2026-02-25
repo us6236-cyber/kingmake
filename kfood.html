@@ -10,7 +10,6 @@
     --bg:#000;
     --panel:rgba(255,255,255,0.03);
     --line:rgba(255,255,255,0.12);
-
     --gold:#D4AF37;
     --premium:#ff3b3b;
     --standard:#ffffff;
@@ -23,70 +22,43 @@
     color:#fff;
   }
 
-  /* TOP BAR */
   .top{
-    position:sticky;
-    top:0;
-    z-index:10;
+    position:sticky; top:0; z-index:10;
     backdrop-filter:blur(10px);
     background:rgba(0,0,0,0.78);
     border-bottom:1px solid var(--line);
   }
   .top-inner{
-    max-width:1800px;       /* ✅ 더 넓게 */
+    max-width:1800px;
     margin:auto;
     padding:14px 18px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+    display:flex; align-items:center; justify-content:space-between;
     gap:12px;
   }
   .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    text-decoration:none;
-    color:#fff;
+    display:flex; align-items:center; gap:10px;
+    text-decoration:none; color:#fff;
   }
   .brand img{height:26px;width:auto;display:block;}
   .brand b{letter-spacing:1px}
-  .page-title{
-    font-size:13px;
-    opacity:0.75;
-  }
+  .page-title{font-size:13px; opacity:0.75;}
 
-  /* LAYOUT */
   .wrap{
-    max-width:1800px;       /* ✅ 더 넓게 */
+    max-width:1800px;
     margin:0 auto;
     padding:26px 18px 70px;
     text-align:center;
   }
-  .hero h1{
-    margin:0;
-    font-size:34px;
-    letter-spacing:-0.5px;
-  }
-  .hero p{
-    margin:12px 0 0;
-    opacity:0.7;
-    line-height:1.6;
-  }
+  .hero h1{margin:0; font-size:34px; letter-spacing:-0.5px;}
+  .hero p{margin:12px 0 0; opacity:0.7; line-height:1.6;}
 
-  /* LEGEND */
   .legend{
     margin:18px auto 0;
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
-    font-size:13px;
-    opacity:0.9;
+    display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+    font-size:13px; opacity:0.9;
   }
   .pill{
-    display:flex;
-    align-items:center;
-    gap:8px;
+    display:flex; align-items:center; gap:8px;
     padding:8px 10px;
     border:1px solid var(--line);
     border-radius:999px;
@@ -98,10 +70,9 @@
   .dot.standard{background:var(--standard)}
   .dot.hot{background:var(--premium)}
 
-  /* HEATMAP */
   .heatmap{
     margin:26px auto 0;
-    max-width:1740px;       /* ✅ 더 넓게 */
+    max-width:1740px;
     border:1px solid var(--line);
     border-radius:18px;
     background:var(--panel);
@@ -112,11 +83,10 @@
     display:grid;
     gap:10px;
     padding:16px;
-    grid-template-columns: repeat(22, 1fr); /* ✅ 더 넓게 */
+    grid-template-columns: repeat(22, 1fr);
     grid-auto-rows: 56px;
   }
 
-  /* TILE */
   .tile{
     border:1px solid rgba(255,255,255,0.12);
     border-radius:14px;
@@ -141,7 +111,6 @@
   .tile.premium{ border-color:rgba(255,59,59,0.55); }
   .tile.standard{ border-color:rgba(255,255,255,0.30); }
 
-  /* HOT BLINK */
   .tile.hot{ animation:blinkHot 1.2s infinite; }
   @keyframes blinkHot{
     0%   { box-shadow:0 0 0 rgba(255,59,59,0); }
@@ -149,7 +118,6 @@
     100% { box-shadow:0 0 0 rgba(255,59,59,0); }
   }
 
-  /* LABEL */
   .badge{
     position:absolute;
     top:10px; left:10px;
@@ -159,9 +127,7 @@
     border:1px solid rgba(255,255,255,0.16);
     background:rgba(0,0,0,0.35);
     opacity:0.92;
-    display:flex;
-    align-items:center;
-    gap:6px;
+    display:flex; align-items:center; gap:6px;
     white-space:nowrap;
   }
   .badge .mini-dot{width:8px;height:8px;border-radius:3px;display:inline-block;background:rgba(255,255,255,0.4);}
@@ -173,15 +139,33 @@
   .badge.standard .mini-dot{background:var(--standard)}
   .badge.hot .mini-dot{background:var(--premium)}
 
+  /* ✅ 로고 배지(오른쪽 상단) */
+  .logo-badge{
+    position:absolute;
+    top:10px; right:10px;
+    width:34px; height:34px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.12);
+    background:rgba(0,0,0,0.35);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .logo-badge img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:6px;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.55));
+  }
+
   .name{font-weight:800; letter-spacing:0.2px; line-height:1.1; text-align:left;}
   .sub{margin-top:6px; font-size:12px; color:rgba(255,255,255,0.7); text-align:left;}
 
-  /* ✅ 좌석 크기: 등급별 “동일” */
-  .kingSize{ grid-column: span 7; grid-row: span 2; }  /* KING 3석 동일 */
-  .premSize{ grid-column: span 3; grid-row: span 2; }  /* Premium 47석 동일 */
-  .stdSize{  grid-column: span 2; grid-row: span 1; }  /* Standard 50석 동일 */
+  /* 등급별 동일 사이즈 */
+  .kingSize{ grid-column: span 7; grid-row: span 2; }
+  .premSize{ grid-column: span 3; grid-row: span 2; }
+  .stdSize{  grid-column: span 2; grid-row: span 1; }
 
-  /* MOBILE */
   @media (max-width:1200px){
     .grid{ grid-template-columns: repeat(14, 1fr); }
     .kingSize{ grid-column: span 14; grid-row: span 2; }
@@ -212,8 +196,8 @@
   <div class="hero">
     <h1>🍗 K-FOOD Brand Heatmap</h1>
     <p>
-      카테고리 구성: 치킨20 · 버거10 · 분식20 · 카페20 · 한식20 · 중식10 (총 100개 브랜드)<br>
-      좌석 클릭 → 브랜드 공식 페이지로 이동 / HOT 좌석 반짝
+      좌석 클릭 → 브랜드 공식 페이지로 이동<br>
+      로고는 자동 적용(로컬 로고 우선 → 없으면 도메인 기반 자동 로고 시도)
     </p>
   </div>
 
@@ -230,30 +214,13 @@
 </div>
 
 <script>
-/**
- * ✅ 요구사항
- * - 브랜드 100개 (치킨20/버거10/분식20/카페20/한식20/중식10)
- * - 좌석 등급: KING 3 / Premium 47 / Standard 50
- * - 랜덤 배치
- * - 클릭 시 브랜드 공식 URL 이동
- * - HOT 좌석 반짝
- *
- * 참고:
- * - 아래 URL은 “브랜드/본사 공식 사이트(또는 공식 브랜드 페이지)” 위주로 구성했습니다.
- * - 운영하면서 브랜드 추가/교체는 이 배열만 수정하면 됩니다.
- */
-
-// 좌석 수
+/* 좌석 수 */
 const SEAT_COUNTS = { king: 3, premium: 47, standard: 50 };
-
-// HOT 좌석 개수(원하는 만큼)
 const HOT_COUNT = 12;
 
-// -------------------------
-// 1) 브랜드 100개(카테고리별)
-// -------------------------
+/* 브랜드 100개 (치킨20/버거10/분식20/카페20/한식20/중식10) */
 const brands100 = [
-  // ===== 치킨 20 =====
+  // 치킨 20
   { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
   { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
   { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
@@ -269,14 +236,13 @@ const brands100 = [
   { cat:"치킨", name:"60계치킨", url:"https://www.60chicken.co.kr/" },
   { cat:"치킨", name:"호식이두마리치킨", url:"https://www.9922.co.kr/" },
   { cat:"치킨", name:"또래오래", url:"https://www.toreore.com/" },
-  // 아래 5개는 “공식 채널/공식 페이지”가 브랜드별로 다를 수 있어, 운영 시 확정 URL로 교체 추천
   { cat:"치킨", name:"지코바", url:"https://www.zicoba.co.kr/" },
   { cat:"치킨", name:"부어치킨", url:"https://www.boor.co.kr/" },
   { cat:"치킨", name:"깐부치킨", url:"https://www.kkanbu.co.kr/" },
   { cat:"치킨", name:"누구나홀딱반한닭", url:"https://www.whodak.com/" },
   { cat:"치킨", name:"훌랄라참숯바베큐치킨", url:"https://www.hoolala.co.kr/" },
 
-  // ===== 버거 10 =====
+  // 버거 10
   { cat:"버거", name:"맥도날드", url:"https://www.mcdonalds.co.kr/" },
   { cat:"버거", name:"버거킹", url:"https://www.burgerking.co.kr/" },
   { cat:"버거", name:"KFC", url:"https://www.kfckorea.com/" },
@@ -286,31 +252,31 @@ const brands100 = [
   { cat:"버거", name:"쉐이크쉑(코리아)", url:"https://www.shakeshack.kr/" },
   { cat:"버거", name:"노브랜드버거", url:"https://www.nobrandburger.com/" },
   { cat:"버거", name:"프랭크버거", url:"https://www.frankburger.co.kr/" },
-  { cat:"버거", name:"롯데리아(이벤트)", url:"https://www.lotteeatz.com/event/main" },
+  { cat:"버거", name:"롯데잇츠", url:"https://www.lotteeatz.com/" },
 
-  // ===== 분식 20 =====
+  // 분식 20
   { cat:"분식", name:"동대문엽기떡볶이", url:"https://www.yupdduk.com/" },
   { cat:"분식", name:"신전떡볶이", url:"https://sinjeon.co.kr/" },
   { cat:"분식", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr/" },
   { cat:"분식", name:"청년다방", url:"https://www.youngdabang.com/" },
   { cat:"분식", name:"명랑핫도그", url:"https://myungranghotdog.com/" },
   { cat:"분식", name:"김가네", url:"https://www.gimgane.co.kr/" },
-  { cat:"분식", name:"김밥천국(브랜드)", url:"https://www.gimbapcheonguk.co.kr/" },
+  { cat:"분식", name:"김밥천국", url:"https://www.gimbapcheonguk.co.kr/" },
   { cat:"분식", name:"고봉민김밥", url:"https://www.gbmgimbap.com/" },
   { cat:"분식", name:"국대떡볶이", url:"https://www.kookdae.co.kr/" },
-  { cat:"분식", name:"응급실떡볶이", url:"https://www.응급실떡볶이.com/" },
   { cat:"분식", name:"바르다김선생", url:"https://www.bareun.co.kr/" },
   { cat:"분식", name:"봉구스밥버거", url:"https://www.bongousse.co.kr/" },
   { cat:"분식", name:"한솥도시락", url:"https://www.hsd.co.kr/" },
-  { cat:"분식", name:"컵밥(국대)", url:"https://www.kookdae.co.kr/" },
   { cat:"분식", name:"삼첩분식", url:"https://samcheop.com/" },
   { cat:"분식", name:"두끼떡볶이", url:"https://www.dookki.co.kr/" },
-  { cat:"분식", name:"요거프레소(디저트)", url:"https://www.yogerpresso.co.kr/" },
-  { cat:"분식", name:"도시락카페(한솥)", url:"https://www.hsd.co.kr/" },
-  { cat:"분식", name:"할매떡볶이(브랜드)", url:"https://www.halmatteokbokki.com/" },
-  { cat:"분식", name:"뚜레쥬르(간식)", url:"https://www.tlj.co.kr/" },
+  { cat:"분식", name:"뚜레쥬르", url:"https://www.tlj.co.kr/" },
+  { cat:"분식", name:"파리바게뜨", url:"https://www.paris.co.kr/" },
+  { cat:"분식", name:"크리스피크림", url:"https://www.krispykreme.co.kr/" },
+  { cat:"분식", name:"던킨", url:"https://www.dunkindonuts.co.kr/" },
+  { cat:"분식", name:"배스킨라빈스", url:"https://www.baskinrobbins.co.kr/" },
+  { cat:"분식", name:"요거프레소", url:"https://www.yogerpresso.co.kr/" },
 
-  // ===== 카페 20 =====
+  // 카페 20
   { cat:"카페", name:"스타벅스 코리아", url:"https://www.starbucks.co.kr/" },
   { cat:"카페", name:"이디야커피", url:"https://www.ediya.com/" },
   { cat:"카페", name:"메가MGC커피", url:"https://www.mega-mgccoffee.com/" },
@@ -319,76 +285,60 @@ const brands100 = [
   { cat:"카페", name:"투썸플레이스", url:"https://www.twosome.co.kr/" },
   { cat:"카페", name:"할리스", url:"https://www.hollys.co.kr/" },
   { cat:"카페", name:"탐앤탐스", url:"https://www.tomntoms.com/" },
-  { cat:"카페", name:"엔제리너스(롯데잇츠)", url:"https://www.lotteeatz.com/brand/angel" },
   { cat:"카페", name:"카페베네", url:"https://www.caffebene.co.kr/" },
   { cat:"카페", name:"공차코리아", url:"https://www.gong-cha.co.kr/" },
   { cat:"카페", name:"더벤티", url:"https://www.theventi.co.kr/" },
   { cat:"카페", name:"폴 바셋", url:"https://www.baristapaulbassett.co.kr/" },
   { cat:"카페", name:"커피빈 코리아", url:"https://www.coffeebeankorea.com/" },
-  { cat:"카페", name:"카페드롭탑", url:"https://www.droptop.co.kr/" },
-  { cat:"카페", name:"블루보틀(코리아)", url:"https://bluebottlecoffee.com/kr/" },
-  { cat:"카페", name:"빽다방(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%B9%BD%EB%8B%A4%EB%B0%A9/" },
   { cat:"카페", name:"달.콤커피", url:"https://www.dalkomm.com/" },
-  { cat:"카페", name:"커피에반하다", url:"https://www.coffeev.co.kr/" },
-  { cat:"카페", name:"마노핀", url:"https://www.manofin.co.kr/" },
+  { cat:"카페", name:"블루보틀(코리아)", url:"https://bluebottlecoffee.com/kr/" },
+  { cat:"카페", name:"엔제리너스(롯데잇츠)", url:"https://www.lotteeatz.com/brand/angel" },
+  { cat:"카페", name:"드롭탑", url:"https://www.droptop.co.kr/" },
+  { cat:"카페", name:"파스쿠찌", url:"https://www.caffe-pascucci.co.kr/" },
+  { cat:"카페", name:"아티제", url:"https://www.cafeartisee.com/" },
+  { cat:"카페", name:"할리스몰", url:"https://www.hollysmall.com/" },
 
-  // ===== 한식 20 =====
+  // 한식 20
   { cat:"한식", name:"본죽", url:"https://www.bonif.co.kr/" },
   { cat:"한식", name:"원할머니보쌈", url:"https://www.bossam.co.kr/" },
-  { cat:"한식", name:"족발야시장", url:"https://www.jokbalyasijang.co.kr/" },
   { cat:"한식", name:"명륜진사갈비", url:"https://www.mrg.kr/" },
-  { cat:"한식", name:"이차돌(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%9D%B4%EC%B0%A8%EB%8F%8C/" },
-  { cat:"한식", name:"새마을식당(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%83%88%EB%A7%88%EC%9D%84%EC%8B%9D%EB%8B%B9/" },
-  { cat:"한식", name:"한신포차(더본)", url:"https://www.theborn.co.kr/theborn_brand/%ED%95%9C%EC%8B%A0%ED%8F%AC%EC%B0%A8/" },
-  { cat:"한식", name:"역전우동0410(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%97%AD%EC%A0%84%EC%9A%B0%EB%8F%990410/" },
-  { cat:"한식", name:"롤링파스타(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%A1%A4%EB%A7%81%ED%8C%8C%EC%8A%A4%ED%83%80/" },
-  { cat:"한식", name:"백철판0410(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%B0%B1%EC%B2%A0%ED%8C%90410/" },
-  { cat:"한식", name:"미정국수0410(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%AF%B8%EC%A0%95%EA%B5%AD%EC%88%980410/" },
-  { cat:"한식", name:"인생설렁탕(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%9D%B8%EC%83%9D%EC%84%A4%EB%A0%81%ED%83%95/" },
-  { cat:"한식", name:"연돈볼카츠(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EC%97%B0%EB%8F%88%EB%B3%BC%EC%B9%B4%EC%B8%A0/" },
-  { cat:"한식", name:"리춘시장(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EB%A6%AC%EC%B6%98%EC%8B%9C%EC%9E%A5/" },
-  { cat:"한식", name:"고봉삼계탕", url:"https://www.gobong.co.kr/" },
-  { cat:"한식", name:"놀부보쌈", url:"https://www.nolboo.co.kr/" },
-  { cat:"한식", name:"놀부부대찌개", url:"https://www.nolboo.co.kr/" },
-  { cat:"한식", name:"본도시락", url:"https://www.bondosirak.com/" },
-  { cat:"한식", name:"고기싸롱", url:"https://www.gogisarong.com/" },
+  { cat:"한식", name:"놀부", url:"https://www.nolboo.co.kr/" },
   { cat:"한식", name:"채선당", url:"https://www.chae-seon-dang.com/" },
+  { cat:"한식", name:"더본코리아", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"새마을식당", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"한신포차", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"역전우동0410", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"인생설렁탕", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"연돈볼카츠", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"이차돌", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"미정국수0410", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"리춘시장", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"본도시락", url:"https://www.bondosirak.com/" },
+  { cat:"한식", name:"본죽&비빔밥", url:"https://www.bonif.co.kr/" },
+  { cat:"한식", name:"한솥(한식도시락)", url:"https://www.hsd.co.kr/" },
+  { cat:"한식", name:"고봉삼계탕", url:"https://www.gobong.co.kr/" },
+  { cat:"한식", name:"본전주비빔밥", url:"https://www.bonif.co.kr/" },
+  { cat:"한식", name:"청기와타운", url:"https://www.cheonggiwa.co.kr/" },
 
-  // ===== 중식 10 =====
-  { cat:"중식", name:"홍콩반점0410(더본)", url:"https://www.theborn.co.kr/theborn_brand/%ED%99%8D%EC%BD%A9%EB%B0%98%EC%A0%902/" },
-  { cat:"중식", name:"고기짬뽕(더본)", url:"https://www.theborn.co.kr/theborn_brand/%EA%B3%A0%EA%B8%B0%EC%A7%AC%EB%BD%95/" },
-  { cat:"중식", name:"백스비어(안주)", url:"https://www.theborn.co.kr/theborn_brand/%EB%B0%B1%EC%8A%A4%EB%B9%84%EC%96%B4/" },
-  { cat:"중식", name:"리춘시장(중화요리)", url:"https://www.theborn.co.kr/theborn_brand/%EB%A6%AC%EC%B6%98%EC%8B%9C%EC%9E%A5/" },
-  { cat:"중식", name:"홍짜장", url:"https://www.hongjajang.com/" },
+  // 중식 10
+  { cat:"중식", name:"홍콩반점0410", url:"https://www.theborn.co.kr/" },
+  { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
+  { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" },
   { cat:"중식", name:"짬뽕지존", url:"https://www.zzambbongjijon.com/" },
   { cat:"중식", name:"만강홍", url:"https://www.mankanghong.co.kr/" },
-  { cat:"중식", name:"진짬뽕(브랜드)", url:"https://www.jinjjam.co.kr/" },
-  { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
-  { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" }
+  { cat:"중식", name:"홍짜장", url:"https://www.hongjajang.com/" },
+  { cat:"중식", name:"더본(중식)", url:"https://www.theborn.co.kr/" },
+  { cat:"중식", name:"리춘시장(중화)", url:"https://www.theborn.co.kr/" },
+  { cat:"중식", name:"교동짬뽕", url:"https://www.gyodongjjambbong.com/" },
+  { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
 ];
 
-// 안전장치: 정확히 100개인지 확인
-if (brands100.length !== 100){
-  console.warn("브랜드 개수가 100이 아닙니다:", brands100.length);
-}
-
-// -------------------------
-// 2) 좌석(등급) 100개 만들고
-//    브랜드 100개를 매칭
-// -------------------------
-let tiers = [];
-for(let i=0;i<SEAT_COUNTS.king;i++) tiers.push("king");
-for(let i=0;i<SEAT_COUNTS.premium;i++) tiers.push("premium");
-for(let i=0;i<SEAT_COUNTS.standard;i++) tiers.push("standard");
-
-// 셔플
+/* ---- 유틸 ---- */
 function shuffle(arr){
   return arr.map(v => ({ v, r: Math.random() }))
             .sort((a,b) => a.r - b.r)
             .map(o => o.v);
 }
-
-// HOT 인덱스: king/premium 위주
 function pickHotIndexes(items, hotCount){
   const candidates = [];
   items.forEach((b, i) => {
@@ -397,15 +347,10 @@ function pickHotIndexes(items, hotCount){
   const shuffled = shuffle(candidates);
   return new Set(shuffled.slice(0, Math.min(hotCount, shuffled.length)));
 }
-
-// url 이동
 function go(url){
   if(!url) return;
-  if(url.startsWith("mailto:")) { window.location.href = url; return; }
   window.open(url, "_blank", "noopener,noreferrer");
 }
-
-// 라벨/사이즈
 function labelFor(tier){
   if(tier === "king") return "👑 KING";
   if(tier === "premium") return "⭐ Premium";
@@ -425,26 +370,51 @@ function escapeHtml(str){
     .replaceAll("'","&#039;");
 }
 
-// 100개 좌석에 100개 브랜드를 매칭(랜덤)
+/* ✅ 로고 자동 적용
+   1) 로컬 로고: /logos/<domain>.png
+   2) 없으면 자동 로고(도메인): https://logo.clearbit.com/<domain>
+*/
+function domainFromUrl(url){
+  try{
+    const u = new URL(url);
+    let host = u.hostname.toLowerCase();
+    host = host.replace(/^www\./, "");
+    return host;
+  }catch(e){
+    return "";
+  }
+}
+function localLogo(domain){
+  return `logos/${domain}.png`;
+}
+function autoLogo(domain){
+  return `https://logo.clearbit.com/${domain}`;
+}
+
+/* ---- 좌석 등급 100개 만들고 브랜드 100개 매칭 ---- */
+let tiers = [];
+for(let i=0;i<SEAT_COUNTS.king;i++) tiers.push("king");
+for(let i=0;i<SEAT_COUNTS.premium;i++) tiers.push("premium");
+for(let i=0;i<SEAT_COUNTS.standard;i++) tiers.push("standard");
+
 const tierShuffled = shuffle(tiers);
 const brandShuffled = shuffle(brands100);
 
 const seats = tierShuffled.map((tier, idx) => {
   const b = brandShuffled[idx];
+  const domain = domainFromUrl(b.url);
   return {
     tier,
     cat: b.cat,
     name: b.name,
-    url: b.url
+    url: b.url,
+    domain
   };
 });
 
-// HOT 적용
 const hotSet = pickHotIndexes(seats, HOT_COUNT);
 
-// -------------------------
-// 3) 렌더
-// -------------------------
+/* ---- 렌더 ---- */
 const grid = document.getElementById("grid");
 
 seats.forEach((b, i) => {
@@ -456,13 +426,25 @@ seats.forEach((b, i) => {
   tile.className = `tile ${b.tier} ${sizeCls}` + (isHot ? " hot" : "");
   tile.setAttribute("role", "button");
   tile.setAttribute("tabindex", "0");
-  tile.setAttribute("aria-label", `${b.name} (${label})`);
+
+  // 로고 src는 "로컬 먼저"
+  const logoLocal = b.domain ? localLogo(b.domain) : "";
+  const logoAuto  = b.domain ? autoLogo(b.domain)  : "";
 
   tile.innerHTML = `
     <div class="badge ${b.tier} ${isHot ? "hot" : ""}">
       <span class="mini-dot"></span>
       ${label}${isHot ? " • HOT" : ""}
     </div>
+
+    <div class="logo-badge" title="${escapeHtml(b.domain || '')}">
+      <img
+        src="${escapeHtml(logoLocal)}"
+        alt="${escapeHtml(b.name)} 로고"
+        onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';"
+      />
+    </div>
+
     <div>
       <div class="name">${escapeHtml(b.name)}</div>
       <div class="sub">${escapeHtml(b.cat)} · 클릭하여 이동</div>
@@ -477,5 +459,6 @@ seats.forEach((b, i) => {
   grid.appendChild(tile);
 });
 </script>
+
 </body>
 </html>
