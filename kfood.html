@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KINGMAKE 광고판 (운영용)</title>
+  <title>KINGMAKE 광고판 (Admin+Analytics)</title>
   <style>
     :root{
       --bg:#0b0f17;
-      --panel:#0f1624;
       --border:rgba(255,255,255,.10);
       --text:rgba(255,255,255,.92);
       --muted:rgba(255,255,255,.65);
@@ -27,38 +26,24 @@
                   var(--bg);
       color:var(--text);
     }
-    .wrap{
-      width:min(1750px, calc(100vw - 48px));
-      margin: 24px auto 64px;
-    }
-    header{
-      display:flex;
-      gap:16px;
-      align-items:flex-start;
-      justify-content:space-between;
-      margin-bottom:16px;
-    }
+    .wrap{ width:min(1750px, calc(100vw - 48px)); margin: 24px auto 64px; }
+    header{ display:flex; gap:16px; align-items:flex-start; justify-content:space-between; margin-bottom:16px; }
     .brand{ display:flex; flex-direction:column; gap:6px; }
     .brand h1{ margin:0; font-size:26px; letter-spacing:.4px; }
     .brand p{ margin:0; color:var(--muted); font-size:14px; line-height:1.45; }
 
-    .controls{
-      display:flex; gap:10px; flex-wrap:wrap;
-      align-items:center; justify-content:flex-end;
-    }
+    .controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
     .pill{
       background: rgba(255,255,255,.06);
       border:1px solid var(--border);
       padding:10px 12px;
       border-radius:999px;
-      display:flex;
-      align-items:center;
-      gap:10px;
+      display:flex; align-items:center; gap:10px;
       box-shadow: 0 6px 18px rgba(0,0,0,.18);
       backdrop-filter: blur(8px);
     }
     .pill label{ font-size:12px; color:var(--muted); white-space:nowrap; }
-    select, input[type="text"], input[type="number"]{
+    select, input[type="text"], input[type="number"], input[type="date"], input[type="password"]{
       background: rgba(0,0,0,.25);
       border:1px solid rgba(255,255,255,.14);
       color:var(--text);
@@ -66,7 +51,7 @@
       border-radius:10px;
       outline:none;
       font-size:13px;
-      min-width: 160px;
+      min-width: 150px;
     }
     button{
       background: linear-gradient(135deg, rgba(255,215,0,.20), rgba(0,200,255,.16));
@@ -80,18 +65,10 @@
     }
     button:hover{ transform: translateY(-1px); filter: brightness(1.08); }
     button:active{ transform: translateY(0px); }
-    .btn-ghost{
-      background: rgba(255,255,255,.06);
-    }
-    .btn-bad{
-      background: rgba(255,77,109,.14);
-      border-color: rgba(255,77,109,.25);
-    }
+    .btn-ghost{ background: rgba(255,255,255,.06); }
+    .btn-bad{ background: rgba(255,77,109,.14); border-color: rgba(255,77,109,.25); }
 
-    .stats{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin: 10px 0 16px;
-    }
+    .stats{ display:flex; gap:10px; flex-wrap:wrap; margin: 10px 0 16px; }
     .stat{
       background: rgba(255,255,255,.05);
       border:1px solid var(--border);
@@ -101,93 +78,60 @@
       font-size:13px;
       color:var(--muted);
     }
-    .stat b{ color: var(--text); font-weight:800; }
-    .stat .ok{ color: var(--good); font-weight:800;}
-    .stat .warn{ color: var(--warn); font-weight:800;}
-    .stat .bad{ color: var(--bad); font-weight:800;}
+    .stat b{ color: var(--text); font-weight:900; }
+    .ok{ color: var(--good); font-weight:900; }
+    .warn{ color: var(--warn); font-weight:900; }
+    .bad{ color: var(--bad); font-weight:900; }
 
-    .board{
-      background: rgba(255,255,255,.03);
-      border:1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      box-shadow: var(--shadow);
-    }
-    .grid{
-      display:grid;
-      gap: var(--gap);
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-      align-items:stretch;
-    }
+    .board{ background: rgba(255,255,255,.03); border:1px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
+    .grid{ display:grid; gap: var(--gap); grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); align-items:stretch; }
 
     .seat{
       position:relative;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display:flex; align-items:center; justify-content:center;
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid rgba(255,255,255,.12);
       border-radius: 14px;
       cursor:pointer;
       overflow:hidden;
-      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease, filter .15s ease;
       min-height: 110px;
       user-select:none;
     }
-    .seat:hover{
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(0,0,0,.35);
-      border-color: rgba(255,255,255,.22);
-    }
-
-    /* 등급별 동일 크기 */
+    .seat:hover{ transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,.35); border-color: rgba(255,255,255,.22); }
     .seat.king{ min-height: 170px; }
     .seat.premium{ min-height: 130px; }
     .seat.standard{ min-height: 110px; }
 
     .badge{
-      position:absolute;
-      top:10px; left:10px;
-      font-size:11px;
-      padding:6px 8px;
-      border-radius:999px;
+      position:absolute; top:10px; left:10px;
+      font-size:11px; padding:6px 8px; border-radius:999px;
       border:1px solid rgba(255,255,255,.18);
       background: rgba(0,0,0,.25);
       color: rgba(255,255,255,.85);
       backdrop-filter: blur(6px);
-      display:flex;
-      gap:6px;
-      align-items:center;
+      display:flex; gap:6px; align-items:center;
     }
     .badge.king{ border-color: rgba(255,215,0,.45); }
     .badge.premium{ border-color: rgba(0,200,255,.45); }
     .badge.standard{ border-color: rgba(255,255,255,.18); }
+    .badge .cat{ opacity:.85; padding-left:6px; border-left:1px solid rgba(255,255,255,.18); }
 
-    .badge .cat{
-      opacity:.85;
-      padding-left:6px;
-      border-left:1px solid rgba(255,255,255,.18);
+    .tag{
+      position:absolute; top:10px; right:10px;
+      font-size:11px; padding:6px 8px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.88);
+      display:flex; gap:6px; align-items:center;
     }
-
-    .hot{
-      position:absolute;
-      top:10px; right:10px;
-      font-size:11px;
-      padding:6px 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,120,0,.55);
-      background: rgba(255,120,0,.14);
-      color: rgba(255,230,200,.95);
-      letter-spacing:.3px;
-      display:flex;
-      gap:6px;
-      align-items:center;
-    }
+    .tag.hot{ border-color: rgba(255,120,0,.55); background: rgba(255,120,0,.14); color: rgba(255,230,200,.95); }
+    .tag.disabled{ border-color: rgba(255,77,109,.5); background: rgba(255,77,109,.12); }
+    .tag.expired{ border-color: rgba(255,176,32,.55); background: rgba(255,176,32,.12); }
 
     .seat.is-hot::before{
       content:"";
-      position:absolute;
-      inset:-40%;
+      position:absolute; inset:-40%;
       background: radial-gradient(circle at 30% 30%, rgba(255,215,0,.35), transparent 55%),
                   radial-gradient(circle at 70% 60%, rgba(255,80,0,.22), transparent 60%);
       filter: blur(6px);
@@ -195,37 +139,20 @@
       animation: hotPulse 1.2s ease-in-out infinite;
       pointer-events:none;
     }
-    .seat.is-hot{
-      border-color: rgba(255,215,0,.35);
-      box-shadow: 0 0 0 1px rgba(255,215,0,.10), 0 18px 45px rgba(0,0,0,.42);
-    }
+    .seat.is-hot{ border-color: rgba(255,215,0,.35); box-shadow: 0 0 0 1px rgba(255,215,0,.10), 0 18px 45px rgba(0,0,0,.42); }
     @keyframes hotPulse{
       0%{ transform: scale(0.96) rotate(0deg); opacity:.35; }
       50%{ transform: scale(1.03) rotate(6deg); opacity:.60; }
       100%{ transform: scale(0.96) rotate(0deg); opacity:.35; }
     }
 
-    .logo{
-      width: 78%;
-      height: 78%;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 14px rgba(0,0,0,.30));
-    }
-    .fallback{
-      padding: 10px;
-      text-align:center;
-    }
-    .fallback .name{
-      font-weight:900;
-      font-size:14px;
-      letter-spacing:.2px;
-    }
-    .fallback .url{
-      margin-top:6px;
-      font-size:12px;
-      color: rgba(255,255,255,.65);
-      word-break: break-all;
-    }
+    .seat.is-disabled{ filter: grayscale(0.65) brightness(0.8); cursor:not-allowed; }
+    .seat.is-expired{ filter: grayscale(0.35) brightness(0.92); }
+
+    .logo{ width: 78%; height: 78%; object-fit: contain; filter: drop-shadow(0 10px 14px rgba(0,0,0,.30)); }
+    .fallback{ padding: 10px; text-align:center; }
+    .fallback .name{ font-weight:900; font-size:14px; letter-spacing:.2px; }
+    .fallback .url{ margin-top:6px; font-size:12px; color: rgba(255,255,255,.65); word-break: break-all; }
 
     dialog{
       border:1px solid rgba(255,255,255,.18);
@@ -234,15 +161,12 @@
       background: rgba(15,22,36,.96);
       color: var(--text);
       box-shadow: 0 30px 80px rgba(0,0,0,.55);
-      width:min(720px, calc(100vw - 32px));
+      width:min(820px, calc(100vw - 32px));
     }
-    dialog::backdrop{
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(4px);
-    }
+    dialog::backdrop{ background: rgba(0,0,0,.55); backdrop-filter: blur(4px); }
     .modal{ padding: 16px; }
     .modal h3{ margin:0 0 6px; font-size:18px; }
-    .modal p{ margin:0 0 14px; color: var(--muted); font-size:13px; line-height:1.45; }
+    .hint{ margin:0 0 14px; color: var(--muted); font-size:13px; line-height:1.45; }
     .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 10px; }
     .row a{
       color: var(--text);
@@ -256,50 +180,21 @@
       gap:8px;
     }
     .row a:hover{ filter: brightness(1.10); }
-    .row button{ background: rgba(255,255,255,.06); }
 
-    .split{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:12px;
-      margin-top: 10px;
-    }
-    .card{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
-      border-radius: 14px;
-      padding: 12px;
-    }
+    .split{ display:grid; grid-template-columns: 1.1fr .9fr; gap:12px; margin-top: 10px; }
+    .card{ border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); border-radius: 14px; padding: 12px; }
     .card h4{ margin:0 0 10px; font-size:14px; }
     .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
     .field label{ font-size:12px; color: var(--muted); }
     .field small{ color: rgba(255,255,255,.55); }
-    .hint{
-      font-size:12px;
-      color: rgba(255,255,255,.62);
-      line-height: 1.45;
-    }
-    .pricebox{
-      display:flex; flex-direction:column; gap:8px;
-      font-size:13px;
-      color: rgba(255,255,255,.78);
-    }
-    .pricebox .line{ display:flex; justify-content:space-between; gap:10px; }
-    .pricebox b{ color: var(--text); }
-    .pill-mini{
-      font-size:11px;
-      padding:4px 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.2);
-      display:inline-flex;
-      gap:6px;
-      align-items:center;
-    }
-    .okdot{ width:8px; height:8px; border-radius:50%; background: var(--good); display:inline-block; }
-    .baddot{ width:8px; height:8px; border-radius:50%; background: var(--bad); display:inline-block; }
+    pre{ margin:0; white-space:pre-wrap; word-break:break-all; }
 
-    @media (max-width: 920px){
+    table{ width:100%; border-collapse:collapse; font-size:13px; }
+    th, td{ padding:8px 6px; border-bottom:1px solid rgba(255,255,255,.10); text-align:left; }
+    th{ color: rgba(255,255,255,.78); font-weight:800; }
+    td{ color: rgba(255,255,255,.78); }
+
+    @media (max-width: 980px){
       header{ flex-direction:column; align-items:stretch; }
       .controls{ justify-content:flex-start; }
       .split{ grid-template-columns: 1fr; }
@@ -310,10 +205,10 @@
 <div class="wrap">
   <header>
     <div class="brand">
-      <h1>👑 KINGMAKE 광고판 (운영용)</h1>
+      <h1>👑 KINGMAKE 광고판 (관리자+분석)</h1>
       <p>
-        총 100석(킹3/프리미엄47/스탠다드50) · 카테고리 좌석 자동 생성 · HOT(유료) 고정 · 랜덤 배치<br/>
-        로고는 <b>/logos</b> 폴더에 넣으면 자동 적용됩니다. (없으면 텍스트/기본로고로 표시)
+        관리자 모드에서 좌석 상태(유료/만료/비활성) 관리 + 노출/클릭/CTR 분석이 가능합니다.<br/>
+        데이터는 브라우저 로컬에 저장됩니다(localStorage).
       </p>
     </div>
 
@@ -326,6 +221,8 @@
           <option value="premium">PREMIUM</option>
           <option value="standard">STANDARD</option>
           <option value="hot">HOT(유료)</option>
+          <option value="disabled">비활성</option>
+          <option value="expired">만료</option>
         </select>
       </div>
 
@@ -338,11 +235,14 @@
 
       <div class="pill">
         <label>검색</label>
-        <input id="q" type="text" placeholder="브랜드명/URL 검색" />
+        <input id="q" type="text" placeholder="브랜드/URL/ID" />
       </div>
 
       <button id="shuffleBtn">🔀 랜덤 재배치</button>
-      <button id="exportBtn" class="btn-ghost">🧾 광고목록 JSON</button>
+      <button id="exportBtn" class="btn-ghost">🧾 Export(JSON)</button>
+
+      <button id="adminBtn" class="btn-ghost">🔒 관리자 OFF</button>
+      <button id="resetAllBtn" class="btn-bad">♻ 전체 카운트 리셋</button>
     </div>
   </header>
 
@@ -353,7 +253,7 @@
   </section>
 </div>
 
-<!-- 상세/신청 모달 -->
+<!-- 상세/관리 모달 -->
 <dialog id="detailDialog">
   <div class="modal">
     <h3 id="dTitle">브랜드</h3>
@@ -361,148 +261,144 @@
 
     <div class="split">
       <div class="card">
-        <h4>📌 광고 신청</h4>
+        <h4>📊 분석(해당 좌석)</h4>
+        <table>
+          <tr><th>노출(View)</th><td id="mViews">0</td></tr>
+          <tr><th>클릭(Click)</th><td id="mClicks">0</td></tr>
+          <tr><th>CTR</th><td id="mCtr">0%</td></tr>
+          <tr><th>상태</th><td id="mState">ACTIVE</td></tr>
+          <tr><th>만료일</th><td id="mExpire">-</td></tr>
+        </table>
+
+        <div class="row">
+          <a id="dGo" href="#" target="_blank" rel="noopener noreferrer">🔗 사이트 열기</a>
+          <button id="dClose" class="btn-ghost">닫기</button>
+          <button id="resetSeatBtn" class="btn-bad">이 좌석 리셋</button>
+        </div>
+
+        <p class="hint" style="margin-top:10px">
+          • 일반 사용자: 클릭 시 사이트 이동(비활성/만료는 이동 차단)<br/>
+          • 관리자: 아래 “관리자 설정”에서 상태/만료일/유료(HOT) 변경
+        </p>
+      </div>
+
+      <div class="card">
+        <h4>🛠 관리자 설정 <span id="adminBadge" class="bad" style="font-weight:900; margin-left:8px;">OFF</span></h4>
 
         <div class="field">
-          <label>업체명</label>
-          <input id="fBrand" type="text" placeholder="예) BHC치킨 ○○점" />
+          <label>상태</label>
+          <select id="aStatus">
+            <option value="active">활성(Active)</option>
+            <option value="disabled">비활성(Disabled)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>유료 HOT</label>
+          <select id="aHot">
+            <option value="no">아님</option>
+            <option value="yes">HOT(유료)</option>
+          </select>
+          <small>HOT는 반짝+태그 표시</small>
+        </div>
+
+        <div class="field">
+          <label>만료일</label>
+          <input id="aExpire" type="date" />
+          <small>오늘보다 이전이면 “만료” 처리되어 클릭 차단</small>
+        </div>
+
+        <div class="field">
+          <label>브랜드명</label>
+          <input id="aName" type="text" placeholder="예) BHC치킨" />
         </div>
 
         <div class="field">
           <label>공식 URL (https://)</label>
-          <input id="fUrl" type="text" placeholder="예) https://example.com" />
-          <small>※ https만 허용(운영 안전)</small>
+          <input id="aUrl" type="text" placeholder="예) https://www.bhc.co.kr" />
         </div>
 
         <div class="field">
-          <label>연락처(전화/카톡/이메일)</label>
-          <input id="fContact" type="text" placeholder="예) 010-1234-5678 / 카톡ID" />
-        </div>
-
-        <div class="field">
-          <label>희망 기간(월)</label>
-          <input id="fMonths" type="number" min="1" value="1" />
+          <label>로고 경로(선택)</label>
+          <input id="aLogo" type="text" placeholder="예) logos/bhc.png" />
+          <small>비워두면 자동 슬러그(브랜드명).png 적용</small>
         </div>
 
         <div class="row">
-          <button id="applyBtn">✅ 신청 데이터 생성</button>
-          <button id="copyBtn" class="btn-ghost">📋 복사</button>
-          <button id="downloadBtn" class="btn-ghost">⬇ 다운로드</button>
+          <button id="saveAdminBtn">💾 저장</button>
+          <button id="copySeatJsonBtn" class="btn-ghost">📋 좌석 JSON 복사</button>
         </div>
 
-        <p class="hint" style="margin-top:10px">
-          신청 버튼을 누르면 <b>JSON</b>이 생성됩니다. (운영자는 이 JSON을 모아 “광고주 DB”로 관리하면 됩니다)
-        </p>
-
-        <pre id="out" class="card" style="margin-top:10px; white-space:pre-wrap; word-break:break-all;"></pre>
-      </div>
-
-      <div class="card">
-        <h4>💰 가격/혜택</h4>
-        <div id="priceBox" class="pricebox"></div>
-
-        <div style="margin-top:10px" class="hint">
-          <span class="pill-mini"><span class="okdot"></span>HOT(유료)</span>
-          는 상단 강조 + 반짝 효과로 클릭률이 높습니다.
-        </div>
-
-        <div class="row" style="margin-top:12px">
-          <a id="dGo" href="#" target="_blank" rel="noopener noreferrer">🔗 사이트 열기</a>
-          <button id="dClose" class="btn-ghost">닫기</button>
-        </div>
+        <pre id="seatJson" class="card" style="margin-top:10px;"></pre>
       </div>
     </div>
   </div>
 </dialog>
 
 <script>
-/**
- * =========================
- * 운영용 업그레이드 포인트
- * - 카테고리 좌석 자동 생성
- * - KING/PREMIUM/STANDARD 자동 배분(총 100석)
- * - HOT(유료) 좌석 고정 + 반짝
- * - 브랜드명 -> 로고 자동 매핑(슬러그) + 로드 실패 fallback
- * - 광고 신청 폼(JSON 생성/복사/다운로드)
- * - 전체 광고 목록(JSON Export)
- * =========================
- */
-
-/* 0) 운영 설정 */
+/* =========================
+   설정 / 데이터
+========================= */
 const SETTINGS = {
   totalSeats: 100,
-  gradeCounts: { king: 3, premium: 47, standard: 50 }, // 고정
-  // 카테고리 좌석 수 (요청)
-  categoryCounts: {
-    "치킨": 20,
-    "버거": 10,
-    "분식": 20,
-    "카페": 20,
-    "한식": 20,
-    "중식": 10
-  },
-
-  // HOT(유료) 좌석 수: "상위 등급부터" 할당
+  gradeCounts: { king: 3, premium: 47, standard: 50 },
+  categoryCounts: { "치킨":20, "버거":10, "분식":20, "카페":20, "한식":20, "중식":10 },
   hotPaidCount: 12,
-
-  // 등급별 월 가격(원) - 원하면 바꾸기
-  pricing: {
-    standard: 10000,
-    premium: 30000,
-    king: 100000,
-    hot_addon: 20000 // HOT 추가 옵션(유료 강조) : 등급 가격 + HOT 추가
-  },
-
-  // 로고 경로 규칙
   logosFolder: "logos",
-  defaultLogo: "logos/default.png", // 넣어두면 좋음(없어도 fallback 텍스트로 표시)
-  // 안전: https만 허용
+  defaultLogo: "logos/default.png",
   httpsOnly: true,
+
+  // 관리자 비밀번호 (원하면 변경)
+  adminPassword: "kingmake2026",
+
+  // localStorage keys
+  keySeats: "KINGMAKE_SEATS_V1",
+  keyMetrics: "KINGMAKE_METRICS_V1",
+  keyAdmin: "KINGMAKE_ADMIN_ON_V1"
 };
 
-/* 1) 샘플 브랜드 풀 (원하면 늘리면 됨) */
 const BRANDS_BY_CATEGORY = {
-  "치킨": [
+  "치킨":[
     { name:"BHC치킨", url:"https://www.bhc.co.kr" },
     { name:"BBQ", url:"https://www.bbq.co.kr" },
     { name:"교촌치킨", url:"https://www.kyochon.com" },
     { name:"굽네치킨", url:"https://www.goobne.co.kr" },
     { name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr" }
   ],
-  "버거": [
+  "버거":[
     { name:"맥도날드", url:"https://www.mcdonalds.co.kr" },
     { name:"롯데리아", url:"https://www.lotteria.com" },
     { name:"버거킹", url:"https://www.burgerking.co.kr" },
     { name:"맘스터치", url:"https://www.momstouch.co.kr" },
     { name:"KFC", url:"https://www.kfc.co.kr" }
   ],
-  "분식": [
+  "분식":[
     { name:"신전떡볶이", url:"https://sinjeon.co.kr" },
     { name:"엽기떡볶이", url:"https://www.yupdduk.com" },
     { name:"김밥천국", url:"https://www.gimbab1009.com" },
     { name:"죠스떡볶이", url:"https://www.jawsfood.co.kr" }
   ],
-  "카페": [
+  "카페":[
     { name:"스타벅스", url:"https://www.starbucks.co.kr" },
     { name:"이디야", url:"https://www.ediya.com" },
     { name:"메가커피", url:"https://www.mega-mgccoffee.com" },
     { name:"투썸플레이스", url:"https://www.twosome.co.kr" },
     { name:"빽다방", url:"https://www.theborn.co.kr" }
   ],
-  "한식": [
+  "한식":[
     { name:"본죽", url:"https://www.bonif.co.kr" },
     { name:"한솥도시락", url:"https://www.hsd.co.kr" },
-    { name:"놀부부대찌개", url:"https://www.nolboo.co.kr" },
     { name:"원할머니보쌈", url:"https://www.wonandone.co.kr" }
   ],
-  "중식": [
+  "중식":[
     { name:"홍콩반점", url:"https://www.theborn.co.kr" },
-    { name:"역전우동", url:"https://www.theborn.co.kr" },
-    { name:"공차(중식은 아니지만 예시)", url:"https://www.gong-cha.co.kr" } // 예시(원하면 제거)
+    { name:"역전우동", url:"https://www.theborn.co.kr" }
   ],
 };
 
-/* 2) DOM */
+/* =========================
+   DOM
+========================= */
 const grid = document.getElementById("grid");
 const stats = document.getElementById("stats");
 const filterEl = document.getElementById("filter");
@@ -510,24 +406,36 @@ const catFilterEl = document.getElementById("catFilter");
 const qEl = document.getElementById("q");
 const shuffleBtn = document.getElementById("shuffleBtn");
 const exportBtn = document.getElementById("exportBtn");
+const adminBtn = document.getElementById("adminBtn");
+const resetAllBtn = document.getElementById("resetAllBtn");
 
 const dialog = document.getElementById("detailDialog");
 const dTitle = document.getElementById("dTitle");
 const dMeta = document.getElementById("dMeta");
 const dGo = document.getElementById("dGo");
 const dClose = document.getElementById("dClose");
+const resetSeatBtn = document.getElementById("resetSeatBtn");
 
-const fBrand = document.getElementById("fBrand");
-const fUrl = document.getElementById("fUrl");
-const fContact = document.getElementById("fContact");
-const fMonths = document.getElementById("fMonths");
-const applyBtn = document.getElementById("applyBtn");
-const copyBtn = document.getElementById("copyBtn");
-const downloadBtn = document.getElementById("downloadBtn");
-const out = document.getElementById("out");
-const priceBox = document.getElementById("priceBox");
+const mViews = document.getElementById("mViews");
+const mClicks = document.getElementById("mClicks");
+const mCtr = document.getElementById("mCtr");
+const mState = document.getElementById("mState");
+const mExpire = document.getElementById("mExpire");
 
-/* 3) 유틸 */
+const adminBadge = document.getElementById("adminBadge");
+const aStatus = document.getElementById("aStatus");
+const aHot = document.getElementById("aHot");
+const aExpire = document.getElementById("aExpire");
+const aName = document.getElementById("aName");
+const aUrl = document.getElementById("aUrl");
+const aLogo = document.getElementById("aLogo");
+const saveAdminBtn = document.getElementById("saveAdminBtn");
+const copySeatJsonBtn = document.getElementById("copySeatJsonBtn");
+const seatJson = document.getElementById("seatJson");
+
+/* =========================
+   유틸
+========================= */
 function shuffle(arr){
   for(let i = arr.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
@@ -548,95 +456,112 @@ function isValidHttpsUrl(u){
     const url = new URL(u);
     if(SETTINGS.httpsOnly) return url.protocol === "https:" && !!url.hostname;
     return (url.protocol === "https:" || url.protocol === "http:") && !!url.hostname;
-  }catch(e){
-    return false;
-  }
+  }catch(e){ return false; }
 }
-function won(n){ return new Intl.NumberFormat("ko-KR").format(n) + "원"; }
-function typeLabel(t){ return t === "king" ? "KING" : (t === "premium" ? "PREMIUM" : "STANDARD"); }
-
-/** 브랜드명 -> 파일명 슬러그 (자동 로고 매핑용)
- * - 한글도 남기되, 공백/특수문자 정리
- * - 가능하면 로고 파일명은 영어/숫자/하이픈 추천
- */
 function slugify(name){
-  return name
-    .trim()
-    .toLowerCase()
+  return name.trim().toLowerCase()
     .replace(/\s+/g, "-")
-    .replace(/[\/\\?%*:|"<>]/g, "") // 파일에 위험한 문자 제거
-    .replace(/[^0-9a-z가-힣\-_.]/g, ""); // 기본 허용
+    .replace(/[\/\\?%*:|"<>]/g, "")
+    .replace(/[^0-9a-z가-힣\-_.]/g, "");
 }
-function autoLogoPath(brand){
-  // brand.logo가 있으면 우선
-  if(brand.logo) return brand.logo;
-  const slug = slugify(brand.name);
+function autoLogoPath(name, logoOverride){
+  if(logoOverride && logoOverride.trim()) return logoOverride.trim();
+  const slug = slugify(name);
   return `${SETTINGS.logosFolder}/${slug}.png`;
 }
+function todayYmd(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const dd = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${dd}`;
+}
+function isExpired(expireDateYmd){
+  if(!expireDateYmd) return false;
+  return expireDateYmd < todayYmd(); // YYYY-MM-DD 문자열 비교 OK
+}
+function pct(n){ return (Math.round(n*1000)/10).toFixed(1) + "%"; }
 
-/* 4) 카테고리 필터 옵션 채우기 */
-function initCategoryFilter(){
-  const cats = Object.keys(SETTINGS.categoryCounts);
-  cats.forEach(c => {
-    const opt = document.createElement("option");
-    opt.value = c;
-    opt.textContent = c;
-    catFilterEl.appendChild(opt);
-  });
+/* =========================
+   Metrics (조회/클릭)
+   metrics = { [seatId]: { views, clicks } }
+========================= */
+function loadMetrics(){
+  try{
+    const raw = localStorage.getItem(SETTINGS.keyMetrics);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveMetrics(metrics){
+  localStorage.setItem(SETTINGS.keyMetrics, JSON.stringify(metrics));
+}
+let metrics = loadMetrics();
+
+function incView(seatId){
+  metrics[seatId] = metrics[seatId] || { views:0, clicks:0 };
+  metrics[seatId].views += 1;
+  saveMetrics(metrics);
+}
+function incClick(seatId){
+  metrics[seatId] = metrics[seatId] || { views:0, clicks:0 };
+  metrics[seatId].clicks += 1;
+  saveMetrics(metrics);
+}
+function resetSeatMetrics(seatId){
+  metrics[seatId] = { views:0, clicks:0 };
+  saveMetrics(metrics);
+}
+function resetAllMetrics(){
+  metrics = {};
+  saveMetrics(metrics);
 }
 
-/* 5) 좌석 생성 로직
- * - 카테고리별 좌석 수대로 seats 생성
- * - 등급은 전체 100석 기준으로 king/premium/standard 할당
- * - HOT(유료) 좌석은 상위 등급부터 hotPaidCount만큼 지정
- */
-function buildSeats(){
+/* =========================
+   Seats (관리자 설정 포함)
+   seat fields:
+   - id, category, type
+   - name, url, logo
+   - status: active|disabled
+   - hotPaid: boolean
+   - expireDate: "YYYY-MM-DD" or ""
+========================= */
+function buildDefaultSeats(){
   const seats = [];
+  let idx = 0;
 
-  // (1) 카테고리 좌석 생성
-  let seatIndex = 0;
+  // 카테고리 수만큼 생성
   for(const [cat, count] of Object.entries(SETTINGS.categoryCounts)){
     const pool = (BRANDS_BY_CATEGORY[cat] && BRANDS_BY_CATEGORY[cat].length)
       ? BRANDS_BY_CATEGORY[cat]
       : [{ name:`${cat} 광고주`, url:"https://example.com" }];
 
-    for(let i=0; i<count; i++){
+    for(let i=0;i<count;i++){
       const b = pool[i % pool.length];
-      const url_ok = isValidHttpsUrl(b.url);
-
+      const id = `S-${String(++idx).padStart(3,"0")}`;
       seats.push({
-        id: `S-${String(++seatIndex).padStart(3,"0")}`,
+        id,
         category: cat,
-        type: "standard", // 임시, 아래에서 등급 배분
-        hot: false,
+        type: "standard",
         name: b.name,
         url: b.url,
-        url_ok,
-        logo: autoLogoPath(b),
-        // 운영용 필드
-        is_paid: false,
-        created_at: new Date().toISOString(),
+        logo: autoLogoPath(b.name, ""),
+        status: "active",
+        hotPaid: false,
+        expireDate: "",
       });
     }
   }
 
-  // (2) 총 100석 검증(혹시 설정 변경 대비)
+  // 총 100 보정
   if(seats.length !== SETTINGS.totalSeats){
-    // 부족/초과 시 자동 보정(부족하면 dummy 채우기 / 초과면 자르기)
     if(seats.length < SETTINGS.totalSeats){
       const missing = SETTINGS.totalSeats - seats.length;
-      for(let i=0; i<missing; i++){
+      for(let i=0;i<missing;i++){
+        const id = `S-${String(++idx).padStart(3,"0")}`;
         seats.push({
-          id: `S-${String(++seatIndex).padStart(3,"0")}`,
-          category: "기타",
-          type: "standard",
-          hot: false,
-          name: "광고주 모집중",
-          url: "https://example.com",
-          url_ok: true,
-          logo: SETTINGS.defaultLogo,
-          is_paid: false,
-          created_at: new Date().toISOString(),
+          id, category:"기타", type:"standard",
+          name:"광고주 모집중", url:"https://example.com",
+          logo: SETTINGS.defaultLogo, status:"active", hotPaid:false, expireDate:""
         });
       }
     }else{
@@ -644,154 +569,249 @@ function buildSeats(){
     }
   }
 
-  // (3) 등급 배분: 랜덤하게 섞은 뒤 앞에서부터 KING/PREMIUM/STD 할당
+  // 등급 배분
   const order = shuffle(seats.slice());
-  let ptr = 0;
   const { king, premium, standard } = SETTINGS.gradeCounts;
+  let p=0;
+  order.slice(p,p+king).forEach(s=>s.type="king"); p+=king;
+  order.slice(p,p+premium).forEach(s=>s.type="premium"); p+=premium;
+  order.slice(p,p+standard).forEach(s=>s.type="standard"); p+=standard;
 
-  order.slice(ptr, ptr+king).forEach(s => s.type="king"); ptr += king;
-  order.slice(ptr, ptr+premium).forEach(s => s.type="premium"); ptr += premium;
-  order.slice(ptr, ptr+standard).forEach(s => s.type="standard"); ptr += standard;
-
-  // (4) HOT(유료) 고정: king -> premium -> standard 순서로 지정
+  // HOT 기본 할당(상위 등급부터)
   const hotTargets = order
-    .filter(s => s.type === "king")
-    .concat(order.filter(s => s.type === "premium"))
-    .concat(order.filter(s => s.type === "standard"))
-    .slice(0, Math.min(SETTINGS.hotPaidCount, order.length));
+    .filter(s=>s.type==="king")
+    .concat(order.filter(s=>s.type==="premium"))
+    .concat(order.filter(s=>s.type==="standard"))
+    .slice(0, SETTINGS.hotPaidCount);
+  hotTargets.forEach(s=>s.hotPaid=true);
 
-  hotTargets.forEach(s => { s.hot = true; s.is_paid = true; });
-
-  // (5) 최종 배치는 랜덤
-  shuffle(order);
-  return order;
+  return shuffle(order);
 }
 
-/* 6) 렌더 */
-let allSeats = buildSeats();
+function loadSeats(){
+  try{
+    const raw = localStorage.getItem(SETTINGS.keySeats);
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    // 최소 유효성
+    if(!Array.isArray(parsed) || parsed.length < 1) return null;
+    return parsed;
+  }catch(e){ return null; }
+}
+function saveSeats(seats){
+  localStorage.setItem(SETTINGS.keySeats, JSON.stringify(seats));
+}
 
+let allSeats = loadSeats() || buildDefaultSeats();
+saveSeats(allSeats); // 최초 저장
+
+/* =========================
+   Admin state
+========================= */
+function loadAdminOn(){
+  return localStorage.getItem(SETTINGS.keyAdmin) === "1";
+}
+function saveAdminOn(on){
+  localStorage.setItem(SETTINGS.keyAdmin, on ? "1" : "0");
+}
+let adminOn = loadAdminOn();
+
+/* =========================
+   필터 초기화
+========================= */
+function initCategoryFilter(){
+  const cats = Object.keys(SETTINGS.categoryCounts);
+  cats.forEach(c=>{
+    const opt=document.createElement("option");
+    opt.value=c; opt.textContent=c;
+    catFilterEl.appendChild(opt);
+  });
+}
+
+/* =========================
+   파생 상태(만료 계산)
+========================= */
+function seatDerivedState(seat){
+  const expired = isExpired(seat.expireDate);
+  const disabled = seat.status === "disabled";
+  return { expired, disabled };
+}
+
+/* =========================
+   렌더(통계)
+========================= */
+function sumMetrics(){
+  let views=0, clicks=0;
+  for(const k of Object.keys(metrics)){
+    views += (metrics[k]?.views || 0);
+    clicks += (metrics[k]?.clicks || 0);
+  }
+  const ctr = views ? (clicks / views) : 0;
+  return { views, clicks, ctr };
+}
 function renderStats(){
   const total = allSeats.length;
-  const hotCount = allSeats.filter(s => s.hot).length;
-  const invalidCount = allSeats.filter(s => !s.url_ok).length;
-  const paidCount = allSeats.filter(s => s.is_paid).length;
+  const hot = allSeats.filter(s=>s.hotPaid).length;
+  const disabled = allSeats.filter(s=>s.status==="disabled").length;
+  const expired = allSeats.filter(s=>isExpired(s.expireDate)).length;
 
-  const k = allSeats.filter(s => s.type === "king").length;
-  const p = allSeats.filter(s => s.type === "premium").length;
-  const s = allSeats.filter(s => s.type === "standard").length;
+  const k = allSeats.filter(s=>s.type==="king").length;
+  const p = allSeats.filter(s=>s.type==="premium").length;
+  const st = allSeats.filter(s=>s.type==="standard").length;
+
+  const sm = sumMetrics();
 
   stats.innerHTML = `
     <div class="stat">총 좌석: <b>${total}</b></div>
-    <div class="stat">KING: <b>${k}</b></div>
-    <div class="stat">PREMIUM: <b>${p}</b></div>
-    <div class="stat">STANDARD: <b>${s}</b></div>
-    <div class="stat">HOT(유료): <b>${hotCount}</b> · 유료표시: <b>${paidCount}</b></div>
-    <div class="stat">URL 오류: <b class="${invalidCount? "warn":"ok"}">${invalidCount}</b></div>
+    <div class="stat">KING: <b>${k}</b> · PREMIUM: <b>${p}</b> · STANDARD: <b>${st}</b></div>
+    <div class="stat">HOT(유료): <b>${hot}</b></div>
+    <div class="stat">비활성: <b class="${disabled? "warn":"ok"}">${disabled}</b> · 만료: <b class="${expired? "warn":"ok"}">${expired}</b></div>
+    <div class="stat">전체 노출: <b>${sm.views}</b> · 클릭: <b>${sm.clicks}</b> · CTR: <b>${pct(sm.ctr)}</b></div>
   `;
 }
 
+/* =========================
+   필터 매칭
+========================= */
 function seatMatches(seat){
   const f = filterEl.value;
   const cf = catFilterEl.value;
-  const q = (qEl.value || "").trim().toLowerCase();
+  const q = (qEl.value||"").trim().toLowerCase();
+
+  const ds = seatDerivedState(seat);
 
   const okFilter =
-    (f === "all") ||
-    (f === "hot" && seat.hot) ||
-    (f === seat.type);
+    (f==="all") ||
+    (f==="hot" && seat.hotPaid) ||
+    (f==="disabled" && ds.disabled) ||
+    (f==="expired" && ds.expired) ||
+    (f===seat.type);
 
-  const okCat =
-    (cf === "all") ||
-    (seat.category === cf);
+  const okCat = (cf==="all") || (seat.category===cf);
 
-  const okQuery =
-    (!q) ||
-    (seat.name.toLowerCase().includes(q)) ||
-    (seat.url.toLowerCase().includes(q)) ||
-    (seat.id.toLowerCase().includes(q));
+  const okQuery = (!q) ||
+    seat.name.toLowerCase().includes(q) ||
+    seat.url.toLowerCase().includes(q) ||
+    seat.id.toLowerCase().includes(q);
 
   return okFilter && okCat && okQuery;
 }
 
+/* =========================
+   상세 모달
+========================= */
 let currentSeat = null;
 
-function calcMonthlyPrice(seat){
-  const base = SETTINGS.pricing[seat.type] || 0;
-  const hotAddon = seat.hot ? SETTINGS.pricing.hot_addon : 0;
-  return base + hotAddon;
+function seatToJson(seat){
+  const m = metrics[seat.id] || { views:0, clicks:0 };
+  const ctr = m.views ? (m.clicks / m.views) : 0;
+  return {
+    ...seat,
+    derived: seatDerivedState(seat),
+    metrics: { ...m, ctr }
+  };
 }
 
-function renderPriceBox(seat){
-  const monthly = calcMonthlyPrice(seat);
-  const base = SETTINGS.pricing[seat.type] || 0;
-  const addon = seat.hot ? SETTINGS.pricing.hot_addon : 0;
+function refreshModal(){
+  if(!currentSeat) return;
+  const m = metrics[currentSeat.id] || { views:0, clicks:0 };
+  const ctr = m.views ? (m.clicks / m.views) : 0;
 
-  priceBox.innerHTML = `
-    <div class="line"><span>등급(${typeLabel(seat.type)})</span><b>${won(base)}/월</b></div>
-    <div class="line"><span>HOT 강조</span><b>${seat.hot ? won(addon) + "/월" : "없음"}</b></div>
-    <div class="line" style="margin-top:6px; padding-top:8px; border-top:1px solid rgba(255,255,255,.12);">
-      <span><b>합계</b></span><b>${won(monthly)}/월</b>
-    </div>
-    <div class="hint" style="margin-top:10px;">
-      • KING: 최상단 급(대형) / • PREMIUM: 중형 / • STANDARD: 소형<br/>
-      • HOT는 유료광고로 고정 노출(반짝)
-    </div>
-  `;
+  const ds = seatDerivedState(currentSeat);
+  const stateText = ds.disabled ? "DISABLED" : (ds.expired ? "EXPIRED" : "ACTIVE");
+
+  mViews.textContent = m.views || 0;
+  mClicks.textContent = m.clicks || 0;
+  mCtr.textContent = pct(ctr);
+  mState.textContent = stateText;
+  mExpire.textContent = currentSeat.expireDate || "-";
+
+  // 관리자 UI 반영
+  adminBadge.textContent = adminOn ? "ON" : "OFF";
+  adminBadge.className = adminOn ? "ok" : "bad";
+
+  aStatus.value = currentSeat.status || "active";
+  aHot.value = currentSeat.hotPaid ? "yes" : "no";
+  aExpire.value = currentSeat.expireDate || "";
+  aName.value = currentSeat.name || "";
+  aUrl.value = currentSeat.url || "";
+  aLogo.value = (currentSeat.logo || "").trim();
+
+  const j = seatToJson(currentSeat);
+  seatJson.textContent = JSON.stringify(j, null, 2);
+
+  // 이동 버튼 제어
+  const urlOk = isValidHttpsUrl(currentSeat.url);
+  const blocked = ds.disabled || ds.expired || !urlOk;
+  if(blocked){
+    dGo.href = "#";
+    dGo.style.pointerEvents = "none";
+    dGo.style.opacity = ".5";
+  }else{
+    dGo.href = currentSeat.url;
+    dGo.style.pointerEvents = "auto";
+    dGo.style.opacity = "1";
+  }
 }
 
 function openSeatModal(seat){
   currentSeat = seat;
   dTitle.textContent = seat.name;
-  dMeta.textContent = `${typeLabel(seat.type)} · ${seat.category} · ${seat.url_ok ? seat.url : "⚠️ https URL 오류"} · ${seat.id}`;
-
-  // 폼 기본값
-  fBrand.value = seat.name;
-  fUrl.value = seat.url_ok ? seat.url : "";
-  fContact.value = "";
-  fMonths.value = 1;
-
-  renderPriceBox(seat);
-
-  if(seat.url_ok){
-    dGo.href = seat.url;
-    dGo.style.pointerEvents = "auto";
-    dGo.style.opacity = "1";
-  }else{
-    dGo.href = "#";
-    dGo.style.pointerEvents = "none";
-    dGo.style.opacity = ".5";
-  }
-
-  out.textContent = "";
+  dMeta.textContent = `${seat.type.toUpperCase()} · ${seat.category} · ${seat.url} · ${seat.id}`;
+  refreshModal();
   dialog.showModal();
 }
 
+/* =========================
+   그리드 렌더 + 노출 카운트
+   - "노출"은 현재 화면에 그려진 좌석을 1회 렌더할 때 1씩 증가
+   - 필터/검색/랜덤 재배치 시에도 증가합니다(간단 분석용)
+========================= */
 function render(){
   grid.innerHTML = "";
   const visible = allSeats.filter(seatMatches);
 
+  // 노출 카운트 증가
+  visible.forEach(s => incView(s.id));
+
   for(const seat of visible){
+    const ds = seatDerivedState(seat);
+
     const el = document.createElement("div");
-    el.className = `seat ${seat.type}` + (seat.hot ? " is-hot" : "");
+    const hotClass = seat.hotPaid ? " is-hot" : "";
+    const disClass = ds.disabled ? " is-disabled" : "";
+    const expClass = ds.expired ? " is-expired" : "";
+    el.className = `seat ${seat.type}${hotClass}${disClass}${expClass}`;
 
     const badge = document.createElement("div");
     badge.className = `badge ${seat.type}`;
-    badge.innerHTML = `${typeLabel(seat.type)} <span class="cat">${escapeHtml(seat.category)}</span>`;
+    badge.innerHTML = `${seat.type.toUpperCase()} <span class="cat">${escapeHtml(seat.category)}</span>`;
     el.appendChild(badge);
 
-    if(seat.hot){
-      const hot = document.createElement("div");
-      hot.className = "hot";
-      hot.textContent = "HOT · 유료";
-      el.appendChild(hot);
+    // 태그 표시
+    if(ds.disabled){
+      const tag = document.createElement("div");
+      tag.className = "tag disabled";
+      tag.textContent = "비활성";
+      el.appendChild(tag);
+    }else if(ds.expired){
+      const tag = document.createElement("div");
+      tag.className = "tag expired";
+      tag.textContent = "만료";
+      el.appendChild(tag);
+    }else if(seat.hotPaid){
+      const tag = document.createElement("div");
+      tag.className = "tag hot";
+      tag.textContent = "HOT · 유료";
+      el.appendChild(tag);
     }
 
-    // 로고(자동) -> 실패하면 기본로고 -> 실패하면 텍스트
+    // 로고 -> 실패 시 기본 -> 텍스트
     const img = document.createElement("img");
     img.className = "logo";
     img.alt = seat.name;
     img.loading = "lazy";
-    img.src = seat.logo || SETTINGS.defaultLogo;
+    img.src = (seat.logo && seat.logo.trim()) ? seat.logo.trim() : autoLogoPath(seat.name, "");
 
     let triedDefault = false;
     img.onerror = () => {
@@ -808,10 +828,30 @@ function render(){
     };
     el.appendChild(img);
 
-    // 좌클릭: 유효 URL이면 새창, 대신 운영용은 "모달 먼저"가 전환율 좋음
-    // => 여기서는 모달로 통일 (원하면 즉시 open으로 바꿀 수 있음)
-    el.addEventListener("click", () => openSeatModal(seat));
-    el.addEventListener("contextmenu", (e) => { e.preventDefault(); openSeatModal(seat); });
+    // 클릭 동작
+    el.addEventListener("click", () => {
+      // 관리자 모드면 모달로 편집
+      if(adminOn){
+        openSeatModal(seat);
+        return;
+      }
+
+      // 일반 모드: 비활성/만료/URL오류면 모달 안내
+      const urlOk = isValidHttpsUrl(seat.url);
+      const blocked = ds.disabled || ds.expired || !urlOk;
+
+      if(blocked){
+        openSeatModal(seat);
+        return;
+      }
+
+      // 클릭 카운트 + 이동
+      incClick(seat.id);
+      window.open(seat.url, "_blank", "noopener,noreferrer");
+    });
+
+    // 우클릭: 항상 모달
+    el.addEventListener("contextmenu", (e)=>{ e.preventDefault(); openSeatModal(seat); });
 
     grid.appendChild(el);
   }
@@ -820,66 +860,79 @@ function render(){
     const empty = document.createElement("div");
     empty.style.padding = "18px 6px";
     empty.style.color = "rgba(255,255,255,.65)";
-    empty.textContent = "검색/필터 조건에 맞는 좌석이 없습니다.";
+    empty.textContent = "조건에 맞는 좌석이 없습니다.";
     grid.appendChild(empty);
   }
+
+  renderStats();
 }
 
-/* 7) 신청 JSON 생성/복사/다운로드 */
-function buildApplicationJson(){
-  if(!currentSeat) return null;
-
-  const months = Math.max(1, parseInt(fMonths.value || "1", 10));
-  const url = (fUrl.value || "").trim();
-  const url_ok = isValidHttpsUrl(url);
-
-  const monthly = calcMonthlyPrice(currentSeat);
-  const totalPrice = monthly * months;
-
-  return {
-    kind: "KINGMAKE_AD_APPLICATION",
-    created_at: new Date().toISOString(),
-    seat: {
-      id: currentSeat.id,
-      grade: currentSeat.type,
-      category: currentSeat.category,
-      hot_paid: currentSeat.hot,
-      monthly_price_won: monthly,
-    },
-    applicant: {
-      brand_name: (fBrand.value || "").trim(),
-      official_url: url,
-      url_ok,
-      contact: (fContact.value || "").trim(),
-      months,
-      total_price_won: totalPrice
-    }
-  };
+/* =========================
+   관리자 토글
+========================= */
+function syncAdminUi(){
+  adminBtn.textContent = adminOn ? "🔓 관리자 ON" : "🔒 관리자 OFF";
 }
-
-applyBtn.addEventListener("click", () => {
-  const data = buildApplicationJson();
-  if(!data) return;
-
-  if(!data.applicant.brand_name){
-    alert("업체명을 입력해주세요.");
+adminBtn.addEventListener("click", () => {
+  if(adminOn){
+    adminOn = false;
+    saveAdminOn(false);
+    syncAdminUi();
+    render();
     return;
   }
-  if(!data.applicant.official_url || !data.applicant.url_ok){
-    alert("공식 URL을 https:// 로 정확히 입력해주세요.");
-    return;
+  const pw = prompt("관리자 비밀번호를 입력하세요:");
+  if(pw === null) return;
+  if(pw === SETTINGS.adminPassword){
+    adminOn = true;
+    saveAdminOn(true);
+    syncAdminUi();
+    render();
+  }else{
+    alert("비밀번호가 틀렸습니다.");
   }
-  if(!data.applicant.contact){
-    alert("연락처를 입력해주세요.");
-    return;
-  }
-
-  out.textContent = JSON.stringify(data, null, 2);
 });
 
-copyBtn.addEventListener("click", async () => {
-  const txt = out.textContent.trim();
-  if(!txt){ alert("먼저 신청 데이터를 생성해주세요."); return; }
+/* =========================
+   관리자 저장(좌석 상태 변경)
+========================= */
+saveAdminBtn.addEventListener("click", () => {
+  if(!adminOn){
+    alert("관리자 모드를 켜주세요.");
+    return;
+  }
+  if(!currentSeat) return;
+
+  const newName = (aName.value||"").trim();
+  const newUrl = (aUrl.value||"").trim();
+  if(!newName){
+    alert("브랜드명을 입력하세요.");
+    return;
+  }
+  if(!isValidHttpsUrl(newUrl)){
+    alert("공식 URL을 https:// 로 정확히 입력하세요.");
+    return;
+  }
+
+  currentSeat.status = aStatus.value;
+  currentSeat.hotPaid = (aHot.value === "yes");
+  currentSeat.expireDate = (aExpire.value || "").trim();
+  currentSeat.name = newName;
+  currentSeat.url = newUrl;
+  currentSeat.logo = autoLogoPath(newName, (aLogo.value||"").trim());
+
+  // allSeats 반영
+  allSeats = allSeats.map(s => s.id === currentSeat.id ? currentSeat : s);
+  saveSeats(allSeats);
+
+  refreshModal();
+  render();
+  alert("저장 완료!");
+});
+
+copySeatJsonBtn.addEventListener("click", async () => {
+  if(!currentSeat) return;
+  const txt = seatJson.textContent.trim();
   try{
     await navigator.clipboard.writeText(txt);
     alert("복사 완료!");
@@ -888,80 +941,99 @@ copyBtn.addEventListener("click", async () => {
   }
 });
 
-downloadBtn.addEventListener("click", () => {
-  const txt = out.textContent.trim();
-  if(!txt){ alert("먼저 신청 데이터를 생성해주세요."); return; }
-  const blob = new Blob([txt], { type: "application/json;charset=utf-8" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `kingmake_application_${currentSeat ? currentSeat.id : "seat"}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(a.href);
+/* =========================
+   좌석/전체 카운트 리셋
+========================= */
+resetSeatBtn.addEventListener("click", () => {
+  if(!currentSeat) return;
+  if(!confirm(`${currentSeat.id} 좌석 카운트를 0으로 리셋할까요?`)) return;
+  resetSeatMetrics(currentSeat.id);
+  refreshModal();
+  renderStats();
+  alert("리셋 완료!");
 });
 
-/* 8) 전체 광고 목록 JSON Export */
-exportBtn.addEventListener("click", () => {
-  const exportData = {
-    kind: "KINGMAKE_AD_BOARD_EXPORT",
-    created_at: new Date().toISOString(),
-    settings: SETTINGS,
-    seats: allSeats.map(s => ({
-      id: s.id,
-      grade: s.type,
-      category: s.category,
-      hot_paid: s.hot,
-      name: s.name,
-      url: s.url,
-      url_ok: s.url_ok,
-      logo: s.logo
-    }))
-  };
+resetAllBtn.addEventListener("click", () => {
+  if(!confirm("전체 좌석의 조회/클릭 카운트를 모두 0으로 리셋할까요?")) return;
+  resetAllMetrics();
+  renderStats();
+  alert("전체 리셋 완료!");
+});
 
+/* =========================
+   Export JSON (좌석+메트릭)
+========================= */
+exportBtn.addEventListener("click", async () => {
+  const exportData = {
+    kind: "KINGMAKE_EXPORT_V1",
+    created_at: new Date().toISOString(),
+    seats: allSeats,
+    metrics
+  };
   const txt = JSON.stringify(exportData, null, 2);
 
-  // 다운로드 + 복사 둘 다 제공
-  const blob = new Blob([txt], { type: "application/json;charset=utf-8" });
+  // 다운로드
+  const blob = new Blob([txt], { type:"application/json;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `kingmake_board_export.json`;
+  a.download = "kingmake_export.json";
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(a.href);
 
-  navigator.clipboard?.writeText(txt).then(()=> {
-    alert("광고목록 JSON 다운로드 + 클립보드 복사 완료!");
-  }).catch(()=> {
-    alert("광고목록 JSON 다운로드 완료! (클립보드 복사는 브라우저 권한 필요)");
-  });
+  // 복사
+  try{
+    await navigator.clipboard.writeText(txt);
+    alert("Export 다운로드 + 클립보드 복사 완료!");
+  }catch(e){
+    alert("Export 다운로드 완료! (클립보드 권한이 없을 수 있어요)");
+  }
 });
 
-/* 9) 기타 이벤트 */
+/* =========================
+   랜덤 재배치
+   - 좌석 자체를 새로 만들면 기존 metrics와 id 매칭이 깨질 수 있으니
+     여기서는 "배열 순서만 셔플" 합니다.
+========================= */
+shuffleBtn.addEventListener("click", () => {
+  allSeats = shuffle(allSeats.slice());
+  saveSeats(allSeats);
+  render();
+});
+
+/* =========================
+   모달 닫기
+========================= */
+dClose.addEventListener("click", () => dialog.close());
+dialog.addEventListener("click", (e) => {
+  const rect = dialog.getBoundingClientRect();
+  const inDialog = rect.top <= e.clientY && e.clientY <= rect.bottom &&
+                   rect.left <= e.clientX && e.clientX <= rect.right;
+  if(!inDialog) dialog.close();
+});
+
+/* =========================
+   필터 이벤트
+========================= */
 filterEl.addEventListener("change", render);
 catFilterEl.addEventListener("change", render);
 qEl.addEventListener("input", render);
 
-shuffleBtn.addEventListener("click", () => {
-  allSeats = buildSeats();
-  renderStats();
-  render();
-});
-
-dClose.addEventListener("click", () => dialog.close());
-dialog.addEventListener("click", (e) => {
-  const rect = dialog.getBoundingClientRect();
-  const inDialog = (
-    rect.top <= e.clientY && e.clientY <= rect.bottom &&
-    rect.left <= e.clientX && e.clientX <= rect.right
-  );
-  if(!inDialog) dialog.close();
-});
-
-/* 10) 초기 구동 */
+/* =========================
+   초기 구동
+========================= */
+function initCategoryFilter(){
+  const cats = Object.keys(SETTINGS.categoryCounts);
+  cats.forEach(c=>{
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = c;
+    catFilterEl.appendChild(opt);
+  });
+}
 initCategoryFilter();
-renderStats();
+syncAdminUi();
 render();
 </script>
 </body>
