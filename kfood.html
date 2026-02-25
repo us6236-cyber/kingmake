@@ -270,43 +270,55 @@ const HOT_COUNT = 12;
 // - KING 3개는 입점 문의(메일)로
 // - Premium 47개 / Standard 50개는 브랜드명 기반 검색 링크로
 const brands = [
-  // 👑 KING (3)
+
+  // 👑 KING SEATS
   { tier:"king", name:"KING SEAT A", url:"mailto:contact@kingmake.kr" },
   { tier:"king", name:"KING SEAT B", url:"mailto:contact@kingmake.kr" },
   { tier:"king", name:"KING SEAT C", url:"mailto:contact@kingmake.kr" },
 
-  // ⭐ Premium (47)
-  ...[
-    "BHC","BBQ","교촌치킨","굽네치킨","네네치킨","푸라닭","노랑통닭","처갓집양념치킨","또래오래","멕시카나",
-    "페리카나","호식이두마리치킨","지코바","60계치킨","자담치킨","부어치킨","치킨플러스","바른치킨","또봉이통닭","땅땅치킨",
-    "꾸브라꼬숯불두마리치킨","기영이숯불두마리치킨","치킨마루","쌀통닭","올리브치킨","와락치킨","킹콩부대찌개(치킨)","강정이기가막혀","코리엔탈치킨","치킨신드롬",
-    "오븐에빠진닭(오빠닭)","훌랄라참숯바베큐치킨","누구나홀딱반한닭","치킨678","치킨매니아","또카닭","치킨더홈","대한통닭","한신포차(치킨)","꼬꼬닭",
-    "치킨퐁","통큰치킨","자이언트치킨","치킨의민족","오성통닭","마니치킨","수원통닭거리(브랜드)"
-  ].slice(0, SEAT_COUNTS.premium).map(n => ({
-    tier:"premium",
-    name:n,
-    url: searchUrl(n)
-  })),
+  // ⭐ Premium (대표 브랜드)
+  { tier:"premium", name:"BHC", url:"https://www.bhc.co.kr" },
+  { tier:"premium", name:"BBQ", url:"https://bbq.co.kr" },
+  { tier:"premium", name:"교촌치킨", url:"https://www.kyochon.com" },
+  { tier:"premium", name:"굽네치킨", url:"https://www.goobne.co.kr" },
+  { tier:"premium", name:"푸라닭", url:"https://puradakchicken.com" },
+  { tier:"premium", name:"노랑통닭", url:"https://norangtongdak.co.kr" },
+  { tier:"premium", name:"네네치킨", url:"https://nenechicken.com" },
+  { tier:"premium", name:"멕시카나", url:"https://www.mexicana.co.kr" },
+  { tier:"premium", name:"페리카나", url:"https://www.pericana.co.kr" },
+  { tier:"premium", name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr" },
+  { tier:"premium", name:"지코바", url:"https://www.zicoba.co.kr" },
+  { tier:"premium", name:"60계치킨", url:"https://www.60chicken.com" },
+  { tier:"premium", name:"자담치킨", url:"https://www.jadamchicken.com" },
+  { tier:"premium", name:"치킨플러스", url:"https://www.chickenplus.co.kr" },
+  { tier:"premium", name:"또래오래", url:"https://www.toreore.com" },
+  { tier:"premium", name:"호식이두마리치킨", url:"https://www.9922.co.kr" },
+  { tier:"premium", name:"부어치킨", url:"https://www.boor.co.kr" },
+  { tier:"premium", name:"바른치킨", url:"https://barunchicken.com" },
 
-  // ⬜ Standard (50)
-  ...[
-    "김밥천국","김가네","고봉민김밥","죠스떡볶이","엽기떡볶이","신전떡볶이","청년다방","응급실떡볶이","명랑핫도그","청년피자",
-    "피자나라치킨공주","미스터피자","피자헛","도미노피자","파파존스","빽다방","이디야커피","메가MGC커피","컴포즈커피","탐앤탐스",
-    "할리스","투썸플레이스","카페베네","맘스터치","롯데리아","버거킹","맥도날드","서브웨이","KFC","한솥도시락",
-    "본죽","본죽&비빔밥","홍콩반점0410","새마을식당","백철판0410","역전우동0410","롤링파스타","인생설렁탕","연돈볼카츠","원조쌈밥집",
-    "명륜진사갈비","이차돌","채선당","샤브올데이","놀부부대찌개","놀부보쌈","원할머니보쌈","족발야시장","미스터보쌈","청년족발"
-  ].slice(0, SEAT_COUNTS.standard).map(n => ({
-    tier:"standard",
-    name:n,
-    url: searchUrl(n)
-  }))
-].slice(0, 100);
+  // ⬜ Standard (확장 브랜드)
+  { tier:"standard", name:"맘스터치", url:"https://www.momstouch.co.kr" },
+  { tier:"standard", name:"롯데리아", url:"https://www.lotteria.com" },
+  { tier:"standard", name:"KFC", url:"https://www.kfckorea.com" },
+  { tier:"standard", name:"맥도날드", url:"https://www.mcdonalds.co.kr" },
+  { tier:"standard", name:"버거킹", url:"https://www.burgerking.co.kr" },
+  { tier:"standard", name:"서브웨이", url:"https://www.subway.co.kr" },
+  { tier:"standard", name:"한솥도시락", url:"https://www.hsd.co.kr" },
+  { tier:"standard", name:"김가네", url:"https://www.gimgane.co.kr" },
+  { tier:"standard", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr" },
+  { tier:"standard", name:"신전떡볶이", url:"https://sinjeon.co.kr" },
+  { tier:"standard", name:"엽기떡볶이", url:"https://www.yupdduk.com" },
+  { tier:"standard", name:"청년다방", url:"https://www.youngdabang.com" },
+  { tier:"standard", name:"본죽", url:"https://www.bonif.co.kr" },
+  { tier:"standard", name:"홍콩반점", url:"https://www.hongkongbanjum.com" },
+  { tier:"standard", name:"역전우동", url:"https://www.udon0410.com" },
+  { tier:"standard", name:"새마을식당", url:"https://www.saemaeul.com" },
+  { tier:"standard", name:"이차돌", url:"https://www.ichadol.com" },
+  { tier:"standard", name:"명륜진사갈비", url:"https://www.mrg.kr" },
+  { tier:"standard", name:"원할머니보쌈", url:"https://www.bossam.co.kr" },
+  { tier:"standard", name:"족발야시장", url:"https://www.jokbalnight.com" }
 
-// 검색 링크(안전) : 브랜드명 + 공식 홈페이지
-function searchUrl(name){
-  const q = encodeURIComponent(name + " 공식 홈페이지");
-  return "https://www.google.com/search?q=" + q;
-}
+];
 
 // 랜덤 셔플
 function shuffle(arr){
