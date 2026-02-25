@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KINGMAKE 광고판 (Admin+Analytics)</title>
+  <title>K-FOOD 광고판 | KINGMAKE</title>
   <style>
     :root{
       --bg:#0b0f17;
@@ -161,7 +161,7 @@
       background: rgba(15,22,36,.96);
       color: var(--text);
       box-shadow: 0 30px 80px rgba(0,0,0,.55);
-      width:min(820px, calc(100vw - 32px));
+      width:min(860px, calc(100vw - 32px));
     }
     dialog::backdrop{ background: rgba(0,0,0,.55); backdrop-filter: blur(4px); }
     .modal{ padding: 16px; }
@@ -194,6 +194,8 @@
     th{ color: rgba(255,255,255,.78); font-weight:800; }
     td{ color: rgba(255,255,255,.78); }
 
+    .tiny{ font-size:12px; color: rgba(255,255,255,.58); }
+
     @media (max-width: 980px){
       header{ flex-direction:column; align-items:stretch; }
       .controls{ justify-content:flex-start; }
@@ -205,11 +207,14 @@
 <div class="wrap">
   <header>
     <div class="brand">
-      <h1>👑 KINGMAKE 광고판 (관리자+분석)</h1>
+      <h1>🍗 K-FOOD 광고판 | KINGMAKE</h1>
       <p>
-        관리자 모드에서 좌석 상태(유료/만료/비활성) 관리 + 노출/클릭/CTR 분석이 가능합니다.<br/>
-        데이터는 브라우저 로컬에 저장됩니다(localStorage).
+        100석(치킨20/버거10/분식20/카페20/한식20/중식10) · KING 3 / PREMIUM 47 / STANDARD 50 · 랜덤 배치<br/>
+        ✅ 관리자 모드 + ✅ 로컬 분석 + ✅ Google Sheet 서버리스 적재(C)
       </p>
+      <div class="tiny">
+        ※ 로고: <b>/logos</b> 폴더에 PNG 넣고, 관리자에서 로고 경로를 지정하거나 자동(slug).png를 사용하세요.
+      </div>
     </div>
 
     <div class="controls">
@@ -278,7 +283,8 @@
 
         <p class="hint" style="margin-top:10px">
           • 일반 사용자: 클릭 시 사이트 이동(비활성/만료는 이동 차단)<br/>
-          • 관리자: 아래 “관리자 설정”에서 상태/만료일/유료(HOT) 변경
+          • 관리자: “관리자 설정”에서 상태/만료일/HOT/브랜드/URL/로고 변경<br/>
+          • 시트 적재: view(1일 1회) / click / admin_update / export 이벤트가 기록됩니다.
         </p>
       </div>
 
@@ -336,6 +342,98 @@
 </dialog>
 
 <script>
+/* ============================================================
+   ✅ (C) Google Sheet 서버리스 적재 설정 (여기만 바꾸면 됨)
+   ============================================================ */
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/XXXXX/exec"; // TODO: 본인 웹앱 URL
+const API_KEY = "CHANGE_ME_TO_STRONG_KEY"; // TODO: Apps Script CONFIG.API_KEY와 동일
+
+async function sendToSheet(payload) {
+  // URL을 안 넣었으면 조용히 종료 (개발 중 편의)
+  if (!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.includes("XXXXX")) return;
+
+  try {
+    await fetch(SHEET_WEBAPP_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": API_KEY
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch (e) {
+    console.warn("sheet log fail", e);
+  }
+}
+
+function oncePerDayKey(seatId){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const dd = String(d.getDate()).padStart(2,"0");
+  return `VIEWED_${seatId}_${y}-${m}-${dd}`;
+}
+function logViewOncePerDay(seat){
+  const k = oncePerDayKey(seat.id);
+  if(localStorage.getItem(k)) return;
+  localStorage.setItem(k, "1");
+
+  sendToSheet({
+    type: "event",
+    eventType: "view",
+    seatId: seat.id,
+    grade: seat.type,
+    category: seat.category,
+    brand: seat.name,
+    url: seat.url,
+    ua: navigator.userAgent,
+    ref: document.referrer,
+    meta: { hotPaid: !!seat.hotPaid, status: seat.status || "active", expireDate: seat.expireDate || "" }
+  });
+}
+function logClick(seat){
+  sendToSheet({
+    type: "event",
+    eventType: "click",
+    seatId: seat.id,
+    grade: seat.type,
+    category: seat.category,
+    brand: seat.name,
+    url: seat.url,
+    ua: navigator.userAgent,
+    ref: document.referrer,
+    meta: { hotPaid: !!seat.hotPaid, status: seat.status || "active", expireDate: seat.expireDate || "" }
+  });
+}
+function logAdminUpdate(seat){
+  sendToSheet({
+    type: "event",
+    eventType: "admin_update",
+    seatId: seat.id,
+    grade: seat.type,
+    category: seat.category,
+    brand: seat.name,
+    url: seat.url,
+    ua: navigator.userAgent,
+    ref: document.referrer,
+    meta: { hotPaid: !!seat.hotPaid, status: seat.status || "active", expireDate: seat.expireDate || "", logo: seat.logo || "" }
+  });
+}
+function logExport(){
+  sendToSheet({
+    type: "event",
+    eventType: "export",
+    seatId: "",
+    grade: "",
+    category: "",
+    brand: "",
+    url: location.href,
+    ua: navigator.userAgent,
+    ref: document.referrer,
+    meta: { page: "k-food.html" }
+  });
+}
+
 /* =========================
    설정 / 데이터
 ========================= */
@@ -352,9 +450,9 @@ const SETTINGS = {
   adminPassword: "kingmake2026",
 
   // localStorage keys
-  keySeats: "KINGMAKE_SEATS_V1",
-  keyMetrics: "KINGMAKE_METRICS_V1",
-  keyAdmin: "KINGMAKE_ADMIN_ON_V1"
+  keySeats: "KFOOD_SEATS_V1",
+  keyMetrics: "KFOOD_METRICS_V1",
+  keyAdmin: "KFOOD_ADMIN_ON_V1"
 };
 
 const BRANDS_BY_CATEGORY = {
@@ -478,13 +576,12 @@ function todayYmd(){
 }
 function isExpired(expireDateYmd){
   if(!expireDateYmd) return false;
-  return expireDateYmd < todayYmd(); // YYYY-MM-DD 문자열 비교 OK
+  return expireDateYmd < todayYmd();
 }
 function pct(n){ return (Math.round(n*1000)/10).toFixed(1) + "%"; }
 
 /* =========================
-   Metrics (조회/클릭)
-   metrics = { [seatId]: { views, clicks } }
+   Metrics (로컬 저장)
 ========================= */
 function loadMetrics(){
   try{
@@ -497,12 +594,12 @@ function saveMetrics(metrics){
 }
 let metrics = loadMetrics();
 
-function incView(seatId){
+function incViewLocal(seatId){
   metrics[seatId] = metrics[seatId] || { views:0, clicks:0 };
   metrics[seatId].views += 1;
   saveMetrics(metrics);
 }
-function incClick(seatId){
+function incClickLocal(seatId){
   metrics[seatId] = metrics[seatId] || { views:0, clicks:0 };
   metrics[seatId].clicks += 1;
   saveMetrics(metrics);
@@ -517,19 +614,12 @@ function resetAllMetrics(){
 }
 
 /* =========================
-   Seats (관리자 설정 포함)
-   seat fields:
-   - id, category, type
-   - name, url, logo
-   - status: active|disabled
-   - hotPaid: boolean
-   - expireDate: "YYYY-MM-DD" or ""
+   Seats 저장(관리자 설정 포함)
 ========================= */
 function buildDefaultSeats(){
   const seats = [];
   let idx = 0;
 
-  // 카테고리 수만큼 생성
   for(const [cat, count] of Object.entries(SETTINGS.categoryCounts)){
     const pool = (BRANDS_BY_CATEGORY[cat] && BRANDS_BY_CATEGORY[cat].length)
       ? BRANDS_BY_CATEGORY[cat]
@@ -545,9 +635,9 @@ function buildDefaultSeats(){
         name: b.name,
         url: b.url,
         logo: autoLogoPath(b.name, ""),
-        status: "active",
-        hotPaid: false,
-        expireDate: "",
+        status: "active",      // active|disabled
+        hotPaid: false,        // HOT 유료
+        expireDate: "",        // YYYY-MM-DD
       });
     }
   }
@@ -593,7 +683,6 @@ function loadSeats(){
     const raw = localStorage.getItem(SETTINGS.keySeats);
     if(!raw) return null;
     const parsed = JSON.parse(raw);
-    // 최소 유효성
     if(!Array.isArray(parsed) || parsed.length < 1) return null;
     return parsed;
   }catch(e){ return null; }
@@ -603,7 +692,7 @@ function saveSeats(seats){
 }
 
 let allSeats = loadSeats() || buildDefaultSeats();
-saveSeats(allSeats); // 최초 저장
+saveSeats(allSeats);
 
 /* =========================
    Admin state
@@ -666,7 +755,7 @@ function renderStats(){
     <div class="stat">KING: <b>${k}</b> · PREMIUM: <b>${p}</b> · STANDARD: <b>${st}</b></div>
     <div class="stat">HOT(유료): <b>${hot}</b></div>
     <div class="stat">비활성: <b class="${disabled? "warn":"ok"}">${disabled}</b> · 만료: <b class="${expired? "warn":"ok"}">${expired}</b></div>
-    <div class="stat">전체 노출: <b>${sm.views}</b> · 클릭: <b>${sm.clicks}</b> · CTR: <b>${pct(sm.ctr)}</b></div>
+    <div class="stat">로컬 노출: <b>${sm.views}</b> · 로컬 클릭: <b>${sm.clicks}</b> · CTR: <b>${pct(sm.ctr)}</b></div>
   `;
 }
 
@@ -677,7 +766,6 @@ function seatMatches(seat){
   const f = filterEl.value;
   const cf = catFilterEl.value;
   const q = (qEl.value||"").trim().toLowerCase();
-
   const ds = seatDerivedState(seat);
 
   const okFilter =
@@ -726,7 +814,6 @@ function refreshModal(){
   mState.textContent = stateText;
   mExpire.textContent = currentSeat.expireDate || "-";
 
-  // 관리자 UI 반영
   adminBadge.textContent = adminOn ? "ON" : "OFF";
   adminBadge.className = adminOn ? "ok" : "bad";
 
@@ -737,10 +824,8 @@ function refreshModal(){
   aUrl.value = currentSeat.url || "";
   aLogo.value = (currentSeat.logo || "").trim();
 
-  const j = seatToJson(currentSeat);
-  seatJson.textContent = JSON.stringify(j, null, 2);
+  seatJson.textContent = JSON.stringify(seatToJson(currentSeat), null, 2);
 
-  // 이동 버튼 제어
   const urlOk = isValidHttpsUrl(currentSeat.url);
   const blocked = ds.disabled || ds.expired || !urlOk;
   if(blocked){
@@ -763,16 +848,18 @@ function openSeatModal(seat){
 }
 
 /* =========================
-   그리드 렌더 + 노출 카운트
-   - "노출"은 현재 화면에 그려진 좌석을 1회 렌더할 때 1씩 증가
-   - 필터/검색/랜덤 재배치 시에도 증가합니다(간단 분석용)
+   그리드 렌더
+   - 로컬 노출 증가 + 시트 view(1일 1회)
 ========================= */
 function render(){
   grid.innerHTML = "";
   const visible = allSeats.filter(seatMatches);
 
-  // 노출 카운트 증가
-  visible.forEach(s => incView(s.id));
+  // 노출(로컬 + 시트 1일 1회)
+  visible.forEach(seat => {
+    incViewLocal(seat.id);
+    logViewOncePerDay(seat);
+  });
 
   for(const seat of visible){
     const ds = seatDerivedState(seat);
@@ -788,7 +875,6 @@ function render(){
     badge.innerHTML = `${seat.type.toUpperCase()} <span class="cat">${escapeHtml(seat.category)}</span>`;
     el.appendChild(badge);
 
-    // 태그 표시
     if(ds.disabled){
       const tag = document.createElement("div");
       tag.className = "tag disabled";
@@ -806,7 +892,6 @@ function render(){
       el.appendChild(tag);
     }
 
-    // 로고 -> 실패 시 기본 -> 텍스트
     const img = document.createElement("img");
     img.className = "logo";
     img.alt = seat.name;
@@ -828,15 +913,12 @@ function render(){
     };
     el.appendChild(img);
 
-    // 클릭 동작
     el.addEventListener("click", () => {
-      // 관리자 모드면 모달로 편집
       if(adminOn){
         openSeatModal(seat);
         return;
       }
 
-      // 일반 모드: 비활성/만료/URL오류면 모달 안내
       const urlOk = isValidHttpsUrl(seat.url);
       const blocked = ds.disabled || ds.expired || !urlOk;
 
@@ -845,12 +927,13 @@ function render(){
         return;
       }
 
-      // 클릭 카운트 + 이동
-      incClick(seat.id);
+      // 클릭(로컬 + 시트)
+      incClickLocal(seat.id);
+      logClick(seat);
+
       window.open(seat.url, "_blank", "noopener,noreferrer");
     });
 
-    // 우클릭: 항상 모달
     el.addEventListener("contextmenu", (e)=>{ e.preventDefault(); openSeatModal(seat); });
 
     grid.appendChild(el);
@@ -894,7 +977,7 @@ adminBtn.addEventListener("click", () => {
 });
 
 /* =========================
-   관리자 저장(좌석 상태 변경)
+   관리자 저장(좌석 상태 변경) + 시트 기록
 ========================= */
 saveAdminBtn.addEventListener("click", () => {
   if(!adminOn){
@@ -905,6 +988,7 @@ saveAdminBtn.addEventListener("click", () => {
 
   const newName = (aName.value||"").trim();
   const newUrl = (aUrl.value||"").trim();
+
   if(!newName){
     alert("브랜드명을 입력하세요.");
     return;
@@ -921,9 +1005,11 @@ saveAdminBtn.addEventListener("click", () => {
   currentSeat.url = newUrl;
   currentSeat.logo = autoLogoPath(newName, (aLogo.value||"").trim());
 
-  // allSeats 반영
   allSeats = allSeats.map(s => s.id === currentSeat.id ? currentSeat : s);
   saveSeats(allSeats);
+
+  // ✅ 시트에 관리자 업데이트 이벤트 기록
+  logAdminUpdate(currentSeat);
 
   refreshModal();
   render();
@@ -961,11 +1047,11 @@ resetAllBtn.addEventListener("click", () => {
 });
 
 /* =========================
-   Export JSON (좌석+메트릭)
+   Export JSON (좌석+메트릭) + 시트 기록
 ========================= */
 exportBtn.addEventListener("click", async () => {
   const exportData = {
-    kind: "KINGMAKE_EXPORT_V1",
+    kind: "KFOOD_EXPORT_V1",
     created_at: new Date().toISOString(),
     seats: allSeats,
     metrics
@@ -976,7 +1062,7 @@ exportBtn.addEventListener("click", async () => {
   const blob = new Blob([txt], { type:"application/json;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "kingmake_export.json";
+  a.download = "k-food_export.json";
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -985,16 +1071,16 @@ exportBtn.addEventListener("click", async () => {
   // 복사
   try{
     await navigator.clipboard.writeText(txt);
-    alert("Export 다운로드 + 클립보드 복사 완료!");
-  }catch(e){
-    alert("Export 다운로드 완료! (클립보드 권한이 없을 수 있어요)");
-  }
+  }catch(e){ /* ignore */ }
+
+  // ✅ 시트 기록
+  logExport();
+
+  alert("Export 완료! (다운로드 + 가능하면 클립보드 복사 + 시트 기록)");
 });
 
 /* =========================
-   랜덤 재배치
-   - 좌석 자체를 새로 만들면 기존 metrics와 id 매칭이 깨질 수 있으니
-     여기서는 "배열 순서만 셔플" 합니다.
+   랜덤 재배치(순서만 셔플: ID 유지)
 ========================= */
 shuffleBtn.addEventListener("click", () => {
   allSeats = shuffle(allSeats.slice());
@@ -1023,15 +1109,6 @@ qEl.addEventListener("input", render);
 /* =========================
    초기 구동
 ========================= */
-function initCategoryFilter(){
-  const cats = Object.keys(SETTINGS.categoryCounts);
-  cats.forEach(c=>{
-    const opt = document.createElement("option");
-    opt.value = c;
-    opt.textContent = c;
-    catFilterEl.appendChild(opt);
-  });
-}
 initCategoryFilter();
 syncAdminUi();
 render();
