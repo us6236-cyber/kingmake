@@ -1,365 +1,539 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>K-FOOD | KING MAKE</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KINGMAKE 광고판 (운영용)</title>
+  <style>
+    :root{
+      --bg:#0b0f17;
+      --panel:#0f1624;
+      --border:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.65);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --gap:12px;
+      --good:#2ee59d;
+      --warn:#ffb020;
+      --bad:#ff4d6d;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: radial-gradient(1200px 500px at 10% 0%, rgba(255,215,0,.12), transparent 60%),
+                  radial-gradient(900px 500px at 90% 10%, rgba(0,200,255,.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    .wrap{
+      width:min(1750px, calc(100vw - 48px));
+      margin: 24px auto 64px;
+    }
+    header{
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      justify-content:space-between;
+      margin-bottom:16px;
+    }
+    .brand{ display:flex; flex-direction:column; gap:6px; }
+    .brand h1{ margin:0; font-size:26px; letter-spacing:.4px; }
+    .brand p{ margin:0; color:var(--muted); font-size:14px; line-height:1.45; }
 
-<style>
-  :root{
-    --bg:#000;
-    --panel:rgba(255,255,255,0.03);
-    --line:rgba(255,255,255,0.12);
-    --gold:#D4AF37;
-    --premium:#ff3b3b;
-    --standard:#ffffff;
-  }
+    .controls{
+      display:flex; gap:10px; flex-wrap:wrap;
+      align-items:center; justify-content:flex-end;
+    }
+    .pill{
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--border);
+      padding:10px 12px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.18);
+      backdrop-filter: blur(8px);
+    }
+    .pill label{ font-size:12px; color:var(--muted); white-space:nowrap; }
+    select, input[type="text"], input[type="number"]{
+      background: rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.14);
+      color:var(--text);
+      padding:8px 10px;
+      border-radius:10px;
+      outline:none;
+      font-size:13px;
+      min-width: 160px;
+    }
+    button{
+      background: linear-gradient(135deg, rgba(255,215,0,.20), rgba(0,200,255,.16));
+      border:1px solid rgba(255,255,255,.16);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      transition: transform .15s ease, filter .15s ease;
+      white-space:nowrap;
+    }
+    button:hover{ transform: translateY(-1px); filter: brightness(1.08); }
+    button:active{ transform: translateY(0px); }
+    .btn-ghost{
+      background: rgba(255,255,255,.06);
+    }
+    .btn-bad{
+      background: rgba(255,77,109,.14);
+      border-color: rgba(255,77,109,.25);
+    }
 
-  body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-    background:var(--bg);
-    color:#fff;
-  }
+    .stats{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin: 10px 0 16px;
+    }
+    .stat{
+      background: rgba(255,255,255,.05);
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding:10px 12px;
+      box-shadow: var(--shadow);
+      font-size:13px;
+      color:var(--muted);
+    }
+    .stat b{ color: var(--text); font-weight:800; }
+    .stat .ok{ color: var(--good); font-weight:800;}
+    .stat .warn{ color: var(--warn); font-weight:800;}
+    .stat .bad{ color: var(--bad); font-weight:800;}
 
-  .top{
-    position:sticky; top:0; z-index:10;
-    backdrop-filter:blur(10px);
-    background:rgba(0,0,0,0.78);
-    border-bottom:1px solid var(--line);
-  }
-  .top-inner{
-    max-width:1800px;
-    margin:auto;
-    padding:14px 18px;
-    display:flex; align-items:center; justify-content:space-between;
-    gap:12px;
-  }
-  .brand{
-    display:flex; align-items:center; gap:10px;
-    text-decoration:none; color:#fff;
-  }
-  .brand img{height:26px;width:auto;display:block;}
-  .brand b{letter-spacing:1px}
-  .page-title{font-size:13px; opacity:0.75;}
+    .board{
+      background: rgba(255,255,255,.03);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+    .grid{
+      display:grid;
+      gap: var(--gap);
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      align-items:stretch;
+    }
 
-  .wrap{
-    max-width:1800px;
-    margin:0 auto;
-    padding:26px 18px 70px;
-    text-align:center;
-  }
-  .hero h1{margin:0; font-size:34px; letter-spacing:-0.5px;}
-  .hero p{margin:12px 0 0; opacity:0.7; line-height:1.6;}
+    .seat{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      cursor:pointer;
+      overflow:hidden;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      min-height: 110px;
+      user-select:none;
+    }
+    .seat:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+      border-color: rgba(255,255,255,.22);
+    }
 
-  .legend{
-    margin:18px auto 0;
-    display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
-    font-size:13px; opacity:0.9;
-  }
-  .pill{
-    display:flex; align-items:center; gap:8px;
-    padding:8px 10px;
-    border:1px solid var(--line);
-    border-radius:999px;
-    background:rgba(255,255,255,0.04);
-  }
-  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
-  .dot.king{background:var(--gold)}
-  .dot.premium{background:var(--premium)}
-  .dot.standard{background:var(--standard)}
-  .dot.hot{background:var(--premium)}
+    /* 등급별 동일 크기 */
+    .seat.king{ min-height: 170px; }
+    .seat.premium{ min-height: 130px; }
+    .seat.standard{ min-height: 110px; }
 
-  .heatmap{
-    margin:26px auto 0;
-    max-width:1740px;
-    border:1px solid var(--line);
-    border-radius:18px;
-    background:var(--panel);
-    box-shadow:0 24px 80px rgba(0,0,0,0.65);
-    overflow:hidden;
-  }
-  .grid{
-    display:grid;
-    gap:10px;
-    padding:16px;
-    grid-template-columns: repeat(22, 1fr);
-    grid-auto-rows: 56px;
-  }
+    .badge{
+      position:absolute;
+      top:10px; left:10px;
+      font-size:11px;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.25);
+      color: rgba(255,255,255,.85);
+      backdrop-filter: blur(6px);
+      display:flex;
+      gap:6px;
+      align-items:center;
+    }
+    .badge.king{ border-color: rgba(255,215,0,.45); }
+    .badge.premium{ border-color: rgba(0,200,255,.45); }
+    .badge.standard{ border-color: rgba(255,255,255,.18); }
 
-  .tile{
-    border:1px solid rgba(255,255,255,0.12);
-    border-radius:14px;
-    background:rgba(255,255,255,0.04);
-    cursor:pointer;
-    position:relative;
-    overflow:hidden;
-    display:flex;
-    align-items:flex-end;
-    justify-content:flex-start;
-    padding:12px;
-    transition:transform .18s ease, border-color .18s ease, background .18s ease;
-    user-select:none;
-  }
-  .tile:hover{
-    transform:translateY(-2px);
-    border-color:rgba(255,255,255,0.35);
-    background:rgba(255,255,255,0.07);
-  }
+    .badge .cat{
+      opacity:.85;
+      padding-left:6px;
+      border-left:1px solid rgba(255,255,255,.18);
+    }
 
-  .tile.king{ border-color:rgba(212,175,55,0.55); }
-  .tile.premium{ border-color:rgba(255,59,59,0.55); }
-  .tile.standard{ border-color:rgba(255,255,255,0.30); }
+    .hot{
+      position:absolute;
+      top:10px; right:10px;
+      font-size:11px;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,120,0,.55);
+      background: rgba(255,120,0,.14);
+      color: rgba(255,230,200,.95);
+      letter-spacing:.3px;
+      display:flex;
+      gap:6px;
+      align-items:center;
+    }
 
-  .tile.hot{ animation:blinkHot 1.2s infinite; }
-  @keyframes blinkHot{
-    0%   { box-shadow:0 0 0 rgba(255,59,59,0); }
-    50%  { box-shadow:0 0 18px rgba(255,59,59,0.85); border-color:rgba(255,59,59,0.9); }
-    100% { box-shadow:0 0 0 rgba(255,59,59,0); }
-  }
+    .seat.is-hot::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,215,0,.35), transparent 55%),
+                  radial-gradient(circle at 70% 60%, rgba(255,80,0,.22), transparent 60%);
+      filter: blur(6px);
+      opacity: .45;
+      animation: hotPulse 1.2s ease-in-out infinite;
+      pointer-events:none;
+    }
+    .seat.is-hot{
+      border-color: rgba(255,215,0,.35);
+      box-shadow: 0 0 0 1px rgba(255,215,0,.10), 0 18px 45px rgba(0,0,0,.42);
+    }
+    @keyframes hotPulse{
+      0%{ transform: scale(0.96) rotate(0deg); opacity:.35; }
+      50%{ transform: scale(1.03) rotate(6deg); opacity:.60; }
+      100%{ transform: scale(0.96) rotate(0deg); opacity:.35; }
+    }
 
-  .badge{
-    position:absolute;
-    top:10px; left:10px;
-    font-size:11px;
-    padding:6px 10px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.16);
-    background:rgba(0,0,0,0.35);
-    opacity:0.92;
-    display:flex; align-items:center; gap:6px;
-    white-space:nowrap;
-  }
-  .badge .mini-dot{width:8px;height:8px;border-radius:3px;display:inline-block;background:rgba(255,255,255,0.4);}
-  .badge.king{border-color:rgba(212,175,55,0.55)}
-  .badge.king .mini-dot{background:var(--gold)}
-  .badge.premium{border-color:rgba(255,59,59,0.55)}
-  .badge.premium .mini-dot{background:var(--premium)}
-  .badge.standard{border-color:rgba(255,255,255,0.25)}
-  .badge.standard .mini-dot{background:var(--standard)}
-  .badge.hot .mini-dot{background:var(--premium)}
+    .logo{
+      width: 78%;
+      height: 78%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,.30));
+    }
+    .fallback{
+      padding: 10px;
+      text-align:center;
+    }
+    .fallback .name{
+      font-weight:900;
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+    .fallback .url{
+      margin-top:6px;
+      font-size:12px;
+      color: rgba(255,255,255,.65);
+      word-break: break-all;
+    }
 
-  /* ✅ 로고 배지(오른쪽 상단) */
-  .logo-badge{
-    position:absolute;
-    top:10px; right:10px;
-    width:34px; height:34px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.12);
-    background:rgba(0,0,0,0.35);
-    display:flex; align-items:center; justify-content:center;
-    overflow:hidden;
-  }
-  .logo-badge img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    padding:6px;
-    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.55));
-  }
+    dialog{
+      border:1px solid rgba(255,255,255,.18);
+      border-radius: 18px;
+      padding: 0;
+      background: rgba(15,22,36,.96);
+      color: var(--text);
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+      width:min(720px, calc(100vw - 32px));
+    }
+    dialog::backdrop{
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(4px);
+    }
+    .modal{ padding: 16px; }
+    .modal h3{ margin:0 0 6px; font-size:18px; }
+    .modal p{ margin:0 0 14px; color: var(--muted); font-size:13px; line-height:1.45; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 10px; }
+    .row a{
+      color: var(--text);
+      text-decoration:none;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      padding: 10px 12px;
+      border-radius: 12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .row a:hover{ filter: brightness(1.10); }
+    .row button{ background: rgba(255,255,255,.06); }
 
-  .name{font-weight:800; letter-spacing:0.2px; line-height:1.1; text-align:left;}
-  .sub{margin-top:6px; font-size:12px; color:rgba(255,255,255,0.7); text-align:left;}
+    .split{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:12px;
+      margin-top: 10px;
+    }
+    .card{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .card h4{ margin:0 0 10px; font-size:14px; }
+    .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+    .field label{ font-size:12px; color: var(--muted); }
+    .field small{ color: rgba(255,255,255,.55); }
+    .hint{
+      font-size:12px;
+      color: rgba(255,255,255,.62);
+      line-height: 1.45;
+    }
+    .pricebox{
+      display:flex; flex-direction:column; gap:8px;
+      font-size:13px;
+      color: rgba(255,255,255,.78);
+    }
+    .pricebox .line{ display:flex; justify-content:space-between; gap:10px; }
+    .pricebox b{ color: var(--text); }
+    .pill-mini{
+      font-size:11px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.2);
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+    }
+    .okdot{ width:8px; height:8px; border-radius:50%; background: var(--good); display:inline-block; }
+    .baddot{ width:8px; height:8px; border-radius:50%; background: var(--bad); display:inline-block; }
 
-  /* 등급별 동일 사이즈 */
-  .kingSize{ grid-column: span 7; grid-row: span 2; }
-  .premSize{ grid-column: span 3; grid-row: span 2; }
-  .stdSize{  grid-column: span 2; grid-row: span 1; }
-
-  @media (max-width:1200px){
-    .grid{ grid-template-columns: repeat(14, 1fr); }
-    .kingSize{ grid-column: span 14; grid-row: span 2; }
-    .premSize{ grid-column: span 7; grid-row: span 2; }
-    .stdSize{  grid-column: span 7; grid-row: span 1; }
-  }
-  @media (max-width:520px){
-    .grid{ grid-template-columns: repeat(6, 1fr); gap:8px; padding:12px; grid-auto-rows:52px; }
-    .kingSize{ grid-column: span 6; grid-row: span 2; }
-    .premSize{ grid-column: span 3; grid-row: span 2; }
-    .stdSize{  grid-column: span 3; grid-row: span 1; }
-  }
-</style>
+    @media (max-width: 920px){
+      header{ flex-direction:column; align-items:stretch; }
+      .controls{ justify-content:flex-start; }
+      .split{ grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-
 <body>
-<div class="top">
-  <div class="top-inner">
-    <a class="brand" href="index.html" aria-label="KING MAKE Home">
-      <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
-      <b>KING MAKE</b>
-    </a>
-    <div class="page-title">K-FOOD • HEATMAP (KING 3 / Premium 47 / Standard 50)</div>
-  </div>
-</div>
-
 <div class="wrap">
-  <div class="hero">
-    <h1>🍗 K-FOOD Brand Heatmap</h1>
-    <p>
-      좌석 클릭 → 브랜드 공식 페이지로 이동<br>
-      로고는 자동 적용(로컬 로고 우선 → 없으면 도메인 기반 자동 로고 시도)
-    </p>
-  </div>
+  <header>
+    <div class="brand">
+      <h1>👑 KINGMAKE 광고판 (운영용)</h1>
+      <p>
+        총 100석(킹3/프리미엄47/스탠다드50) · 카테고리 좌석 자동 생성 · HOT(유료) 고정 · 랜덤 배치<br/>
+        로고는 <b>/logos</b> 폴더에 넣으면 자동 적용됩니다. (없으면 텍스트/기본로고로 표시)
+      </p>
+    </div>
 
-  <div class="legend">
-    <div class="pill"><span class="dot king"></span> KING 3</div>
-    <div class="pill"><span class="dot premium"></span> Premium 47</div>
-    <div class="pill"><span class="dot standard"></span> Standard 50</div>
-    <div class="pill"><span class="dot hot"></span> HOT (반짝)</div>
-  </div>
+    <div class="controls">
+      <div class="pill">
+        <label>보기</label>
+        <select id="filter">
+          <option value="all">전체</option>
+          <option value="king">KING</option>
+          <option value="premium">PREMIUM</option>
+          <option value="standard">STANDARD</option>
+          <option value="hot">HOT(유료)</option>
+        </select>
+      </div>
 
-  <div class="heatmap">
+      <div class="pill">
+        <label>카테고리</label>
+        <select id="catFilter">
+          <option value="all">전체</option>
+        </select>
+      </div>
+
+      <div class="pill">
+        <label>검색</label>
+        <input id="q" type="text" placeholder="브랜드명/URL 검색" />
+      </div>
+
+      <button id="shuffleBtn">🔀 랜덤 재배치</button>
+      <button id="exportBtn" class="btn-ghost">🧾 광고목록 JSON</button>
+    </div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <section class="board">
     <div class="grid" id="grid"></div>
-  </div>
+  </section>
 </div>
+
+<!-- 상세/신청 모달 -->
+<dialog id="detailDialog">
+  <div class="modal">
+    <h3 id="dTitle">브랜드</h3>
+    <p id="dMeta" class="hint">등급 · 카테고리 · URL · 좌석ID</p>
+
+    <div class="split">
+      <div class="card">
+        <h4>📌 광고 신청</h4>
+
+        <div class="field">
+          <label>업체명</label>
+          <input id="fBrand" type="text" placeholder="예) BHC치킨 ○○점" />
+        </div>
+
+        <div class="field">
+          <label>공식 URL (https://)</label>
+          <input id="fUrl" type="text" placeholder="예) https://example.com" />
+          <small>※ https만 허용(운영 안전)</small>
+        </div>
+
+        <div class="field">
+          <label>연락처(전화/카톡/이메일)</label>
+          <input id="fContact" type="text" placeholder="예) 010-1234-5678 / 카톡ID" />
+        </div>
+
+        <div class="field">
+          <label>희망 기간(월)</label>
+          <input id="fMonths" type="number" min="1" value="1" />
+        </div>
+
+        <div class="row">
+          <button id="applyBtn">✅ 신청 데이터 생성</button>
+          <button id="copyBtn" class="btn-ghost">📋 복사</button>
+          <button id="downloadBtn" class="btn-ghost">⬇ 다운로드</button>
+        </div>
+
+        <p class="hint" style="margin-top:10px">
+          신청 버튼을 누르면 <b>JSON</b>이 생성됩니다. (운영자는 이 JSON을 모아 “광고주 DB”로 관리하면 됩니다)
+        </p>
+
+        <pre id="out" class="card" style="margin-top:10px; white-space:pre-wrap; word-break:break-all;"></pre>
+      </div>
+
+      <div class="card">
+        <h4>💰 가격/혜택</h4>
+        <div id="priceBox" class="pricebox"></div>
+
+        <div style="margin-top:10px" class="hint">
+          <span class="pill-mini"><span class="okdot"></span>HOT(유료)</span>
+          는 상단 강조 + 반짝 효과로 클릭률이 높습니다.
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <a id="dGo" href="#" target="_blank" rel="noopener noreferrer">🔗 사이트 열기</a>
+          <button id="dClose" class="btn-ghost">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
 
 <script>
-/* 좌석 수 */
-const SEAT_COUNTS = { king: 3, premium: 47, standard: 50 };
-const HOT_COUNT = 12;
+/**
+ * =========================
+ * 운영용 업그레이드 포인트
+ * - 카테고리 좌석 자동 생성
+ * - KING/PREMIUM/STANDARD 자동 배분(총 100석)
+ * - HOT(유료) 좌석 고정 + 반짝
+ * - 브랜드명 -> 로고 자동 매핑(슬러그) + 로드 실패 fallback
+ * - 광고 신청 폼(JSON 생성/복사/다운로드)
+ * - 전체 광고 목록(JSON Export)
+ * =========================
+ */
 
-/* 브랜드 100개 (치킨20/버거10/분식20/카페20/한식20/중식10) */
-const brands100 = [
-  // 치킨 20
-  { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
-  { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
-  { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
-  { cat:"치킨", name:"굽네치킨", url:"https://www.goobne.co.kr/" },
-  { cat:"치킨", name:"네네치킨", url:"https://www.nenechicken.com/" },
-  { cat:"치킨", name:"푸라닭", url:"https://puradakchicken.com/" },
-  { cat:"치킨", name:"노랑통닭", url:"https://www.norangtongdak.co.kr/" },
-  { cat:"치킨", name:"멕시카나", url:"https://www.mexicana.co.kr/" },
-  { cat:"치킨", name:"페리카나", url:"https://www.pelicana.co.kr/" },
-  { cat:"치킨", name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr/main.php" },
-  { cat:"치킨", name:"자담치킨", url:"https://www.ejadam.co.kr/" },
-  { cat:"치킨", name:"치킨플러스", url:"https://chickenplus.co.kr/" },
-  { cat:"치킨", name:"60계치킨", url:"https://www.60chicken.co.kr/" },
-  { cat:"치킨", name:"호식이두마리치킨", url:"https://www.9922.co.kr/" },
-  { cat:"치킨", name:"또래오래", url:"https://www.toreore.com/" },
-  { cat:"치킨", name:"지코바", url:"https://www.zicoba.co.kr/" },
-  { cat:"치킨", name:"부어치킨", url:"https://www.boor.co.kr/" },
-  { cat:"치킨", name:"깐부치킨", url:"https://www.kkanbu.co.kr/" },
-  { cat:"치킨", name:"누구나홀딱반한닭", url:"https://www.whodak.com/" },
-  { cat:"치킨", name:"훌랄라참숯바베큐치킨", url:"https://www.hoolala.co.kr/" },
+/* 0) 운영 설정 */
+const SETTINGS = {
+  totalSeats: 100,
+  gradeCounts: { king: 3, premium: 47, standard: 50 }, // 고정
+  // 카테고리 좌석 수 (요청)
+  categoryCounts: {
+    "치킨": 20,
+    "버거": 10,
+    "분식": 20,
+    "카페": 20,
+    "한식": 20,
+    "중식": 10
+  },
 
-  // 버거 10
-  { cat:"버거", name:"맥도날드", url:"https://www.mcdonalds.co.kr/" },
-  { cat:"버거", name:"버거킹", url:"https://www.burgerking.co.kr/" },
-  { cat:"버거", name:"KFC", url:"https://www.kfckorea.com/" },
-  { cat:"버거", name:"써브웨이", url:"https://www.subway.co.kr/" },
-  { cat:"버거", name:"롯데리아(롯데잇츠)", url:"https://www.lotteeatz.com/brand/ria" },
-  { cat:"버거", name:"맘스터치", url:"https://www.momstouch.co.kr/" },
-  { cat:"버거", name:"쉐이크쉑(코리아)", url:"https://www.shakeshack.kr/" },
-  { cat:"버거", name:"노브랜드버거", url:"https://www.nobrandburger.com/" },
-  { cat:"버거", name:"프랭크버거", url:"https://www.frankburger.co.kr/" },
-  { cat:"버거", name:"롯데잇츠", url:"https://www.lotteeatz.com/" },
+  // HOT(유료) 좌석 수: "상위 등급부터" 할당
+  hotPaidCount: 12,
 
-  // 분식 20
-  { cat:"분식", name:"동대문엽기떡볶이", url:"https://www.yupdduk.com/" },
-  { cat:"분식", name:"신전떡볶이", url:"https://sinjeon.co.kr/" },
-  { cat:"분식", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr/" },
-  { cat:"분식", name:"청년다방", url:"https://www.youngdabang.com/" },
-  { cat:"분식", name:"명랑핫도그", url:"https://myungranghotdog.com/" },
-  { cat:"분식", name:"김가네", url:"https://www.gimgane.co.kr/" },
-  { cat:"분식", name:"김밥천국", url:"https://www.gimbapcheonguk.co.kr/" },
-  { cat:"분식", name:"고봉민김밥", url:"https://www.gbmgimbap.com/" },
-  { cat:"분식", name:"국대떡볶이", url:"https://www.kookdae.co.kr/" },
-  { cat:"분식", name:"바르다김선생", url:"https://www.bareun.co.kr/" },
-  { cat:"분식", name:"봉구스밥버거", url:"https://www.bongousse.co.kr/" },
-  { cat:"분식", name:"한솥도시락", url:"https://www.hsd.co.kr/" },
-  { cat:"분식", name:"삼첩분식", url:"https://samcheop.com/" },
-  { cat:"분식", name:"두끼떡볶이", url:"https://www.dookki.co.kr/" },
-  { cat:"분식", name:"뚜레쥬르", url:"https://www.tlj.co.kr/" },
-  { cat:"분식", name:"파리바게뜨", url:"https://www.paris.co.kr/" },
-  { cat:"분식", name:"크리스피크림", url:"https://www.krispykreme.co.kr/" },
-  { cat:"분식", name:"던킨", url:"https://www.dunkindonuts.co.kr/" },
-  { cat:"분식", name:"배스킨라빈스", url:"https://www.baskinrobbins.co.kr/" },
-  { cat:"분식", name:"요거프레소", url:"https://www.yogerpresso.co.kr/" },
+  // 등급별 월 가격(원) - 원하면 바꾸기
+  pricing: {
+    standard: 10000,
+    premium: 30000,
+    king: 100000,
+    hot_addon: 20000 // HOT 추가 옵션(유료 강조) : 등급 가격 + HOT 추가
+  },
 
-  // 카페 20
-  { cat:"카페", name:"스타벅스 코리아", url:"https://www.starbucks.co.kr/" },
-  { cat:"카페", name:"이디야커피", url:"https://www.ediya.com/" },
-  { cat:"카페", name:"메가MGC커피", url:"https://www.mega-mgccoffee.com/" },
-  { cat:"카페", name:"컴포즈커피", url:"https://composecoffee.com/" },
-  { cat:"카페", name:"빽다방", url:"https://www.paikdabang.com/" },
-  { cat:"카페", name:"투썸플레이스", url:"https://www.twosome.co.kr/" },
-  { cat:"카페", name:"할리스", url:"https://www.hollys.co.kr/" },
-  { cat:"카페", name:"탐앤탐스", url:"https://www.tomntoms.com/" },
-  { cat:"카페", name:"카페베네", url:"https://www.caffebene.co.kr/" },
-  { cat:"카페", name:"공차코리아", url:"https://www.gong-cha.co.kr/" },
-  { cat:"카페", name:"더벤티", url:"https://www.theventi.co.kr/" },
-  { cat:"카페", name:"폴 바셋", url:"https://www.baristapaulbassett.co.kr/" },
-  { cat:"카페", name:"커피빈 코리아", url:"https://www.coffeebeankorea.com/" },
-  { cat:"카페", name:"달.콤커피", url:"https://www.dalkomm.com/" },
-  { cat:"카페", name:"블루보틀(코리아)", url:"https://bluebottlecoffee.com/kr/" },
-  { cat:"카페", name:"엔제리너스(롯데잇츠)", url:"https://www.lotteeatz.com/brand/angel" },
-  { cat:"카페", name:"드롭탑", url:"https://www.droptop.co.kr/" },
-  { cat:"카페", name:"파스쿠찌", url:"https://www.caffe-pascucci.co.kr/" },
-  { cat:"카페", name:"아티제", url:"https://www.cafeartisee.com/" },
-  { cat:"카페", name:"할리스몰", url:"https://www.hollysmall.com/" },
+  // 로고 경로 규칙
+  logosFolder: "logos",
+  defaultLogo: "logos/default.png", // 넣어두면 좋음(없어도 fallback 텍스트로 표시)
+  // 안전: https만 허용
+  httpsOnly: true,
+};
 
-  // 한식 20
-  { cat:"한식", name:"본죽", url:"https://www.bonif.co.kr/" },
-  { cat:"한식", name:"원할머니보쌈", url:"https://www.bossam.co.kr/" },
-  { cat:"한식", name:"명륜진사갈비", url:"https://www.mrg.kr/" },
-  { cat:"한식", name:"놀부", url:"https://www.nolboo.co.kr/" },
-  { cat:"한식", name:"채선당", url:"https://www.chae-seon-dang.com/" },
-  { cat:"한식", name:"더본코리아", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"새마을식당", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"한신포차", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"역전우동0410", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"인생설렁탕", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"연돈볼카츠", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"이차돌", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"미정국수0410", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"리춘시장", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"본도시락", url:"https://www.bondosirak.com/" },
-  { cat:"한식", name:"본죽&비빔밥", url:"https://www.bonif.co.kr/" },
-  { cat:"한식", name:"한솥(한식도시락)", url:"https://www.hsd.co.kr/" },
-  { cat:"한식", name:"고봉삼계탕", url:"https://www.gobong.co.kr/" },
-  { cat:"한식", name:"본전주비빔밥", url:"https://www.bonif.co.kr/" },
-  { cat:"한식", name:"청기와타운", url:"https://www.cheonggiwa.co.kr/" },
+/* 1) 샘플 브랜드 풀 (원하면 늘리면 됨) */
+const BRANDS_BY_CATEGORY = {
+  "치킨": [
+    { name:"BHC치킨", url:"https://www.bhc.co.kr" },
+    { name:"BBQ", url:"https://www.bbq.co.kr" },
+    { name:"교촌치킨", url:"https://www.kyochon.com" },
+    { name:"굽네치킨", url:"https://www.goobne.co.kr" },
+    { name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr" }
+  ],
+  "버거": [
+    { name:"맥도날드", url:"https://www.mcdonalds.co.kr" },
+    { name:"롯데리아", url:"https://www.lotteria.com" },
+    { name:"버거킹", url:"https://www.burgerking.co.kr" },
+    { name:"맘스터치", url:"https://www.momstouch.co.kr" },
+    { name:"KFC", url:"https://www.kfc.co.kr" }
+  ],
+  "분식": [
+    { name:"신전떡볶이", url:"https://sinjeon.co.kr" },
+    { name:"엽기떡볶이", url:"https://www.yupdduk.com" },
+    { name:"김밥천국", url:"https://www.gimbab1009.com" },
+    { name:"죠스떡볶이", url:"https://www.jawsfood.co.kr" }
+  ],
+  "카페": [
+    { name:"스타벅스", url:"https://www.starbucks.co.kr" },
+    { name:"이디야", url:"https://www.ediya.com" },
+    { name:"메가커피", url:"https://www.mega-mgccoffee.com" },
+    { name:"투썸플레이스", url:"https://www.twosome.co.kr" },
+    { name:"빽다방", url:"https://www.theborn.co.kr" }
+  ],
+  "한식": [
+    { name:"본죽", url:"https://www.bonif.co.kr" },
+    { name:"한솥도시락", url:"https://www.hsd.co.kr" },
+    { name:"놀부부대찌개", url:"https://www.nolboo.co.kr" },
+    { name:"원할머니보쌈", url:"https://www.wonandone.co.kr" }
+  ],
+  "중식": [
+    { name:"홍콩반점", url:"https://www.theborn.co.kr" },
+    { name:"역전우동", url:"https://www.theborn.co.kr" },
+    { name:"공차(중식은 아니지만 예시)", url:"https://www.gong-cha.co.kr" } // 예시(원하면 제거)
+  ],
+};
 
-  // 중식 10
-  { cat:"중식", name:"홍콩반점0410", url:"https://www.theborn.co.kr/" },
-  { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
-  { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" },
-  { cat:"중식", name:"짬뽕지존", url:"https://www.zzambbongjijon.com/" },
-  { cat:"중식", name:"만강홍", url:"https://www.mankanghong.co.kr/" },
-  { cat:"중식", name:"홍짜장", url:"https://www.hongjajang.com/" },
-  { cat:"중식", name:"더본(중식)", url:"https://www.theborn.co.kr/" },
-  { cat:"중식", name:"리춘시장(중화)", url:"https://www.theborn.co.kr/" },
-  { cat:"중식", name:"교동짬뽕", url:"https://www.gyodongjjambbong.com/" },
-  { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
-];
+/* 2) DOM */
+const grid = document.getElementById("grid");
+const stats = document.getElementById("stats");
+const filterEl = document.getElementById("filter");
+const catFilterEl = document.getElementById("catFilter");
+const qEl = document.getElementById("q");
+const shuffleBtn = document.getElementById("shuffleBtn");
+const exportBtn = document.getElementById("exportBtn");
 
-/* ---- 유틸 ---- */
+const dialog = document.getElementById("detailDialog");
+const dTitle = document.getElementById("dTitle");
+const dMeta = document.getElementById("dMeta");
+const dGo = document.getElementById("dGo");
+const dClose = document.getElementById("dClose");
+
+const fBrand = document.getElementById("fBrand");
+const fUrl = document.getElementById("fUrl");
+const fContact = document.getElementById("fContact");
+const fMonths = document.getElementById("fMonths");
+const applyBtn = document.getElementById("applyBtn");
+const copyBtn = document.getElementById("copyBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+const out = document.getElementById("out");
+const priceBox = document.getElementById("priceBox");
+
+/* 3) 유틸 */
 function shuffle(arr){
-  return arr.map(v => ({ v, r: Math.random() }))
-            .sort((a,b) => a.r - b.r)
-            .map(o => o.v);
-}
-function pickHotIndexes(items, hotCount){
-  const candidates = [];
-  items.forEach((b, i) => {
-    if (b.tier === "premium" || b.tier === "king") candidates.push(i);
-  });
-  const shuffled = shuffle(candidates);
-  return new Set(shuffled.slice(0, Math.min(hotCount, shuffled.length)));
-}
-function go(url){
-  if(!url) return;
-  window.open(url, "_blank", "noopener,noreferrer");
-}
-function labelFor(tier){
-  if(tier === "king") return "👑 KING";
-  if(tier === "premium") return "⭐ Premium";
-  return "⬜ Standard";
-}
-function sizeClassFor(tier){
-  if(tier === "king") return "kingSize";
-  if(tier === "premium") return "premSize";
-  return "stdSize";
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 function escapeHtml(str){
   return String(str)
@@ -369,96 +543,426 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
-/* ✅ 로고 자동 적용
-   1) 로컬 로고: /logos/<domain>.png
-   2) 없으면 자동 로고(도메인): https://logo.clearbit.com/<domain>
-*/
-function domainFromUrl(url){
+function isValidHttpsUrl(u){
   try{
-    const u = new URL(url);
-    let host = u.hostname.toLowerCase();
-    host = host.replace(/^www\./, "");
-    return host;
+    const url = new URL(u);
+    if(SETTINGS.httpsOnly) return url.protocol === "https:" && !!url.hostname;
+    return (url.protocol === "https:" || url.protocol === "http:") && !!url.hostname;
   }catch(e){
-    return "";
+    return false;
   }
 }
-function localLogo(domain){
-  return `logos/${domain}.png`;
+function won(n){ return new Intl.NumberFormat("ko-KR").format(n) + "원"; }
+function typeLabel(t){ return t === "king" ? "KING" : (t === "premium" ? "PREMIUM" : "STANDARD"); }
+
+/** 브랜드명 -> 파일명 슬러그 (자동 로고 매핑용)
+ * - 한글도 남기되, 공백/특수문자 정리
+ * - 가능하면 로고 파일명은 영어/숫자/하이픈 추천
+ */
+function slugify(name){
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[\/\\?%*:|"<>]/g, "") // 파일에 위험한 문자 제거
+    .replace(/[^0-9a-z가-힣\-_.]/g, ""); // 기본 허용
 }
-function autoLogo(domain){
-  return `https://logo.clearbit.com/${domain}`;
+function autoLogoPath(brand){
+  // brand.logo가 있으면 우선
+  if(brand.logo) return brand.logo;
+  const slug = slugify(brand.name);
+  return `${SETTINGS.logosFolder}/${slug}.png`;
 }
 
-/* ---- 좌석 등급 100개 만들고 브랜드 100개 매칭 ---- */
-let tiers = [];
-for(let i=0;i<SEAT_COUNTS.king;i++) tiers.push("king");
-for(let i=0;i<SEAT_COUNTS.premium;i++) tiers.push("premium");
-for(let i=0;i<SEAT_COUNTS.standard;i++) tiers.push("standard");
+/* 4) 카테고리 필터 옵션 채우기 */
+function initCategoryFilter(){
+  const cats = Object.keys(SETTINGS.categoryCounts);
+  cats.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = c;
+    catFilterEl.appendChild(opt);
+  });
+}
 
-const tierShuffled = shuffle(tiers);
-const brandShuffled = shuffle(brands100);
+/* 5) 좌석 생성 로직
+ * - 카테고리별 좌석 수대로 seats 생성
+ * - 등급은 전체 100석 기준으로 king/premium/standard 할당
+ * - HOT(유료) 좌석은 상위 등급부터 hotPaidCount만큼 지정
+ */
+function buildSeats(){
+  const seats = [];
 
-const seats = tierShuffled.map((tier, idx) => {
-  const b = brandShuffled[idx];
-  const domain = domainFromUrl(b.url);
-  return {
-    tier,
-    cat: b.cat,
-    name: b.name,
-    url: b.url,
-    domain
-  };
-});
+  // (1) 카테고리 좌석 생성
+  let seatIndex = 0;
+  for(const [cat, count] of Object.entries(SETTINGS.categoryCounts)){
+    const pool = (BRANDS_BY_CATEGORY[cat] && BRANDS_BY_CATEGORY[cat].length)
+      ? BRANDS_BY_CATEGORY[cat]
+      : [{ name:`${cat} 광고주`, url:"https://example.com" }];
 
-const hotSet = pickHotIndexes(seats, HOT_COUNT);
+    for(let i=0; i<count; i++){
+      const b = pool[i % pool.length];
+      const url_ok = isValidHttpsUrl(b.url);
 
-/* ---- 렌더 ---- */
-const grid = document.getElementById("grid");
+      seats.push({
+        id: `S-${String(++seatIndex).padStart(3,"0")}`,
+        category: cat,
+        type: "standard", // 임시, 아래에서 등급 배분
+        hot: false,
+        name: b.name,
+        url: b.url,
+        url_ok,
+        logo: autoLogoPath(b),
+        // 운영용 필드
+        is_paid: false,
+        created_at: new Date().toISOString(),
+      });
+    }
+  }
 
-seats.forEach((b, i) => {
-  const label = labelFor(b.tier);
-  const sizeCls = sizeClassFor(b.tier);
-  const isHot = hotSet.has(i);
+  // (2) 총 100석 검증(혹시 설정 변경 대비)
+  if(seats.length !== SETTINGS.totalSeats){
+    // 부족/초과 시 자동 보정(부족하면 dummy 채우기 / 초과면 자르기)
+    if(seats.length < SETTINGS.totalSeats){
+      const missing = SETTINGS.totalSeats - seats.length;
+      for(let i=0; i<missing; i++){
+        seats.push({
+          id: `S-${String(++seatIndex).padStart(3,"0")}`,
+          category: "기타",
+          type: "standard",
+          hot: false,
+          name: "광고주 모집중",
+          url: "https://example.com",
+          url_ok: true,
+          logo: SETTINGS.defaultLogo,
+          is_paid: false,
+          created_at: new Date().toISOString(),
+        });
+      }
+    }else{
+      seats.length = SETTINGS.totalSeats;
+    }
+  }
 
-  const tile = document.createElement("div");
-  tile.className = `tile ${b.tier} ${sizeCls}` + (isHot ? " hot" : "");
-  tile.setAttribute("role", "button");
-  tile.setAttribute("tabindex", "0");
+  // (3) 등급 배분: 랜덤하게 섞은 뒤 앞에서부터 KING/PREMIUM/STD 할당
+  const order = shuffle(seats.slice());
+  let ptr = 0;
+  const { king, premium, standard } = SETTINGS.gradeCounts;
 
-  // 로고 src는 "로컬 먼저"
-  const logoLocal = b.domain ? localLogo(b.domain) : "";
-  const logoAuto  = b.domain ? autoLogo(b.domain)  : "";
+  order.slice(ptr, ptr+king).forEach(s => s.type="king"); ptr += king;
+  order.slice(ptr, ptr+premium).forEach(s => s.type="premium"); ptr += premium;
+  order.slice(ptr, ptr+standard).forEach(s => s.type="standard"); ptr += standard;
 
-  tile.innerHTML = `
-    <div class="badge ${b.tier} ${isHot ? "hot" : ""}">
-      <span class="mini-dot"></span>
-      ${label}${isHot ? " • HOT" : ""}
+  // (4) HOT(유료) 고정: king -> premium -> standard 순서로 지정
+  const hotTargets = order
+    .filter(s => s.type === "king")
+    .concat(order.filter(s => s.type === "premium"))
+    .concat(order.filter(s => s.type === "standard"))
+    .slice(0, Math.min(SETTINGS.hotPaidCount, order.length));
+
+  hotTargets.forEach(s => { s.hot = true; s.is_paid = true; });
+
+  // (5) 최종 배치는 랜덤
+  shuffle(order);
+  return order;
+}
+
+/* 6) 렌더 */
+let allSeats = buildSeats();
+
+function renderStats(){
+  const total = allSeats.length;
+  const hotCount = allSeats.filter(s => s.hot).length;
+  const invalidCount = allSeats.filter(s => !s.url_ok).length;
+  const paidCount = allSeats.filter(s => s.is_paid).length;
+
+  const k = allSeats.filter(s => s.type === "king").length;
+  const p = allSeats.filter(s => s.type === "premium").length;
+  const s = allSeats.filter(s => s.type === "standard").length;
+
+  stats.innerHTML = `
+    <div class="stat">총 좌석: <b>${total}</b></div>
+    <div class="stat">KING: <b>${k}</b></div>
+    <div class="stat">PREMIUM: <b>${p}</b></div>
+    <div class="stat">STANDARD: <b>${s}</b></div>
+    <div class="stat">HOT(유료): <b>${hotCount}</b> · 유료표시: <b>${paidCount}</b></div>
+    <div class="stat">URL 오류: <b class="${invalidCount? "warn":"ok"}">${invalidCount}</b></div>
+  `;
+}
+
+function seatMatches(seat){
+  const f = filterEl.value;
+  const cf = catFilterEl.value;
+  const q = (qEl.value || "").trim().toLowerCase();
+
+  const okFilter =
+    (f === "all") ||
+    (f === "hot" && seat.hot) ||
+    (f === seat.type);
+
+  const okCat =
+    (cf === "all") ||
+    (seat.category === cf);
+
+  const okQuery =
+    (!q) ||
+    (seat.name.toLowerCase().includes(q)) ||
+    (seat.url.toLowerCase().includes(q)) ||
+    (seat.id.toLowerCase().includes(q));
+
+  return okFilter && okCat && okQuery;
+}
+
+let currentSeat = null;
+
+function calcMonthlyPrice(seat){
+  const base = SETTINGS.pricing[seat.type] || 0;
+  const hotAddon = seat.hot ? SETTINGS.pricing.hot_addon : 0;
+  return base + hotAddon;
+}
+
+function renderPriceBox(seat){
+  const monthly = calcMonthlyPrice(seat);
+  const base = SETTINGS.pricing[seat.type] || 0;
+  const addon = seat.hot ? SETTINGS.pricing.hot_addon : 0;
+
+  priceBox.innerHTML = `
+    <div class="line"><span>등급(${typeLabel(seat.type)})</span><b>${won(base)}/월</b></div>
+    <div class="line"><span>HOT 강조</span><b>${seat.hot ? won(addon) + "/월" : "없음"}</b></div>
+    <div class="line" style="margin-top:6px; padding-top:8px; border-top:1px solid rgba(255,255,255,.12);">
+      <span><b>합계</b></span><b>${won(monthly)}/월</b>
     </div>
-
-    <div class="logo-badge" title="${escapeHtml(b.domain || '')}">
-      <img
-        src="${escapeHtml(logoLocal)}"
-        alt="${escapeHtml(b.name)} 로고"
-        onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';"
-      />
-    </div>
-
-    <div>
-      <div class="name">${escapeHtml(b.name)}</div>
-      <div class="sub">${escapeHtml(b.cat)} · 클릭하여 이동</div>
+    <div class="hint" style="margin-top:10px;">
+      • KING: 최상단 급(대형) / • PREMIUM: 중형 / • STANDARD: 소형<br/>
+      • HOT는 유료광고로 고정 노출(반짝)
     </div>
   `;
+}
 
-  tile.addEventListener("click", () => go(b.url));
-  tile.addEventListener("keydown", (e) => {
-    if(e.key === "Enter" || e.key === " ") go(b.url);
-  });
+function openSeatModal(seat){
+  currentSeat = seat;
+  dTitle.textContent = seat.name;
+  dMeta.textContent = `${typeLabel(seat.type)} · ${seat.category} · ${seat.url_ok ? seat.url : "⚠️ https URL 오류"} · ${seat.id}`;
 
-  grid.appendChild(tile);
+  // 폼 기본값
+  fBrand.value = seat.name;
+  fUrl.value = seat.url_ok ? seat.url : "";
+  fContact.value = "";
+  fMonths.value = 1;
+
+  renderPriceBox(seat);
+
+  if(seat.url_ok){
+    dGo.href = seat.url;
+    dGo.style.pointerEvents = "auto";
+    dGo.style.opacity = "1";
+  }else{
+    dGo.href = "#";
+    dGo.style.pointerEvents = "none";
+    dGo.style.opacity = ".5";
+  }
+
+  out.textContent = "";
+  dialog.showModal();
+}
+
+function render(){
+  grid.innerHTML = "";
+  const visible = allSeats.filter(seatMatches);
+
+  for(const seat of visible){
+    const el = document.createElement("div");
+    el.className = `seat ${seat.type}` + (seat.hot ? " is-hot" : "");
+
+    const badge = document.createElement("div");
+    badge.className = `badge ${seat.type}`;
+    badge.innerHTML = `${typeLabel(seat.type)} <span class="cat">${escapeHtml(seat.category)}</span>`;
+    el.appendChild(badge);
+
+    if(seat.hot){
+      const hot = document.createElement("div");
+      hot.className = "hot";
+      hot.textContent = "HOT · 유료";
+      el.appendChild(hot);
+    }
+
+    // 로고(자동) -> 실패하면 기본로고 -> 실패하면 텍스트
+    const img = document.createElement("img");
+    img.className = "logo";
+    img.alt = seat.name;
+    img.loading = "lazy";
+    img.src = seat.logo || SETTINGS.defaultLogo;
+
+    let triedDefault = false;
+    img.onerror = () => {
+      if(!triedDefault && SETTINGS.defaultLogo && img.src.indexOf(SETTINGS.defaultLogo) === -1){
+        triedDefault = true;
+        img.src = SETTINGS.defaultLogo;
+        return;
+      }
+      img.remove();
+      const fb = document.createElement("div");
+      fb.className = "fallback";
+      fb.innerHTML = `<div class="name">${escapeHtml(seat.name)}</div><div class="url">${escapeHtml(seat.url)}</div>`;
+      el.appendChild(fb);
+    };
+    el.appendChild(img);
+
+    // 좌클릭: 유효 URL이면 새창, 대신 운영용은 "모달 먼저"가 전환율 좋음
+    // => 여기서는 모달로 통일 (원하면 즉시 open으로 바꿀 수 있음)
+    el.addEventListener("click", () => openSeatModal(seat));
+    el.addEventListener("contextmenu", (e) => { e.preventDefault(); openSeatModal(seat); });
+
+    grid.appendChild(el);
+  }
+
+  if(visible.length === 0){
+    const empty = document.createElement("div");
+    empty.style.padding = "18px 6px";
+    empty.style.color = "rgba(255,255,255,.65)";
+    empty.textContent = "검색/필터 조건에 맞는 좌석이 없습니다.";
+    grid.appendChild(empty);
+  }
+}
+
+/* 7) 신청 JSON 생성/복사/다운로드 */
+function buildApplicationJson(){
+  if(!currentSeat) return null;
+
+  const months = Math.max(1, parseInt(fMonths.value || "1", 10));
+  const url = (fUrl.value || "").trim();
+  const url_ok = isValidHttpsUrl(url);
+
+  const monthly = calcMonthlyPrice(currentSeat);
+  const totalPrice = monthly * months;
+
+  return {
+    kind: "KINGMAKE_AD_APPLICATION",
+    created_at: new Date().toISOString(),
+    seat: {
+      id: currentSeat.id,
+      grade: currentSeat.type,
+      category: currentSeat.category,
+      hot_paid: currentSeat.hot,
+      monthly_price_won: monthly,
+    },
+    applicant: {
+      brand_name: (fBrand.value || "").trim(),
+      official_url: url,
+      url_ok,
+      contact: (fContact.value || "").trim(),
+      months,
+      total_price_won: totalPrice
+    }
+  };
+}
+
+applyBtn.addEventListener("click", () => {
+  const data = buildApplicationJson();
+  if(!data) return;
+
+  if(!data.applicant.brand_name){
+    alert("업체명을 입력해주세요.");
+    return;
+  }
+  if(!data.applicant.official_url || !data.applicant.url_ok){
+    alert("공식 URL을 https:// 로 정확히 입력해주세요.");
+    return;
+  }
+  if(!data.applicant.contact){
+    alert("연락처를 입력해주세요.");
+    return;
+  }
+
+  out.textContent = JSON.stringify(data, null, 2);
 });
-</script>
 
+copyBtn.addEventListener("click", async () => {
+  const txt = out.textContent.trim();
+  if(!txt){ alert("먼저 신청 데이터를 생성해주세요."); return; }
+  try{
+    await navigator.clipboard.writeText(txt);
+    alert("복사 완료!");
+  }catch(e){
+    alert("복사 실패: 브라우저 권한을 확인해주세요.");
+  }
+});
+
+downloadBtn.addEventListener("click", () => {
+  const txt = out.textContent.trim();
+  if(!txt){ alert("먼저 신청 데이터를 생성해주세요."); return; }
+  const blob = new Blob([txt], { type: "application/json;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `kingmake_application_${currentSeat ? currentSeat.id : "seat"}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(a.href);
+});
+
+/* 8) 전체 광고 목록 JSON Export */
+exportBtn.addEventListener("click", () => {
+  const exportData = {
+    kind: "KINGMAKE_AD_BOARD_EXPORT",
+    created_at: new Date().toISOString(),
+    settings: SETTINGS,
+    seats: allSeats.map(s => ({
+      id: s.id,
+      grade: s.type,
+      category: s.category,
+      hot_paid: s.hot,
+      name: s.name,
+      url: s.url,
+      url_ok: s.url_ok,
+      logo: s.logo
+    }))
+  };
+
+  const txt = JSON.stringify(exportData, null, 2);
+
+  // 다운로드 + 복사 둘 다 제공
+  const blob = new Blob([txt], { type: "application/json;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `kingmake_board_export.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(a.href);
+
+  navigator.clipboard?.writeText(txt).then(()=> {
+    alert("광고목록 JSON 다운로드 + 클립보드 복사 완료!");
+  }).catch(()=> {
+    alert("광고목록 JSON 다운로드 완료! (클립보드 복사는 브라우저 권한 필요)");
+  });
+});
+
+/* 9) 기타 이벤트 */
+filterEl.addEventListener("change", render);
+catFilterEl.addEventListener("change", render);
+qEl.addEventListener("input", render);
+
+shuffleBtn.addEventListener("click", () => {
+  allSeats = buildSeats();
+  renderStats();
+  render();
+});
+
+dClose.addEventListener("click", () => dialog.close());
+dialog.addEventListener("click", (e) => {
+  const rect = dialog.getBoundingClientRect();
+  const inDialog = (
+    rect.top <= e.clientY && e.clientY <= rect.bottom &&
+    rect.left <= e.clientX && e.clientX <= rect.right
+  );
+  if(!inDialog) dialog.close();
+});
+
+/* 10) 초기 구동 */
+initCategoryFilter();
+renderStats();
+render();
+</script>
 </body>
 </html>
