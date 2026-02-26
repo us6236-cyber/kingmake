@@ -126,6 +126,111 @@
     margin-left:6px;
   }
 
+  /* ✅ KING SEAT 3 (상단 전용 구역) */
+  .king-zone{
+    max-width:1740px;
+    margin:18px auto 0;
+    border:1px solid rgba(212,175,55,0.35);
+    border-radius:18px;
+    background:rgba(212,175,55,0.06);
+    box-shadow:0 24px 80px rgba(0,0,0,0.55);
+    overflow:hidden;
+    padding:14px;
+    text-align:left;
+  }
+  .king-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:6px 4px 12px;
+  }
+  .king-title b{
+    font-size:14px;
+    letter-spacing:0.3px;
+  }
+  .king-title span{
+    font-size:12px;
+    color:var(--muted);
+  }
+  .king-grid{
+    display:grid;
+    gap:12px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .king-seat{
+    position:relative;
+    border:1px solid rgba(212,175,55,0.40);
+    background:rgba(255,255,255,0.06);
+    border-radius:14px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    min-height:110px;
+    display:flex;
+    align-items:center;
+    padding:16px;
+    gap:14px;
+  }
+  .king-seat:hover{
+    transform:translateY(-2px);
+    border-color:rgba(212,175,55,0.75);
+    background:rgba(255,255,255,0.08);
+    box-shadow:0 0 22px rgba(212,175,55,0.25);
+  }
+  .king-badge{
+    position:absolute;
+    top:10px; left:10px;
+    font-weight:900;
+    font-size:12px;
+    color:rgba(255,255,255,0.88);
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid rgba(212,175,55,0.40);
+    background:rgba(0,0,0,0.30);
+    backdrop-filter: blur(8px);
+  }
+  .king-logo{
+    width:140px;
+    height:78px;
+    border-radius:14px;
+    border:1px solid rgba(212,175,55,0.35);
+    background:rgba(255,255,255,0.92);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex:0 0 auto;
+  }
+  .king-logo img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:14px;
+    filter:none;
+  }
+  .king-meta{min-width:0;}
+  .king-name{
+    font-weight:900;
+    font-size:20px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .king-desc{
+    margin-top:6px;
+    font-size:12px;
+    color:var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  @media (max-width:900px){
+    .king-grid{ grid-template-columns: 1fr; }
+    .king-logo{ width:150px; height:82px; }
+  }
+
   /* LEGEND */
   .legend{
     margin:14px auto 0;
@@ -144,145 +249,6 @@
   .dot.premium{background:var(--premium)}
   .dot.standard{background:var(--standard)}
   .dot.hot{background:var(--premium)}
-
-  /* ✅ TOP10 광고판(로고형) */
-  .rank-board{
-    max-width:1740px;
-    margin:18px auto 0;
-    border:1px solid var(--line);
-    border-radius:18px;
-    background:rgba(255,255,255,0.03);
-    box-shadow:0 24px 80px rgba(0,0,0,0.55);
-    overflow:hidden;
-    padding:14px;
-    text-align:left;
-  }
-  .rank-title{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    gap:10px;
-    padding:6px 4px 12px;
-  }
-  .rank-title b{
-    font-size:14px;
-    letter-spacing:0.3px;
-  }
-  .rank-title span{
-    font-size:12px;
-    color:var(--muted);
-  }
-
-  .rank-grid{
-    display:grid;
-    gap:12px;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .rank-card{
-    position:relative;
-    border:1px solid rgba(255,255,255,0.14);
-    background:rgba(255,255,255,0.06);
-    border-radius:14px;
-    overflow:hidden;
-    cursor:pointer;
-    transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
-    min-height:92px;
-    display:flex;
-    align-items:center;
-    padding:14px 14px;
-    gap:14px;
-  }
-  .rank-card:hover{
-    transform:translateY(-2px);
-    border-color:rgba(255,255,255,0.35);
-    background:rgba(255,255,255,0.08);
-  }
-  .rank-card.top1{
-    grid-column: 1 / -1;
-    min-height:120px;
-    padding:18px 18px;
-  }
-
-  .rank-badge{
-    position:absolute;
-    top:10px; left:10px;
-    font-weight:900;
-    font-size:13px;
-    color:rgba(255,255,255,0.85);
-    padding:6px 10px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.14);
-    background:rgba(0,0,0,0.30);
-    backdrop-filter: blur(8px);
-  }
-
-  /* ✅ 로고 박스: 올려주신 광고판 느낌처럼 "가로 직사각 로고" */
-  .rank-logo{
-    width:120px;
-    height:66px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.14);
-    background:rgba(255,255,255,0.92); /* ✅ 흰 배경 */
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    flex:0 0 auto;
-  }
-  .rank-card.top1 .rank-logo{
-    width:170px;
-    height:88px;
-    border-radius:14px;
-  }
-
-  .rank-logo img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    padding:12px;
-    filter:none;
-  }
-
-  .rank-meta{
-    min-width:0;
-  }
-  .rank-name{
-    font-weight:900;
-    font-size:18px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .rank-card.top1 .rank-name{ font-size:26px; }
-
-  .rank-desc{
-    margin-top:6px;
-    font-size:12px;
-    color:var(--muted);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  .rank-card.hot{
-    animation:hotBlink 1.2s infinite;
-  }
-  @keyframes hotBlink{
-    0%   { box-shadow:0 0 0 rgba(255,59,59,0); }
-    50%  { box-shadow:0 0 22px rgba(255,59,59,0.85); border-color:rgba(255,59,59,0.9); }
-    100% { box-shadow:0 0 0 rgba(255,59,59,0); }
-  }
-
-  @media (max-width:900px){
-    .rank-grid{ grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width:560px){
-    .rank-grid{ grid-template-columns: 1fr; }
-    .rank-card.top1 .rank-name{ font-size:22px; }
-    .rank-logo{ width:112px; height:60px; }
-    .rank-card.top1 .rank-logo{ width:150px; height:80px; }
-  }
 
   /* HEATMAP */
   .heatmap{
@@ -322,7 +288,6 @@
     background:rgba(255,255,255,0.07);
   }
 
-  .tile.king{ border-color:rgba(212,175,55,0.55); }
   .tile.premium{ border-color:rgba(255,59,59,0.55); }
   .tile.standard{ border-color:rgba(255,255,255,0.30); }
 
@@ -352,15 +317,12 @@
     white-space:nowrap;
   }
   .badge .mini-dot{width:8px;height:8px;border-radius:3px;display:inline-block;background:rgba(255,255,255,0.4);}
-  .badge.king{border-color:rgba(212,175,55,0.55)}
-  .badge.king .mini-dot{background:var(--gold)}
   .badge.premium{border-color:rgba(255,59,59,0.55)}
   .badge.premium .mini-dot{background:var(--premium)}
   .badge.standard{border-color:rgba(255,255,255,0.25)}
   .badge.standard .mini-dot{background:var(--standard)}
   .badge.hot .mini-dot{background:var(--premium)}
 
-  /* 히트맵 로고 배지(오른쪽 상단) */
   .logo-badge{
     position:absolute;
     top:10px; right:10px;
@@ -382,19 +344,17 @@
   .name{font-weight:800; letter-spacing:0.2px; line-height:1.1; text-align:left;}
   .sub{margin-top:6px; font-size:12px; color:rgba(255,255,255,0.7); text-align:left;}
 
-  .kingSize{ grid-column: span 7; grid-row: span 2; }
+  /* ✅ 히트맵은 Premium 50 / Standard 50 (동일 사이즈 유지) */
   .premSize{ grid-column: span 3; grid-row: span 2; }
   .stdSize{  grid-column: span 2; grid-row: span 1; }
 
   @media (max-width:1200px){
     .grid{ grid-template-columns: repeat(14, 1fr); }
-    .kingSize{ grid-column: span 14; grid-row: span 2; }
     .premSize{ grid-column: span 7; grid-row: span 2; }
     .stdSize{  grid-column: span 7; grid-row: span 1; }
   }
   @media (max-width:520px){
     .grid{ grid-template-columns: repeat(6, 1fr); gap:8px; padding:12px; grid-auto-rows:52px; }
-    .kingSize{ grid-column: span 6; grid-row: span 2; }
     .premSize{ grid-column: span 3; grid-row: span 2; }
     .stdSize{  grid-column: span 3; grid-row: span 1; }
   }
@@ -408,20 +368,20 @@
       <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
       <b>KING MAKE</b>
     </a>
-    <div class="page-title">K-FOOD • HEATMAP</div>
+    <div class="page-title">K-FOOD • KING SEAT + HEATMAP</div>
   </div>
 </div>
 
 <div class="wrap">
   <div class="hero">
-    <h1>🍗 K-FOOD Brand Heatmap</h1>
+    <h1>🍗 K-FOOD Brand Seats</h1>
     <p>
-      (변경사항) TOP10 광고판을 “올려주신 이미지 스타일”의 가로 로고 카드로 적용했습니다.<br>
-      아래 히트맵은 그대로 유지됩니다.
+      상단: KING SEAT 3자리(전용)<br>
+      하단: Premium 50 + Standard 50 (총 100) • 랜덤 배치 • 클릭 이동 • HOT 반짝
     </p>
   </div>
 
-  <!-- ✅ 필터/검색 -->
+  <!-- 필터/검색 -->
   <div class="controls">
     <div class="chips" id="chips">
       <span class="chip active" data-cat="ALL">전체</span>
@@ -440,45 +400,38 @@
     </div>
   </div>
 
-  <!-- ✅ TOP10 광고판(로고형) -->
-  <section class="rank-board">
-    <div class="rank-title">
-      <b>이번 주 TOP10 브랜드</b>
-      <span>1위는 더 크게 노출됩니다 (클릭 이동)</span>
+  <!-- ✅ KING SEAT 3 -->
+  <section class="king-zone">
+    <div class="king-title">
+      <b>👑 KING SEAT (3)</b>
+      <span>가장 눈에 띄는 최고 좌석 (클릭 이동)</span>
     </div>
-    <div class="rank-grid" id="rankGrid"></div>
+    <div class="king-grid" id="kingGrid"></div>
   </section>
 
   <div class="legend">
-    <div class="pill"><span class="dot king"></span> KING 3</div>
-    <div class="pill"><span class="dot premium"></span> Premium 47</div>
+    <div class="pill"><span class="dot king"></span> KING 3 (상단)</div>
+    <div class="pill"><span class="dot premium"></span> Premium 50</div>
     <div class="pill"><span class="dot standard"></span> Standard 50</div>
     <div class="pill"><span class="dot hot"></span> HOT (반짝)</div>
   </div>
 
-  <!-- 히트맵 -->
+  <!-- ✅ 히트맵 (Premium 50 / Standard 50) -->
   <div class="heatmap">
     <div class="grid" id="grid"></div>
   </div>
 </div>
 
 <script>
-/* ---------- 설정 ---------- */
-const SEAT_COUNTS = { king: 3, premium: 47, standard: 50 };
+/* ✅ 좌석 수 변경 요청 반영 */
+const SEAT_COUNTS = { premium: 50, standard: 50 };
 const HOT_COUNT = 12;
 
-/* ✅ TOP10 광고판 데이터(원하면 여기만 바꾸면 됨) */
-const top10 = [
-  { rank:1, name:"농심", url:"https://www.nongshim.com/", hot:true, desc:"1위 스폰서" },
-  { rank:2, name:"오뚜기", url:"https://www.ottogi.co.kr/", hot:false, desc:"TOP 브랜드" },
-  { rank:3, name:"CJ제일제당", url:"https://www.cj.co.kr/", hot:false, desc:"TOP 브랜드" },
-  { rank:4, name:"BHC", url:"https://www.bhc.co.kr/", hot:true, desc:"HOT" },
-  { rank:5, name:"풀무원", url:"https://www.pulmuone.co.kr/", hot:false, desc:"TOP 브랜드" },
-  { rank:6, name:"오리온", url:"https://www.orionworld.com/", hot:false, desc:"TOP 브랜드" },
-  { rank:7, name:"교촌치킨", url:"https://www.kyochon.com/", hot:true, desc:"HOT" },
-  { rank:8, name:"빙그레", url:"https://www.bing.co.kr/", hot:false, desc:"TOP 브랜드" },
-  { rank:9, name:"매일유업", url:"https://www.maeil.com/", hot:false, desc:"TOP 브랜드" },
-  { rank:10, name:"롯데칠성음료", url:"https://company.lottechilsung.co.kr/", hot:false, desc:"TOP 브랜드" }
+/* ✅ KING SEAT 3자리(상단 전용) — 여기만 바꾸면 됨 */
+const kingSeats = [
+  { seat: 1, name:"KING SEAT 1", url:"https://kingmake.kr/", desc:"최상단 프리미엄 자리" },
+  { seat: 2, name:"KING SEAT 2", url:"https://kingmake.kr/", desc:"최상단 프리미엄 자리" },
+  { seat: 3, name:"KING SEAT 3", url:"https://kingmake.kr/", desc:"최상단 프리미엄 자리" }
 ];
 
 /* 브랜드 100개 (히트맵용) */
@@ -602,27 +555,9 @@ function shuffle(arr){
             .sort((a,b) => a.r - b.r)
             .map(o => o.v);
 }
-function pickHotIndexes(items, hotCount){
-  const candidates = [];
-  items.forEach((b, i) => {
-    if (b.tier === "premium" || b.tier === "king") candidates.push(i);
-  });
-  const shuffled = shuffle(candidates);
-  return new Set(shuffled.slice(0, Math.min(hotCount, shuffled.length)));
-}
 function go(url){
   if(!url) return;
   window.open(url, "_blank", "noopener,noreferrer");
-}
-function labelFor(tier){
-  if(tier === "king") return "👑 KING";
-  if(tier === "premium") return "⭐ Premium";
-  return "⬜ Standard";
-}
-function sizeClassFor(tier){
-  if(tier === "king") return "kingSize";
-  if(tier === "premium") return "premSize";
-  return "stdSize";
 }
 function escapeHtml(str){
   return String(str)
@@ -632,8 +567,6 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
-/* 로고 자동 */
 function domainFromUrl(url){
   try{
     const u = new URL(url);
@@ -644,61 +577,71 @@ function localLogo(domain){ return `logos/${domain}.png`; }
 function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
 
 /* -------------------------
-   A) TOP10 광고판 렌더 (로고형)
+   A) KING SEAT 3 렌더
 ------------------------- */
-const rankGrid = document.getElementById("rankGrid");
+const kingGrid = document.getElementById("kingGrid");
 
-top10.forEach(item=>{
+kingSeats.forEach(item=>{
   const domain = domainFromUrl(item.url);
   const logoLocal = domain ? localLogo(domain) : "";
   const logoAuto  = domain ? autoLogo(domain)  : "";
 
-  const card = document.createElement("div");
-  card.className = "rank-card" + (item.rank===1 ? " top1":"") + (item.hot ? " hot":"");
-  card.tabIndex = 0;
-  card.setAttribute("role","button");
-  card.setAttribute("aria-label", `${item.rank}위 ${item.name} 이동`);
+  const seat = document.createElement("div");
+  seat.className = "king-seat";
+  seat.tabIndex = 0;
+  seat.setAttribute("role","button");
+  seat.setAttribute("aria-label", `KING SEAT ${item.seat} ${item.name} 이동`);
 
-  card.innerHTML = `
-    <div class="rank-badge">${item.rank}위</div>
-    <div class="rank-logo">
+  seat.innerHTML = `
+    <div class="king-badge">👑 KING ${item.seat}</div>
+    <div class="king-logo">
       <img src="${escapeHtml(logoLocal)}"
            alt="${escapeHtml(item.name)} 로고"
            onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
     </div>
-    <div class="rank-meta">
-      <div class="rank-name">${escapeHtml(item.name)}</div>
-      <div class="rank-desc">${escapeHtml(item.desc || "TOP 브랜드")}</div>
+    <div class="king-meta">
+      <div class="king-name">${escapeHtml(item.name)}</div>
+      <div class="king-desc">${escapeHtml(item.desc || "최상단 프리미엄 자리")}</div>
     </div>
   `;
 
-  card.addEventListener("click", ()=>go(item.url));
-  card.addEventListener("keydown", (e)=>{
+  seat.addEventListener("click", ()=>go(item.url));
+  seat.addEventListener("keydown", (e)=>{
     if(e.key==="Enter" || e.key===" ") go(item.url);
   });
 
-  rankGrid.appendChild(card);
+  kingGrid.appendChild(seat);
 });
 
 /* -------------------------
-   B) 히트맵(기존 유지)
+   B) 히트맵 렌더 (Premium 50 / Standard 50)
 ------------------------- */
+const HOT_COUNT = 12;
+
+// tiers 생성 (총 100)
 let tiers = [];
-for(let i=0;i<SEAT_COUNTS.king;i++) tiers.push("king");
 for(let i=0;i<SEAT_COUNTS.premium;i++) tiers.push("premium");
 for(let i=0;i<SEAT_COUNTS.standard;i++) tiers.push("standard");
 
 const tierShuffled = shuffle(tiers);
 const brandShuffled = shuffle(brands100);
 
+// 좌석 + 브랜드 매칭
 const seats = tierShuffled.map((tier, idx) => {
   const b = brandShuffled[idx];
   const domain = domainFromUrl(b.url);
   return { tier, cat:b.cat, name:b.name, url:b.url, domain };
 });
 
+// HOT: premium 중 랜덤 선택
+function pickHotIndexes(items, hotCount){
+  const candidates = [];
+  items.forEach((b, i) => { if (b.tier === "premium") candidates.push(i); });
+  return new Set(shuffle(candidates).slice(0, Math.min(hotCount, candidates.length)));
+}
 const hotSet = pickHotIndexes(seats, HOT_COUNT);
 
+// DOM
 const grid = document.getElementById("grid");
 const countText = document.getElementById("countText");
 const searchInput = document.getElementById("searchInput");
@@ -708,6 +651,15 @@ const chips = document.getElementById("chips");
 let currentCat = "ALL";
 let currentQuery = "";
 const tileRefs = [];
+
+function labelFor(tier){
+  if(tier === "premium") return "⭐ Premium";
+  return "⬜ Standard";
+}
+function sizeClassFor(tier){
+  if(tier === "premium") return "premSize";
+  return "stdSize";
+}
 
 seats.forEach((b, i) => {
   const label = labelFor(b.tier);
