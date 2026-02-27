@@ -16,14 +16,8 @@
     --muted:rgba(255,255,255,0.70);
   }
 
-  body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-    background:var(--bg);
-    color:#fff;
-  }
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;background:var(--bg);color:#fff;}
 
-  /* TOP BAR */
   .top{
     position:sticky; top:0; z-index:10;
     backdrop-filter:blur(10px);
@@ -31,206 +25,101 @@
     border-bottom:1px solid var(--line);
   }
   .top-inner{
-    max-width:1800px;
-    margin:auto;
-    padding:14px 18px;
-    display:flex; align-items:center; justify-content:space-between;
-    gap:12px;
+    max-width:1800px;margin:auto;padding:14px 18px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
   }
-  .brand{
-    display:flex; align-items:center; gap:10px;
-    text-decoration:none; color:#fff;
-  }
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;}
   .brand img{height:26px;width:auto;display:block;}
   .brand b{letter-spacing:1px}
-  .page-title{font-size:13px; opacity:0.75;}
+  .page-title{font-size:13px;opacity:0.75;}
 
-  /* LAYOUT */
-  .wrap{
-    max-width:1800px;
-    margin:0 auto;
-    padding:22px 18px 70px;
-    text-align:center;
-  }
-  .hero h1{margin:0; font-size:34px; letter-spacing:-0.5px;}
-  .hero p{margin:12px 0 0; opacity:0.7; line-height:1.6;}
+  .wrap{max-width:1800px;margin:0 auto;padding:22px 18px 70px;text-align:center;}
+  .hero h1{margin:0;font-size:34px;letter-spacing:-0.5px;}
+  .hero p{margin:12px 0 0;opacity:0.7;line-height:1.6;}
 
-  /* CONTROLS */
   .controls{
-    max-width:1740px;
-    margin:18px auto 0;
-    display:flex;
-    gap:10px;
-    align-items:center;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    padding:10px 12px;
-    border:1px solid var(--line);
-    border-radius:16px;
-    background:rgba(255,255,255,0.03);
+    max-width:1740px;margin:18px auto 0;
+    display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    padding:10px 12px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,0.03);
   }
-
-  .chips{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    align-items:center;
-  }
+  .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
   .chip{
-    padding:9px 12px;
-    border-radius:999px;
+    padding:9px 12px;border-radius:999px;
     border:1px solid rgba(255,255,255,0.14);
     background:rgba(255,255,255,0.04);
-    color:#fff;
-    font-size:13px;
-    cursor:pointer;
-    user-select:none;
-    transition:0.15s;
+    color:#fff;font-size:13px;cursor:pointer;user-select:none;transition:0.15s;
   }
-  .chip:hover{ transform:translateY(-1px); border-color:rgba(255,255,255,0.32); }
-  .chip.active{
-    border-color:rgba(255,59,59,0.55);
-    box-shadow:0 0 18px rgba(255,59,59,0.18);
-  }
-
-  .search{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    flex-wrap:wrap;
-  }
+  .chip:hover{transform:translateY(-1px);border-color:rgba(255,255,255,0.32);}
+  .chip.active{border-color:rgba(255,59,59,0.55);box-shadow:0 0 18px rgba(255,59,59,0.18);}
+  .search{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
   .search input{
-    width:min(420px, 74vw);
-    padding:10px 12px;
-    border-radius:12px;
+    width:min(420px, 74vw);padding:10px 12px;border-radius:12px;
     border:1px solid rgba(255,255,255,0.14);
-    background:rgba(0,0,0,0.35);
-    color:#fff;
-    outline:none;
-    font-size:13px;
+    background:rgba(0,0,0,0.35);color:#fff;outline:none;font-size:13px;
   }
-  .search input:focus{ border-color:rgba(255,255,255,0.35); }
+  .search input:focus{border-color:rgba(255,255,255,0.35);}
   .btn{
-    padding:10px 12px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.14);
-    background:rgba(255,255,255,0.05);
-    color:#fff;
-    cursor:pointer;
-    font-size:13px;
+    padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.05);color:#fff;cursor:pointer;font-size:13px;
   }
-  .btn:hover{ border-color:rgba(255,255,255,0.32); }
-  .count{
-    font-size:13px;
-    opacity:0.75;
-    margin-left:6px;
-  }
+  .btn:hover{border-color:rgba(255,255,255,0.32);}
+  .count{font-size:13px;opacity:0.75;margin-left:6px;}
 
-  /* ✅ KING SEAT 3 (항상 3칸) */
+  /* KING ZONE */
   .king-zone{
-    max-width:1740px;
-    margin:18px auto 0;
+    max-width:1740px;margin:18px auto 0;
     border:1px solid rgba(212,175,55,0.35);
-    border-radius:18px;
-    background:rgba(212,175,55,0.06);
+    border-radius:18px;background:rgba(212,175,55,0.06);
     box-shadow:0 24px 80px rgba(0,0,0,0.55);
-    overflow:hidden;
-    padding:14px;
-    text-align:left;
+    overflow:hidden;padding:14px;text-align:left;
   }
-  .king-title{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    padding:6px 4px 12px;
-  }
-  .king-title b{font-size:14px; letter-spacing:0.3px;}
-  .king-title span{font-size:12px; color:var(--muted);}
+  .king-title{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 4px 12px;}
+  .king-title b{font-size:14px;letter-spacing:0.3px;}
+  .king-title span{font-size:12px;color:var(--muted);}
 
-  .king-grid{
-    display:grid;
-    gap:12px;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  /* ✅ 모바일에서도 3칸 유지(가로 스크롤로) */
+  .king-grid{display:grid;gap:12px;grid-template-columns:repeat(3, 1fr);}
   @media (max-width:900px){
-    .king-zone{ overflow-x:auto; }
+    .king-zone{overflow-x:auto;}
     .king-grid{
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(260px, 1fr);
-      grid-template-columns: none;
-      width:max-content;
-      padding-bottom:6px;
+      grid-auto-flow:column;grid-auto-columns:minmax(260px, 1fr);
+      grid-template-columns:none;width:max-content;padding-bottom:6px;
     }
   }
 
   .king-seat{
-    position:relative;
-    border:1px solid rgba(212,175,55,0.40);
+    position:relative;border:1px solid rgba(212,175,55,0.40);
     background:rgba(255,255,255,0.06);
-    border-radius:14px;
-    overflow:hidden;
-    cursor:pointer;
-    transition:transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
-    min-height:110px;
-    display:flex;
-    align-items:center;
-    padding:16px;
-    gap:14px;
+    border-radius:14px;overflow:hidden;cursor:pointer;
+    transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
+    min-height:110px;display:flex;align-items:center;padding:16px;gap:14px;
   }
   .king-seat:hover{
-    transform:translateY(-2px);
-    border-color:rgba(212,175,55,0.75);
-    background:rgba(255,255,255,0.08);
-    box-shadow:0 0 22px rgba(212,175,55,0.25);
+    transform:translateY(-2px);border-color:rgba(212,175,55,0.75);
+    background:rgba(255,255,255,0.08);box-shadow:0 0 22px rgba(212,175,55,0.25);
   }
   .king-badge{
-    position:absolute;
-    top:10px; left:10px;
-    font-weight:900;
-    font-size:12px;
-    color:rgba(255,255,255,0.88);
-    padding:6px 10px;
-    border-radius:999px;
-    border:1px solid rgba(212,175,55,0.40);
-    background:rgba(0,0,0,0.30);
-    backdrop-filter: blur(8px);
+    position:absolute;top:10px;left:10px;font-weight:900;font-size:12px;color:rgba(255,255,255,0.88);
+    padding:6px 10px;border-radius:999px;border:1px solid rgba(212,175,55,0.40);
+    background:rgba(0,0,0,0.30);backdrop-filter:blur(8px);
   }
   .king-logo{
-    width:140px;
-    height:78px;
-    border-radius:14px;
-    border:1px solid rgba(212,175,55,0.35);
-    background:rgba(255,255,255,0.92);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    flex:0 0 auto;
+    width:140px;height:78px;border-radius:14px;border:1px solid rgba(212,175,55,0.35);
+    background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;
+    overflow:hidden;flex:0 0 auto;
   }
-  .king-logo img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    padding:14px;
-  }
-  .king-name{font-weight:900; font-size:20px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .king-desc{margin-top:6px; font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .king-logo img{width:100%;height:100%;object-fit:contain;padding:14px;}
+  .king-name{font-weight:900;font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .king-desc{margin-top:6px;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-  /* LEGEND */
   .legend{
     margin:14px auto 0;
-    display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
-    font-size:13px; opacity:0.9;
+    display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+    font-size:13px;opacity:0.9;
   }
   .pill{
-    display:flex; align-items:center; gap:8px;
-    padding:8px 10px;
-    border:1px solid var(--line);
-    border-radius:999px;
-    background:rgba(255,255,255,0.04);
+    display:flex;align-items:center;gap:8px;
+    padding:8px 10px;border:1px solid var(--line);
+    border-radius:999px;background:rgba(255,255,255,0.04);
   }
   .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
   .dot.king{background:var(--gold)}
@@ -238,71 +127,46 @@
   .dot.standard{background:var(--standard)}
   .dot.hot{background:var(--premium)}
 
-  /* HEATMAP */
   .heatmap{
-    margin:18px auto 0;
-    max-width:1740px;
+    margin:18px auto 0;max-width:1740px;
     border:1px solid var(--line);
-    border-radius:18px;
-    background:var(--panel);
+    border-radius:18px;background:var(--panel);
     box-shadow:0 24px 80px rgba(0,0,0,0.65);
     overflow:hidden;
   }
   .grid{
-    display:grid;
-    gap:10px;
-    padding:16px;
-    grid-template-columns: repeat(22, 1fr);
-    grid-auto-rows: 56px;
+    display:grid;gap:10px;padding:16px;
+    grid-template-columns:repeat(22, 1fr);
+    grid-auto-rows:56px;
   }
 
   .tile{
     border:1px solid rgba(255,255,255,0.12);
-    border-radius:14px;
-    background:rgba(255,255,255,0.04);
-    cursor:pointer;
-    position:relative;
-    overflow:hidden;
-    display:flex;
-    align-items:flex-end;
-    justify-content:flex-start;
+    border-radius:14px;background:rgba(255,255,255,0.04);
+    cursor:pointer;position:relative;overflow:hidden;
+    display:flex;align-items:flex-end;justify-content:flex-start;
     padding:12px;
-    transition:transform .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease, filter .18s ease;
+    transition:transform .18s ease,border-color .18s ease,background .18s ease,opacity .18s ease,filter .18s ease;
     user-select:none;
   }
-  .tile:hover{
-    transform:translateY(-2px);
-    border-color:rgba(255,255,255,0.35);
-    background:rgba(255,255,255,0.07);
-  }
+  .tile:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.07);}
+  .tile.premium{border-color:rgba(255,59,59,0.55);}
+  .tile.standard{border-color:rgba(255,255,255,0.30);}
 
-  .tile.premium{ border-color:rgba(255,59,59,0.55); }
-  .tile.standard{ border-color:rgba(255,255,255,0.30); }
-
-  .tile.hot{ animation:blinkHot 1.2s infinite; }
+  .tile.hot{animation:blinkHot 1.2s infinite;}
   @keyframes blinkHot{
-    0%   { box-shadow:0 0 0 rgba(255,59,59,0); }
-    50%  { box-shadow:0 0 18px rgba(255,59,59,0.85); border-color:rgba(255,59,59,0.9); }
-    100% { box-shadow:0 0 0 rgba(255,59,59,0); }
+    0%{box-shadow:0 0 0 rgba(255,59,59,0);}
+    50%{box-shadow:0 0 18px rgba(255,59,59,0.85);border-color:rgba(255,59,59,0.9);}
+    100%{box-shadow:0 0 0 rgba(255,59,59,0);}
   }
 
-  .tile.filtered-out{
-    opacity:0.18;
-    filter:grayscale(1);
-    pointer-events:none;
-  }
+  .tile.filtered-out{opacity:0.18;filter:grayscale(1);pointer-events:none;}
 
   .badge{
-    position:absolute;
-    top:10px; left:10px;
-    font-size:11px;
-    padding:6px 10px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.16);
-    background:rgba(0,0,0,0.35);
-    opacity:0.92;
-    display:flex; align-items:center; gap:6px;
-    white-space:nowrap;
+    position:absolute;top:10px;left:10px;font-size:11px;padding:6px 10px;
+    border-radius:999px;border:1px solid rgba(255,255,255,0.16);
+    background:rgba(0,0,0,0.35);opacity:0.92;
+    display:flex;align-items:center;gap:6px;white-space:nowrap;
   }
   .badge .mini-dot{width:8px;height:8px;border-radius:3px;display:inline-block;background:rgba(255,255,255,0.4);}
   .badge.premium{border-color:rgba(255,59,59,0.55)}
@@ -312,39 +176,33 @@
   .badge.hot .mini-dot{background:var(--premium)}
 
   .logo-badge{
-    position:absolute;
-    top:10px; right:10px;
-    width:34px; height:34px;
-    border-radius:10px;
+    position:absolute;top:10px;right:10px;
+    width:34px;height:34px;border-radius:10px;
     border:1px solid rgba(255,255,255,0.12);
     background:rgba(0,0,0,0.35);
-    display:flex; align-items:center; justify-content:center;
-    overflow:hidden;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
   }
   .logo-badge img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    padding:6px;
-    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.55));
+    width:100%;height:100%;
+    object-fit:contain;padding:6px;
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,0.55));
   }
 
-  .name{font-weight:800; letter-spacing:0.2px; line-height:1.1; text-align:left;}
-  .sub{margin-top:6px; font-size:12px; color:rgba(255,255,255,0.7); text-align:left;}
+  .name{font-weight:800;letter-spacing:0.2px;line-height:1.1;text-align:left;}
+  .sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,0.7);text-align:left;}
 
-  /* ✅ Premium / Standard 동일 사이즈 */
-  .premSize{ grid-column: span 3; grid-row: span 2; }
-  .stdSize{  grid-column: span 2; grid-row: span 1; }
+  .premSize{grid-column:span 3;grid-row:span 2;}
+  .stdSize{grid-column:span 2;grid-row:span 1;}
 
   @media (max-width:1200px){
-    .grid{ grid-template-columns: repeat(14, 1fr); }
-    .premSize{ grid-column: span 7; grid-row: span 2; }
-    .stdSize{  grid-column: span 7; grid-row: span 1; }
+    .grid{grid-template-columns:repeat(14, 1fr);}
+    .premSize{grid-column:span 7;grid-row:span 2;}
+    .stdSize{grid-column:span 7;grid-row:span 1;}
   }
   @media (max-width:520px){
-    .grid{ grid-template-columns: repeat(6, 1fr); gap:8px; padding:12px; grid-auto-rows:52px; }
-    .premSize{ grid-column: span 3; grid-row: span 2; }
-    .stdSize{  grid-column: span 3; grid-row: span 1; }
+    .grid{grid-template-columns:repeat(6, 1fr);gap:8px;padding:12px;grid-auto-rows:52px;}
+    .premSize{grid-column:span 3;grid-row:span 2;}
+    .stdSize{grid-column:span 3;grid-row:span 1;}
   }
 </style>
 </head>
@@ -356,7 +214,7 @@
       <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
       <b>KING MAKE</b>
     </a>
-    <div class="page-title">K-FOOD • KING SEAT + HEATMAP</div>
+    <div class="page-title">K-FOOD • KING SEAT TOP3 (7D, GLOBAL) + HEATMAP</div>
   </div>
 </div>
 
@@ -364,7 +222,7 @@
   <div class="hero">
     <h1>🍗 K-FOOD Brand Seats</h1>
     <p>
-      상단: KING SEAT 3자리(항상 3칸)<br>
+      KING SEAT 1~3 = <b>최근 7일 전체 유저 클릭 TOP3</b> 자동 표출<br>
       하단: Premium 50 + Standard 50 (총 100) • 랜덤 배치 • 클릭 이동 • HOT 반짝
     </p>
   </div>
@@ -384,20 +242,20 @@
     <div class="search">
       <input id="searchInput" type="text" placeholder="브랜드 검색 (예: BBQ, 스타벅스, 김가네…)" autocomplete="off" />
       <button class="btn" id="clearBtn" type="button">초기화</button>
+      <button class="btn" id="refreshKingBtn" type="button">KING 갱신</button>
     </div>
   </div>
 
-  <!-- ✅ KING SEAT 3 -->
   <section class="king-zone">
     <div class="king-title">
-      <b>👑 KING SEAT (3)</b>
-      <span>항상 3칸으로 보입니다 (모바일은 가로 스크롤)</span>
+      <b>👑 KING SEAT (최근 7일 TOP3)</b>
+      <span id="kingMeta">불러오는 중…</span>
     </div>
     <div class="king-grid" id="kingGrid"></div>
   </section>
 
   <div class="legend">
-    <div class="pill"><span class="dot king"></span> KING 3 (상단)</div>
+    <div class="pill"><span class="dot king"></span> KING = 7일 TOP3</div>
     <div class="pill"><span class="dot premium"></span> Premium 50</div>
     <div class="pill"><span class="dot standard"></span> Standard 50</div>
     <div class="pill"><span class="dot hot"></span> HOT (반짝)</div>
@@ -409,14 +267,14 @@
 </div>
 
 <script>
-/* -------------------------
-  설정
-------------------------- */
+/* ✅ Apps Script Web App URL */
+const API_URL = "https://script.google.com/macros/s/AKfycbzQZU1tSO8k9aF_P38uYh20PO39m06QkRs9KxhskZODb8FvOECmgYcM0-Bj8ZrmcOow/exec";
+
+/* ✅ 좌석 수 */
 const SEAT_COUNTS = { premium: 50, standard: 50 };
 const HOT_COUNT = 12;
-const CLICK_STORE_KEY = "kingmake_clicks_v1";
 
-/* ✅ brands100 (완전한 100개) */
+/* ✅ brands100 (치킨20,버거10,분식20,카페20,한식20,중식10) */
 const brands100 = [
   // 치킨 20
   { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
@@ -532,43 +390,6 @@ const brands100 = [
 ];
 
 /* -------------------------
-  클릭 저장/집계 (최근 7일)
-------------------------- */
-function loadClicks(){
-  try{
-    const raw = localStorage.getItem(CLICK_STORE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  }catch(e){ return []; }
-}
-function saveClicks(arr){
-  try{ localStorage.setItem(CLICK_STORE_KEY, JSON.stringify(arr)); }catch(e){}
-}
-function pruneClicks(arr){
-  const now = Date.now();
-  const sevenDays = 7 * 24 * 60 * 60 * 1000;
-  return arr.filter(x => x && typeof x.t === "number" && (now - x.t) <= sevenDays);
-}
-function recordClickByUrl(url){
-  const clicks = pruneClicks(loadClicks());
-  clicks.push({ u: url, t: Date.now() });   // ✅ url로 저장
-  saveClicks(clicks);
-}
-function getTopBrandsLast7Days(limit=3){
-  const clicks = pruneClicks(loadClicks());
-  const counts = new Map();
-  for(const c of clicks){
-    const u = c.u;
-    if(!u) continue;
-    counts.set(u, (counts.get(u) || 0) + 1);
-  }
-  const ranked = [...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0, limit);
-  const byUrl = new Map(brands100.map(b => [b.url, b]));
-  const top = ranked.map(([u, n]) => ({ brand: byUrl.get(u), clicks: n }))
-                    .filter(x => x.brand);
-  return top;
-}
-
-/* -------------------------
   유틸
 ------------------------- */
 function shuffle(arr){
@@ -590,20 +411,58 @@ function localLogo(domain){ return `logos/${domain}.png`; }
 function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
 
 /* -------------------------
+  서버 통신
+------------------------- */
+async function recordClickServer(brand){
+  // Apps Script CORS 환경별 이슈가 있을 수 있어 try/catch로 방어
+  try{
+    await fetch(API_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({
+        url: brand.url,
+        name: brand.name,
+        tier: brand.tier || ""
+      })
+    });
+  }catch(e){
+    // 실패해도 페이지는 계속 동작
+    console.warn("recordClickServer failed:", e);
+  }
+}
+
+async function fetchTop3FromServer(){
+  try{
+    const res = await fetch(`${API_URL}?action=top7d`, { method:"GET" });
+    const data = await res.json();
+    if(!data.ok) return [];
+    return Array.isArray(data.top) ? data.top : [];
+  }catch(e){
+    console.warn("fetchTop3FromServer failed:", e);
+    return [];
+  }
+}
+
+/* -------------------------
   KING SEAT 렌더 (7일 TOP3)
 ------------------------- */
 const kingGrid = document.getElementById("kingGrid");
+const kingMeta = document.getElementById("kingMeta");
+const refreshKingBtn = document.getElementById("refreshKingBtn");
 
-function renderKingSeats(){
+async function renderKingSeats(){
   kingGrid.innerHTML = "";
+  kingMeta.textContent = "불러오는 중…";
 
-  const top = getTopBrandsLast7Days(3); // [{brand, clicks}]
-  let list = top.map(x => ({
-    ...x.brand,
-    clicks: x.clicks
-  }));
+  const top = await fetchTop3FromServer(); // [{url,name,count}]
+  const byUrl = new Map(brands100.map(b => [b.url, b]));
 
-  // ✅ 클릭 데이터가 부족하면 (첫 방문) 랜덤으로 채움
+  let list = top.map((x) => {
+    const b = byUrl.get(x.url);
+    return b ? { ...b, clicks: x.count } : { cat:"", name:(x.name||"TOP"), url:x.url, tier:"", clicks:x.count };
+  });
+
+  // 데이터 부족하면 랜덤 채움
   if(list.length < 3){
     const used = new Set(list.map(b=>b.url));
     const pool = shuffle([...brands100]);
@@ -639,17 +498,17 @@ function renderKingSeats(){
       </div>
     `;
 
-    const clickHandler = () => {
-      recordClickByUrl(b.url);  // ✅ 기록
-      renderKingSeats();        // ✅ 바로 갱신
-      go(b.url);
-    };
-    seat.addEventListener("click", clickHandler);
-    seat.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") clickHandler(); });
+    seat.addEventListener("click", ()=>go(b.url));
+    seat.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") go(b.url); });
 
     kingGrid.appendChild(seat);
   });
+
+  const ts = new Date();
+  kingMeta.textContent = `업데이트: ${ts.toLocaleString()}`;
 }
+
+refreshKingBtn.addEventListener("click", renderKingSeats);
 renderKingSeats();
 
 /* -------------------------
@@ -676,15 +535,18 @@ function pickHotIndexes(items, hotCount){
 }
 const hotSet = pickHotIndexes(seats, HOT_COUNT);
 
+/* -------------------------
+  타일 렌더
+------------------------- */
 const grid = document.getElementById("grid");
 const countText = document.getElementById("countText");
 const searchInput = document.getElementById("searchInput");
 const clearBtn = document.getElementById("clearBtn");
 const chips = document.getElementById("chips");
-const tileRefs = [];
 
 let currentCat = "ALL";
 let currentQuery = "";
+const tileRefs = [];
 
 function labelFor(tier){ return tier === "premium" ? "⭐ Premium" : "⬜ Standard"; }
 function sizeClassFor(tier){ return tier === "premium" ? "premSize" : "stdSize"; }
@@ -704,25 +566,27 @@ seats.forEach((b, i) => {
       <span class="mini-dot"></span>
       ${labelFor(b.tier)}${isHot ? " • HOT" : ""}
     </div>
+
     <div class="logo-badge" title="${escapeHtml(b.domain || '')}">
       <img src="${escapeHtml(logoLocal)}"
            alt="${escapeHtml(b.name)} 로고"
            onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';" />
     </div>
+
     <div>
       <div class="name">${escapeHtml(b.name)}</div>
       <div class="sub">${escapeHtml(b.cat)} · 클릭하여 이동</div>
     </div>
   `;
 
-  const clickHandler = () => {
-    recordClickByUrl(b.url);  // ✅ premium/standard 구분 없이 전부 기록
-    renderKingSeats();        // ✅ KING TOP3 즉시 업데이트
+  const clickHandler = async () => {
+    await recordClickServer(b); // ✅ 서버 기록
+    renderKingSeats();          // ✅ TOP3 갱신
     go(b.url);
   };
 
   tile.addEventListener("click", clickHandler);
-  tile.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") clickHandler(); });
+  tile.addEventListener("keydown", (e)=>{ if(e.key==="Enter" || e.key===" ") clickHandler(); });
   tile.tabIndex = 0;
   tile.setAttribute("role","button");
 
@@ -730,7 +594,9 @@ seats.forEach((b, i) => {
   tileRefs.push(tile);
 });
 
-/* 필터 */
+/* -------------------------
+  필터/검색
+------------------------- */
 function applyFilter(){
   const q = (currentQuery || "").trim().toLowerCase();
   let shown = 0;
@@ -752,7 +618,9 @@ chips.addEventListener("click", (e) => {
   currentCat = chip.dataset.cat || "ALL";
   applyFilter();
 });
+
 searchInput.addEventListener("input", () => { currentQuery = searchInput.value; applyFilter(); });
+
 clearBtn.addEventListener("click", () => {
   currentCat = "ALL"; currentQuery = "";
   searchInput.value = "";
@@ -760,7 +628,9 @@ clearBtn.addEventListener("click", () => {
   document.querySelector('.chip[data-cat="ALL"]').classList.add("active");
   applyFilter();
 });
+
 applyFilter();
 </script>
+
 </body>
 </html>
