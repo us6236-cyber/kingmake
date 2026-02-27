@@ -126,7 +126,7 @@
     margin-left:6px;
   }
 
-  /* ✅ KING SEAT 3 (상단 전용 구역) */
+  /* ✅ KING SEAT 3 (항상 3칸) */
   .king-zone{
     max-width:1740px;
     margin:18px auto 0;
@@ -145,19 +145,27 @@
     gap:10px;
     padding:6px 4px 12px;
   }
-  .king-title b{
-    font-size:14px;
-    letter-spacing:0.3px;
-  }
-  .king-title span{
-    font-size:12px;
-    color:var(--muted);
-  }
+  .king-title b{font-size:14px; letter-spacing:0.3px;}
+  .king-title span{font-size:12px; color:var(--muted);}
+
   .king-grid{
     display:grid;
     gap:12px;
     grid-template-columns: repeat(3, 1fr);
   }
+
+  /* ✅ 모바일에서도 3칸 유지(가로 스크롤로) */
+  @media (max-width:900px){
+    .king-zone{ overflow-x:auto; }
+    .king-grid{
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(260px, 1fr);
+      grid-template-columns: none;
+      width:max-content;
+      padding-bottom:6px;
+    }
+  }
+
   .king-seat{
     position:relative;
     border:1px solid rgba(212,175,55,0.40);
@@ -207,29 +215,9 @@
     height:100%;
     object-fit:contain;
     padding:14px;
-    filter:none;
   }
-  .king-meta{min-width:0;}
-  .king-name{
-    font-weight:900;
-    font-size:20px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .king-desc{
-    margin-top:6px;
-    font-size:12px;
-    color:var(--muted);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  @media (max-width:900px){
-    .king-grid{ grid-template-columns: 1fr; }
-    .king-logo{ width:150px; height:82px; }
-  }
+  .king-name{font-weight:900; font-size:20px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .king-desc{margin-top:6px; font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
   /* LEGEND */
   .legend{
@@ -344,7 +332,7 @@
   .name{font-weight:800; letter-spacing:0.2px; line-height:1.1; text-align:left;}
   .sub{margin-top:6px; font-size:12px; color:rgba(255,255,255,0.7); text-align:left;}
 
-  /* ✅ 히트맵은 Premium 50 / Standard 50 (동일 사이즈 유지) */
+  /* ✅ Premium / Standard 동일 사이즈 */
   .premSize{ grid-column: span 3; grid-row: span 2; }
   .stdSize{  grid-column: span 2; grid-row: span 1; }
 
@@ -376,12 +364,11 @@
   <div class="hero">
     <h1>🍗 K-FOOD Brand Seats</h1>
     <p>
-      상단: KING SEAT 3자리(전용)<br>
+      상단: KING SEAT 3자리(항상 3칸)<br>
       하단: Premium 50 + Standard 50 (총 100) • 랜덤 배치 • 클릭 이동 • HOT 반짝
     </p>
   </div>
 
-  <!-- 필터/검색 -->
   <div class="controls">
     <div class="chips" id="chips">
       <span class="chip active" data-cat="ALL">전체</span>
@@ -404,7 +391,7 @@
   <section class="king-zone">
     <div class="king-title">
       <b>👑 KING SEAT (3)</b>
-      <span>가장 눈에 띄는 최고 좌석 (클릭 이동)</span>
+      <span>항상 3칸으로 보입니다 (모바일은 가로 스크롤)</span>
     </div>
     <div class="king-grid" id="kingGrid"></div>
   </section>
@@ -416,27 +403,26 @@
     <div class="pill"><span class="dot hot"></span> HOT (반짝)</div>
   </div>
 
-  <!-- ✅ 히트맵 (Premium 50 / Standard 50) -->
   <div class="heatmap">
     <div class="grid" id="grid"></div>
   </div>
 </div>
 
 <script>
-/* ✅ 좌석 수 변경 요청 반영 */
+/* ✅ 좌석 수 */
 const SEAT_COUNTS = { premium: 50, standard: 50 };
 const HOT_COUNT = 12;
 
-/* ✅ KING SEAT 3자리(상단 전용) — 여기만 바꾸면 됨 */
+/* ✅ KING SEAT 3 (원하면 여기만 수정) */
 const kingSeats = [
   { seat: 1, name:"KING SEAT 1", url:"https://kingmake.kr/", desc:"최상단 프리미엄 자리" },
   { seat: 2, name:"KING SEAT 2", url:"https://kingmake.kr/", desc:"최상단 프리미엄 자리" },
   { seat: 3, name:"KING SEAT 3", url:"https://kingmake.kr/", desc:"최상단 프리미엄 자리" }
 ];
 
-/* 브랜드 100개 (히트맵용) */
+/* ✅ brands100 완전한 100개 (치킨20, 버거10, 분식20, 카페20, 한식20, 중식10) */
 const brands100 = [
-  // 치킨 20
+  // ---- 치킨 20 ----
   { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
   { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
   { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
@@ -446,7 +432,7 @@ const brands100 = [
   { cat:"치킨", name:"노랑통닭", url:"https://www.norangtongdak.co.kr/" },
   { cat:"치킨", name:"멕시카나", url:"https://www.mexicana.co.kr/" },
   { cat:"치킨", name:"페리카나", url:"https://www.pelicana.co.kr/" },
-  { cat:"치킨", name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr/main.php" },
+  { cat:"치킨", name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr/" },
   { cat:"치킨", name:"자담치킨", url:"https://www.ejadam.co.kr/" },
   { cat:"치킨", name:"치킨플러스", url:"https://chickenplus.co.kr/" },
   { cat:"치킨", name:"60계치킨", url:"https://www.60chicken.co.kr/" },
@@ -458,19 +444,19 @@ const brands100 = [
   { cat:"치킨", name:"누구나홀딱반한닭", url:"https://www.whodak.com/" },
   { cat:"치킨", name:"훌랄라참숯바베큐치킨", url:"https://www.hoolala.co.kr/" },
 
-  // 버거 10
+  // ---- 버거 10 ----
   { cat:"버거", name:"맥도날드", url:"https://www.mcdonalds.co.kr/" },
   { cat:"버거", name:"버거킹", url:"https://www.burgerking.co.kr/" },
   { cat:"버거", name:"KFC", url:"https://www.kfckorea.com/" },
   { cat:"버거", name:"써브웨이", url:"https://www.subway.co.kr/" },
-  { cat:"버거", name:"롯데리아", url:"https://www.lotteeatz.com/brand/ria" },
+  { cat:"버거", name:"롯데리아", url:"https://www.lotteeatz.com/" },
   { cat:"버거", name:"맘스터치", url:"https://www.momstouch.co.kr/" },
   { cat:"버거", name:"쉐이크쉑", url:"https://www.shakeshack.kr/" },
   { cat:"버거", name:"노브랜드버거", url:"https://www.nobrandburger.com/" },
   { cat:"버거", name:"프랭크버거", url:"https://www.frankburger.co.kr/" },
   { cat:"버거", name:"롯데잇츠", url:"https://www.lotteeatz.com/" },
 
-  // 분식 20
+  // ---- 분식 20 ----
   { cat:"분식", name:"엽기떡볶이", url:"https://www.yupdduk.com/" },
   { cat:"분식", name:"신전떡볶이", url:"https://sinjeon.co.kr/" },
   { cat:"분식", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr/" },
@@ -492,7 +478,7 @@ const brands100 = [
   { cat:"분식", name:"배스킨라빈스", url:"https://www.baskinrobbins.co.kr/" },
   { cat:"분식", name:"요거프레소", url:"https://www.yogerpresso.co.kr/" },
 
-  // 카페 20
+  // ---- 카페 20 ----
   { cat:"카페", name:"스타벅스", url:"https://www.starbucks.co.kr/" },
   { cat:"카페", name:"이디야", url:"https://www.ediya.com/" },
   { cat:"카페", name:"메가커피", url:"https://www.mega-mgccoffee.com/" },
@@ -508,13 +494,13 @@ const brands100 = [
   { cat:"카페", name:"커피빈", url:"https://www.coffeebeankorea.com/" },
   { cat:"카페", name:"달콤커피", url:"https://www.dalkomm.com/" },
   { cat:"카페", name:"블루보틀", url:"https://bluebottlecoffee.com/kr/" },
-  { cat:"카페", name:"엔제리너스", url:"https://www.lotteeatz.com/brand/angel" },
+  { cat:"카페", name:"엔제리너스", url:"https://www.lotteeatz.com/" },
   { cat:"카페", name:"드롭탑", url:"https://www.droptop.co.kr/" },
   { cat:"카페", name:"파스쿠찌", url:"https://www.caffe-pascucci.co.kr/" },
   { cat:"카페", name:"아티제", url:"https://www.cafeartisee.com/" },
   { cat:"카페", name:"할리스몰", url:"https://www.hollysmall.com/" },
 
-  // 한식 20
+  // ---- 한식 20 ----
   { cat:"한식", name:"본죽", url:"https://www.bonif.co.kr/" },
   { cat:"한식", name:"원할머니보쌈", url:"https://www.bossam.co.kr/" },
   { cat:"한식", name:"명륜진사갈비", url:"https://www.mrg.kr/" },
@@ -536,7 +522,7 @@ const brands100 = [
   { cat:"한식", name:"청기와타운", url:"https://www.cheonggiwa.co.kr/" },
   { cat:"한식", name:"본아이에프", url:"https://www.bonif.co.kr/" },
 
-  // 중식 10
+  // ---- 중식 10 ----
   { cat:"중식", name:"홍콩반점0410", url:"https://www.theborn.co.kr/" },
   { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
   { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" },
@@ -548,6 +534,12 @@ const brands100 = [
   { cat:"중식", name:"더본(중식)", url:"https://www.theborn.co.kr/" },
   { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
 ];
+
+// ✅ 100개 검증(콘솔에서 확인 가능)
+console.log("brands100 length =", brands100.length);
+if(brands100.length !== 100){
+  console.warn("⚠️ brands100가 100개가 아닙니다. 현재:", brands100.length);
+}
 
 /* ---- 유틸 ---- */
 function shuffle(arr){
@@ -580,7 +572,6 @@ function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
    A) KING SEAT 3 렌더
 ------------------------- */
 const kingGrid = document.getElementById("kingGrid");
-
 kingSeats.forEach(item=>{
   const domain = domainFromUrl(item.url);
   const logoLocal = domain ? localLogo(domain) : "";
@@ -590,7 +581,6 @@ kingSeats.forEach(item=>{
   seat.className = "king-seat";
   seat.tabIndex = 0;
   seat.setAttribute("role","button");
-  seat.setAttribute("aria-label", `KING SEAT ${item.seat} ${item.name} 이동`);
 
   seat.innerHTML = `
     <div class="king-badge">👑 KING ${item.seat}</div>
@@ -604,21 +594,15 @@ kingSeats.forEach(item=>{
       <div class="king-desc">${escapeHtml(item.desc || "최상단 프리미엄 자리")}</div>
     </div>
   `;
-
   seat.addEventListener("click", ()=>go(item.url));
-  seat.addEventListener("keydown", (e)=>{
-    if(e.key==="Enter" || e.key===" ") go(item.url);
-  });
+  seat.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") go(item.url); });
 
   kingGrid.appendChild(seat);
 });
 
 /* -------------------------
-   B) 히트맵 렌더 (Premium 50 / Standard 50)
+   B) 히트맵 (Premium 50 / Standard 50)
 ------------------------- */
-const HOT_COUNT = 12;
-
-// tiers 생성 (총 100)
 let tiers = [];
 for(let i=0;i<SEAT_COUNTS.premium;i++) tiers.push("premium");
 for(let i=0;i<SEAT_COUNTS.standard;i++) tiers.push("standard");
@@ -626,7 +610,6 @@ for(let i=0;i<SEAT_COUNTS.standard;i++) tiers.push("standard");
 const tierShuffled = shuffle(tiers);
 const brandShuffled = shuffle(brands100);
 
-// 좌석 + 브랜드 매칭
 const seats = tierShuffled.map((tier, idx) => {
   const b = brandShuffled[idx];
   const domain = domainFromUrl(b.url);
@@ -641,7 +624,6 @@ function pickHotIndexes(items, hotCount){
 }
 const hotSet = pickHotIndexes(seats, HOT_COUNT);
 
-// DOM
 const grid = document.getElementById("grid");
 const countText = document.getElementById("countText");
 const searchInput = document.getElementById("searchInput");
@@ -653,21 +635,16 @@ let currentQuery = "";
 const tileRefs = [];
 
 function labelFor(tier){
-  if(tier === "premium") return "⭐ Premium";
-  return "⬜ Standard";
+  return tier === "premium" ? "⭐ Premium" : "⬜ Standard";
 }
 function sizeClassFor(tier){
-  if(tier === "premium") return "premSize";
-  return "stdSize";
+  return tier === "premium" ? "premSize" : "stdSize";
 }
 
 seats.forEach((b, i) => {
-  const label = labelFor(b.tier);
-  const sizeCls = sizeClassFor(b.tier);
   const isHot = hotSet.has(i);
-
   const tile = document.createElement("div");
-  tile.className = `tile ${b.tier} ${sizeCls}` + (isHot ? " hot" : "");
+  tile.className = `tile ${b.tier} ${sizeClassFor(b.tier)}` + (isHot ? " hot" : "");
   tile.dataset.cat = b.cat;
   tile.dataset.name = b.name.toLowerCase();
 
@@ -677,15 +654,13 @@ seats.forEach((b, i) => {
   tile.innerHTML = `
     <div class="badge ${b.tier} ${isHot ? "hot" : ""}">
       <span class="mini-dot"></span>
-      ${label}${isHot ? " • HOT" : ""}
+      ${labelFor(b.tier)}${isHot ? " • HOT" : ""}
     </div>
 
     <div class="logo-badge" title="${escapeHtml(b.domain || '')}">
-      <img
-        src="${escapeHtml(logoLocal)}"
-        alt="${escapeHtml(b.name)} 로고"
-        onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';"
-      />
+      <img src="${escapeHtml(logoLocal)}"
+           alt="${escapeHtml(b.name)} 로고"
+           onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';" />
     </div>
 
     <div>
@@ -695,9 +670,7 @@ seats.forEach((b, i) => {
   `;
 
   tile.addEventListener("click", () => go(b.url));
-  tile.addEventListener("keydown", (e) => {
-    if(e.key === "Enter" || e.key === " ") go(b.url);
-  });
+  tile.addEventListener("keydown", (e) => { if(e.key==="Enter" || e.key===" ") go(b.url); });
   tile.tabIndex = 0;
   tile.setAttribute("role","button");
 
@@ -708,38 +681,29 @@ seats.forEach((b, i) => {
 function applyFilter(){
   const q = (currentQuery || "").trim().toLowerCase();
   let shown = 0;
-
   tileRefs.forEach(tile => {
     const catOk = (currentCat === "ALL") || (tile.dataset.cat === currentCat);
     const nameOk = !q || tile.dataset.name.includes(q);
     const ok = catOk && nameOk;
-
     tile.classList.toggle("filtered-out", !ok);
     if(ok) shown++;
   });
-
   countText.textContent = `표시 ${shown} / ${tileRefs.length}`;
 }
 
 chips.addEventListener("click", (e) => {
   const chip = e.target.closest(".chip");
   if(!chip) return;
-
   document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
   chip.classList.add("active");
-
   currentCat = chip.dataset.cat || "ALL";
   applyFilter();
 });
 
-searchInput.addEventListener("input", () => {
-  currentQuery = searchInput.value;
-  applyFilter();
-});
+searchInput.addEventListener("input", () => { currentQuery = searchInput.value; applyFilter(); });
 
 clearBtn.addEventListener("click", () => {
-  currentCat = "ALL";
-  currentQuery = "";
+  currentCat = "ALL"; currentQuery = "";
   searchInput.value = "";
   document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
   document.querySelector('.chip[data-cat="ALL"]').classList.add("active");
