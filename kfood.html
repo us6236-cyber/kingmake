@@ -409,20 +409,16 @@
 </div>
 
 <script>
-/* ✅ 좌석 수 */
+/* -------------------------
+  설정
+------------------------- */
 const SEAT_COUNTS = { premium: 50, standard: 50 };
 const HOT_COUNT = 12;
+const CLICK_STORE_KEY = "kingmake_clicks_v1";
 
-/* ✅ KING SEAT 3 (원하면 여기만 수정) */
-const kingSeats = [
-  { seat: 1, name:"KING SEAT 1", url:"https://kingmake.kr/", desc:"최상단 프리미엄 자리" },
-  { seat: 2, name:"KING SEAT 2", url:"https://kingmake.kr/", desc:"최상단 프리미엄 자리" },
-  { seat: 3, name:"KING SEAT 3", url:"https://kingmake.kr/", desc:"최상단 프리미엄 자리" }
-];
-
-/* ✅ brands100 완전한 100개 (치킨20, 버거10, 분식20, 카페20, 한식20, 중식10) */
+/* ✅ brands100 (완전한 100개) */
 const brands100 = [
-  // ---- 치킨 20 ----
+  // 치킨 20
   { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
   { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
   { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
@@ -444,7 +440,7 @@ const brands100 = [
   { cat:"치킨", name:"누구나홀딱반한닭", url:"https://www.whodak.com/" },
   { cat:"치킨", name:"훌랄라참숯바베큐치킨", url:"https://www.hoolala.co.kr/" },
 
-  // ---- 버거 10 ----
+  // 버거 10
   { cat:"버거", name:"맥도날드", url:"https://www.mcdonalds.co.kr/" },
   { cat:"버거", name:"버거킹", url:"https://www.burgerking.co.kr/" },
   { cat:"버거", name:"KFC", url:"https://www.kfckorea.com/" },
@@ -456,7 +452,7 @@ const brands100 = [
   { cat:"버거", name:"프랭크버거", url:"https://www.frankburger.co.kr/" },
   { cat:"버거", name:"롯데잇츠", url:"https://www.lotteeatz.com/" },
 
-  // ---- 분식 20 ----
+  // 분식 20
   { cat:"분식", name:"엽기떡볶이", url:"https://www.yupdduk.com/" },
   { cat:"분식", name:"신전떡볶이", url:"https://sinjeon.co.kr/" },
   { cat:"분식", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr/" },
@@ -478,7 +474,7 @@ const brands100 = [
   { cat:"분식", name:"배스킨라빈스", url:"https://www.baskinrobbins.co.kr/" },
   { cat:"분식", name:"요거프레소", url:"https://www.yogerpresso.co.kr/" },
 
-  // ---- 카페 20 ----
+  // 카페 20
   { cat:"카페", name:"스타벅스", url:"https://www.starbucks.co.kr/" },
   { cat:"카페", name:"이디야", url:"https://www.ediya.com/" },
   { cat:"카페", name:"메가커피", url:"https://www.mega-mgccoffee.com/" },
@@ -500,7 +496,7 @@ const brands100 = [
   { cat:"카페", name:"아티제", url:"https://www.cafeartisee.com/" },
   { cat:"카페", name:"할리스몰", url:"https://www.hollysmall.com/" },
 
-  // ---- 한식 20 ----
+  // 한식 20
   { cat:"한식", name:"본죽", url:"https://www.bonif.co.kr/" },
   { cat:"한식", name:"원할머니보쌈", url:"https://www.bossam.co.kr/" },
   { cat:"한식", name:"명륜진사갈비", url:"https://www.mrg.kr/" },
@@ -522,7 +518,7 @@ const brands100 = [
   { cat:"한식", name:"청기와타운", url:"https://www.cheonggiwa.co.kr/" },
   { cat:"한식", name:"본아이에프", url:"https://www.bonif.co.kr/" },
 
-  // ---- 중식 10 ----
+  // 중식 10
   { cat:"중식", name:"홍콩반점0410", url:"https://www.theborn.co.kr/" },
   { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
   { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" },
@@ -535,17 +531,48 @@ const brands100 = [
   { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
 ];
 
-// ✅ 100개 검증(콘솔에서 확인 가능)
-console.log("brands100 length =", brands100.length);
-if(brands100.length !== 100){
-  console.warn("⚠️ brands100가 100개가 아닙니다. 현재:", brands100.length);
+/* -------------------------
+  클릭 저장/집계 (최근 7일)
+------------------------- */
+function loadClicks(){
+  try{
+    const raw = localStorage.getItem(CLICK_STORE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+function saveClicks(arr){
+  try{ localStorage.setItem(CLICK_STORE_KEY, JSON.stringify(arr)); }catch(e){}
+}
+function pruneClicks(arr){
+  const now = Date.now();
+  const sevenDays = 7 * 24 * 60 * 60 * 1000;
+  return arr.filter(x => x && typeof x.t === "number" && (now - x.t) <= sevenDays);
+}
+function recordClickByUrl(url){
+  const clicks = pruneClicks(loadClicks());
+  clicks.push({ u: url, t: Date.now() });   // ✅ url로 저장
+  saveClicks(clicks);
+}
+function getTopBrandsLast7Days(limit=3){
+  const clicks = pruneClicks(loadClicks());
+  const counts = new Map();
+  for(const c of clicks){
+    const u = c.u;
+    if(!u) continue;
+    counts.set(u, (counts.get(u) || 0) + 1);
+  }
+  const ranked = [...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0, limit);
+  const byUrl = new Map(brands100.map(b => [b.url, b]));
+  const top = ranked.map(([u, n]) => ({ brand: byUrl.get(u), clicks: n }))
+                    .filter(x => x.brand);
+  return top;
 }
 
-/* ---- 유틸 ---- */
+/* -------------------------
+  유틸
+------------------------- */
 function shuffle(arr){
-  return arr.map(v => ({ v, r: Math.random() }))
-            .sort((a,b) => a.r - b.r)
-            .map(o => o.v);
+  return arr.map(v => ({ v, r: Math.random() })).sort((a,b)=>a.r-b.r).map(o=>o.v);
 }
 function go(url){
   if(!url) return;
@@ -553,55 +580,80 @@ function go(url){
 }
 function escapeHtml(str){
   return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 function domainFromUrl(url){
-  try{
-    const u = new URL(url);
-    return u.hostname.toLowerCase().replace(/^www\./,"");
-  }catch(e){ return ""; }
+  try{ return new URL(url).hostname.toLowerCase().replace(/^www\./,""); }catch(e){ return ""; }
 }
 function localLogo(domain){ return `logos/${domain}.png`; }
 function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
 
 /* -------------------------
-   A) KING SEAT 3 렌더
+  KING SEAT 렌더 (7일 TOP3)
 ------------------------- */
 const kingGrid = document.getElementById("kingGrid");
-kingSeats.forEach(item=>{
-  const domain = domainFromUrl(item.url);
-  const logoLocal = domain ? localLogo(domain) : "";
-  const logoAuto  = domain ? autoLogo(domain)  : "";
 
-  const seat = document.createElement("div");
-  seat.className = "king-seat";
-  seat.tabIndex = 0;
-  seat.setAttribute("role","button");
+function renderKingSeats(){
+  kingGrid.innerHTML = "";
 
-  seat.innerHTML = `
-    <div class="king-badge">👑 KING ${item.seat}</div>
-    <div class="king-logo">
-      <img src="${escapeHtml(logoLocal)}"
-           alt="${escapeHtml(item.name)} 로고"
-           onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
-    </div>
-    <div class="king-meta">
-      <div class="king-name">${escapeHtml(item.name)}</div>
-      <div class="king-desc">${escapeHtml(item.desc || "최상단 프리미엄 자리")}</div>
-    </div>
-  `;
-  seat.addEventListener("click", ()=>go(item.url));
-  seat.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") go(item.url); });
+  const top = getTopBrandsLast7Days(3); // [{brand, clicks}]
+  let list = top.map(x => ({
+    ...x.brand,
+    clicks: x.clicks
+  }));
 
-  kingGrid.appendChild(seat);
-});
+  // ✅ 클릭 데이터가 부족하면 (첫 방문) 랜덤으로 채움
+  if(list.length < 3){
+    const used = new Set(list.map(b=>b.url));
+    const pool = shuffle([...brands100]);
+    for(const b of pool){
+      if(list.length >= 3) break;
+      if(used.has(b.url)) continue;
+      list.push({ ...b, clicks: 0 });
+      used.add(b.url);
+    }
+  }
+
+  list.slice(0,3).forEach((b, idx)=>{
+    const seatNo = idx + 1;
+    const domain = domainFromUrl(b.url);
+    const logoLocal = domain ? localLogo(domain) : "";
+    const logoAuto  = domain ? autoLogo(domain)  : "";
+
+    const seat = document.createElement("div");
+    seat.className = "king-seat";
+    seat.tabIndex = 0;
+    seat.setAttribute("role","button");
+
+    seat.innerHTML = `
+      <div class="king-badge">👑 KING ${seatNo}</div>
+      <div class="king-logo">
+        <img src="${escapeHtml(logoLocal)}"
+             alt="${escapeHtml(b.name)} 로고"
+             onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
+      </div>
+      <div class="king-meta">
+        <div class="king-name">${escapeHtml(b.name)}</div>
+        <div class="king-desc">최근 7일 클릭 TOP${seatNo} • ${b.clicks}회</div>
+      </div>
+    `;
+
+    const clickHandler = () => {
+      recordClickByUrl(b.url);  // ✅ 기록
+      renderKingSeats();        // ✅ 바로 갱신
+      go(b.url);
+    };
+    seat.addEventListener("click", clickHandler);
+    seat.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") clickHandler(); });
+
+    kingGrid.appendChild(seat);
+  });
+}
+renderKingSeats();
 
 /* -------------------------
-   B) 히트맵 (Premium 50 / Standard 50)
+  히트맵 생성 (Premium 50 / Standard 50)
 ------------------------- */
 let tiers = [];
 for(let i=0;i<SEAT_COUNTS.premium;i++) tiers.push("premium");
@@ -616,10 +668,10 @@ const seats = tierShuffled.map((tier, idx) => {
   return { tier, cat:b.cat, name:b.name, url:b.url, domain };
 });
 
-// HOT: premium 중 랜덤 선택
+// HOT: premium 중 랜덤
 function pickHotIndexes(items, hotCount){
   const candidates = [];
-  items.forEach((b, i) => { if (b.tier === "premium") candidates.push(i); });
+  items.forEach((b, i) => { if(b.tier === "premium") candidates.push(i); });
   return new Set(shuffle(candidates).slice(0, Math.min(hotCount, candidates.length)));
 }
 const hotSet = pickHotIndexes(seats, HOT_COUNT);
@@ -629,17 +681,13 @@ const countText = document.getElementById("countText");
 const searchInput = document.getElementById("searchInput");
 const clearBtn = document.getElementById("clearBtn");
 const chips = document.getElementById("chips");
+const tileRefs = [];
 
 let currentCat = "ALL";
 let currentQuery = "";
-const tileRefs = [];
 
-function labelFor(tier){
-  return tier === "premium" ? "⭐ Premium" : "⬜ Standard";
-}
-function sizeClassFor(tier){
-  return tier === "premium" ? "premSize" : "stdSize";
-}
+function labelFor(tier){ return tier === "premium" ? "⭐ Premium" : "⬜ Standard"; }
+function sizeClassFor(tier){ return tier === "premium" ? "premSize" : "stdSize"; }
 
 seats.forEach((b, i) => {
   const isHot = hotSet.has(i);
@@ -656,21 +704,25 @@ seats.forEach((b, i) => {
       <span class="mini-dot"></span>
       ${labelFor(b.tier)}${isHot ? " • HOT" : ""}
     </div>
-
     <div class="logo-badge" title="${escapeHtml(b.domain || '')}">
       <img src="${escapeHtml(logoLocal)}"
            alt="${escapeHtml(b.name)} 로고"
            onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';" />
     </div>
-
     <div>
       <div class="name">${escapeHtml(b.name)}</div>
       <div class="sub">${escapeHtml(b.cat)} · 클릭하여 이동</div>
     </div>
   `;
 
-  tile.addEventListener("click", () => go(b.url));
-  tile.addEventListener("keydown", (e) => { if(e.key==="Enter" || e.key===" ") go(b.url); });
+  const clickHandler = () => {
+    recordClickByUrl(b.url);  // ✅ premium/standard 구분 없이 전부 기록
+    renderKingSeats();        // ✅ KING TOP3 즉시 업데이트
+    go(b.url);
+  };
+
+  tile.addEventListener("click", clickHandler);
+  tile.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") clickHandler(); });
   tile.tabIndex = 0;
   tile.setAttribute("role","button");
 
@@ -678,6 +730,7 @@ seats.forEach((b, i) => {
   tileRefs.push(tile);
 });
 
+/* 필터 */
 function applyFilter(){
   const q = (currentQuery || "").trim().toLowerCase();
   let shown = 0;
@@ -699,9 +752,7 @@ chips.addEventListener("click", (e) => {
   currentCat = chip.dataset.cat || "ALL";
   applyFilter();
 });
-
 searchInput.addEventListener("input", () => { currentQuery = searchInput.value; applyFilter(); });
-
 clearBtn.addEventListener("click", () => {
   currentCat = "ALL"; currentQuery = "";
   searchInput.value = "";
@@ -709,9 +760,7 @@ clearBtn.addEventListener("click", () => {
   document.querySelector('.chip[data-cat="ALL"]').classList.add("active");
   applyFilter();
 });
-
 applyFilter();
 </script>
-
 </body>
 </html>
