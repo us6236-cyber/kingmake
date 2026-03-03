@@ -266,19 +266,16 @@
 </div>
 
 <script>
-/* ✅ Apps Script Web App URL (당신이 준 URL) */
-const API_URL = "https://script.google.com/macros/s/AKfycbx9zdze77fGyak2znvIvuqYuPcsEELs8opsp0Y5CDKSavw8wW9PyapwC_q4OQui6LRg/exec";
+/* ✅ Apps Script Web App URL */
+const API_URL = "https://script.google.com/macros/s/AKfycbzQZU1tSO8k9aF_P38uYh20PO39m06QkRs9KxhskZODb8FvOECmgYcM0-Bj8ZrmcOow/exec";
 
 /* ✅ 좌석 수 */
 const SEAT_COUNTS = { premium: 50, standard: 50 };
 const HOT_COUNT = 12;
 
-/* ✅ brands100: (중요) 이전에 쓰던 배열을 그대로 유지해야 합니다.
-   여기서는 "예시"가 아니라, 당신이 기존 코드에서 쓰던 brands100을 그대로 붙여넣으면 됩니다.
-   이미 대화에서 제공했던 100개 리스트를 그대로 넣어주세요.
-*/
+/* ✅ 100개 브랜드 리스트 (완성본) */
 const brands100 = [
-  // === 여기에 기존 100개 브랜드 리스트를 그대로 붙여넣어 주세요 ===
+  // 치킨 20
   { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
   { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
   { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
@@ -413,14 +410,14 @@ function localLogo(domain){ return `logos/${domain}.png`; }
 function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
 
 /* -------------------------
-  ✅ CORS-FREE 클릭 기록: Image Beacon (GET)
+  ✅ 이미지 트래킹(GET) - CORS-free
 ------------------------- */
-function recordClickServer(brand){
+function trackClickViaImage(brand){
   try{
-    const ua = encodeURIComponent(navigator.userAgent.slice(0,120));
     const url = encodeURIComponent(brand.url);
     const name = encodeURIComponent(brand.name);
     const tier = encodeURIComponent(brand.tier || "");
+    const ua = encodeURIComponent(navigator.userAgent.slice(0,120));
 
     const img = new Image();
     img.referrerPolicy = "no-referrer";
@@ -431,29 +428,25 @@ function recordClickServer(brand){
 }
 
 /* -------------------------
-  ✅ CORS-FREE TOP3: JSONP
+  ✅ TOP3 JSONP - CORS-free
 ------------------------- */
-function fetchTop3FromServerJSONP(){
+function fetchTop3JSONP(){
   return new Promise((resolve) => {
-    const cbName = "__kingTopCb_" + Math.random().toString(36).slice(2);
-    const script = document.createElement("script");
-
-    window[cbName] = (data) => {
-      try{
-        resolve((data && data.ok && Array.isArray(data.top)) ? data.top : []);
-      } finally {
-        delete window[cbName];
-        script.remove();
-      }
-    };
-
-    script.onerror = () => {
-      delete window[cbName];
+    const cb = "__topcb_" + Math.random().toString(36).slice(2);
+    window[cb] = (data) => {
+      resolve((data && data.ok && Array.isArray(data.top)) ? data.top : []);
+      delete window[cb];
       script.remove();
-      resolve([]);
     };
 
-    script.src = `${API_URL}?action=top7d_jsonp&cb=${cbName}&t=${Date.now()}`;
+    const script = document.createElement("script");
+    script.onerror = () => {
+      resolve([]);
+      delete window[cb];
+      script.remove();
+    };
+
+    script.src = `${API_URL}?action=top7d_jsonp&cb=${cb}&t=${Date.now()}`;
     document.body.appendChild(script);
   });
 }
@@ -469,7 +462,7 @@ async function renderKingSeats(){
   kingGrid.innerHTML = "";
   kingMeta.textContent = "불러오는 중…";
 
-  const top = await fetchTop3FromServerJSONP(); // [{url,name,count}]
+  const top = await fetchTop3JSONP(); // [{url,name,count}]
   const byUrl = new Map(brands100.map(b => [b.url, b]));
 
   let list = top.map((x) => {
@@ -477,7 +470,6 @@ async function renderKingSeats(){
     return b ? { ...b, clicks: x.count } : { cat:"", name:(x.name||"TOP"), url:x.url, tier:"", clicks:x.count };
   });
 
-  // 부족하면 랜덤 채움
   if(list.length < 3){
     const used = new Set(list.map(b=>b.url));
     const pool = shuffle([...brands100]);
@@ -526,11 +518,11 @@ refreshKingBtn.addEventListener("click", renderKingSeats);
 renderKingSeats();
 
 /* -------------------------
-  히트맵 (100좌석)
+  히트맵 생성 (100좌석)
 ------------------------- */
 let tiers = [];
-for(let i=0;i<50;i++) tiers.push("premium");
-for(let i=0;i<50;i++) tiers.push("standard");
+for(let i=0;i<SEAT_COUNTS.premium;i++) tiers.push("premium");
+for(let i=0;i<SEAT_COUNTS.standard;i++) tiers.push("standard");
 
 const tierShuffled = shuffle(tiers);
 const brandShuffled = shuffle(brands100);
@@ -540,6 +532,7 @@ const seats = tierShuffled.map((tier, idx) => {
   return { ...b, tier, domain: domainFromUrl(b.url) };
 });
 
+// HOT: premium 중 랜덤
 function pickHotIndexes(items, hotCount){
   const candidates = [];
   items.forEach((b, i) => { if(b.tier === "premium") candidates.push(i); });
@@ -565,6 +558,7 @@ function sizeClassFor(tier){ return tier === "premium" ? "premSize" : "stdSize";
 
 seats.forEach((b, i) => {
   const isHot = hotSet.has(i);
+
   const tile = document.createElement("div");
   tile.className = `tile ${b.tier} ${sizeClassFor(b.tier)}` + (isHot ? " hot" : "");
   tile.dataset.cat = b.cat;
@@ -592,8 +586,8 @@ seats.forEach((b, i) => {
   `;
 
   const clickHandler = () => {
-    recordClickServer(b); // ✅ 무조건 기록됨
-    setTimeout(renderKingSeats, 300); // ✅ 약간 텀 주고 TOP3 재조회
+    trackClickViaImage(b);           // ✅ GET 로깅
+    setTimeout(renderKingSeats, 400); // ✅ 약간 텀 후 TOP3 갱신
     go(b.url);
   };
 
