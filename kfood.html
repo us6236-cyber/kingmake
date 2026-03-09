@@ -166,13 +166,13 @@
   .king-grid{
     display:grid;
     gap:12px;
-    grid-template-columns:repeat(3, 1fr);
+    grid-template-columns:repeat(5, 1fr);
   }
-  @media (max-width:900px){
+  @media (max-width:1200px){
     .king-zone{overflow-x:auto;}
     .king-grid{
       grid-auto-flow:column;
-      grid-auto-columns:minmax(260px, 1fr);
+      grid-auto-columns:minmax(250px, 1fr);
       grid-template-columns:none;
       width:max-content;
       padding-bottom:6px;
@@ -212,8 +212,8 @@
     backdrop-filter:blur(8px);
   }
   .king-logo{
-    width:140px;
-    height:78px;
+    width:120px;
+    height:70px;
     border-radius:14px;
     border:1px solid rgba(212,175,55,0.35);
     background:rgba(255,255,255,0.92);
@@ -227,11 +227,11 @@
     width:100%;
     height:100%;
     object-fit:contain;
-    padding:14px;
+    padding:12px;
   }
   .king-name{
     font-weight:900;
-    font-size:20px;
+    font-size:18px;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -341,62 +341,21 @@
   .badge.standard .mini-dot{background:var(--standard)}
   .badge.hot .mini-dot{background:var(--premium)}
 
-  /* ✅ Premium: 로고만 */
-  .premium-box{
+  /* ✅ Premium / Standard 모두 로고만 */
+  .logo-only-box{
     width:100%;
     height:100%;
     display:flex;
     align-items:center;
     justify-content:center;
   }
-  .premium-box img{
+  .logo-only-box img{
     width:120px;
     height:120px;
     object-fit:contain;
     display:block;
   }
 
-  /* ✅ Standard: 로고 + 이름 */
-  .logo-badge{
-    position:absolute;
-    top:10px; right:10px;
-    width:34px; height:34px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.12);
-    background:rgba(0,0,0,0.35);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-  }
-  .logo-badge img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    padding:6px;
-    filter:drop-shadow(0 6px 14px rgba(0,0,0,0.55));
-  }
-  .std-inner{
-    height:100%;
-    display:flex;
-    align-items:flex-end;
-    padding:12px;
-  }
-  .name{
-    font-weight:800;
-    letter-spacing:0.2px;
-    line-height:1.1;
-    text-align:left;
-    font-size:13px;
-  }
-  .sub{
-    margin-top:6px;
-    font-size:11px;
-    color:rgba(255,255,255,0.7);
-    text-align:left;
-  }
-
-  /* 10x5 Premium / 10x5 Standard 느낌 */
   .premSize{grid-column:span 2;grid-row:span 2;}
   .stdSize{grid-column:span 2;grid-row:span 1;}
 
@@ -409,7 +368,7 @@
     .grid{grid-template-columns:repeat(6, 1fr);gap:8px;padding:12px;grid-auto-rows:58px;}
     .premSize{grid-column:span 3;grid-row:span 2;}
     .stdSize{grid-column:span 3;grid-row:span 1;}
-    .premium-box img{width:90px;height:90px;}
+    .logo-only-box img{width:90px;height:90px;}
   }
 </style>
 </head>
@@ -421,7 +380,7 @@
       <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
       <b>KING MAKE</b>
     </a>
-    <div class="page-title">K-FOOD • PREMIUM 50 / STANDARD 50</div>
+    <div class="page-title">K-FOOD • KING TOP5 / PREMIUM 50 / STANDARD 50</div>
   </div>
 </div>
 
@@ -429,8 +388,8 @@
   <div class="hero">
     <h1>🍗 K-FOOD Brand Seats</h1>
     <p>
-      Premium 50석 = 치킨 20 · 카페 20 · 버거 10<br>
-      Standard 50석 = 분식 20 · 한식 20 · 중식 10
+      KING SEAT 5개 = 최근 7일 TOP5<br>
+      Premium / Standard 총 100석 = 브랜드 구분 없이 랜덤 배치
     </p>
   </div>
 
@@ -455,15 +414,15 @@
 
   <section class="king-zone">
     <div class="king-title">
-      <b>👑 KING SEAT (최근 7일 TOP3)</b>
+      <b>👑 KING SEAT (최근 7일 TOP5)</b>
       <span id="kingMeta">불러오는 중…</span>
     </div>
     <div class="king-grid" id="kingGrid"></div>
   </section>
 
   <div class="legend">
-    <div class="pill"><span class="dot king"></span> KING = 최근 7일 TOP3</div>
-    <div class="pill"><span class="dot premium"></span> Premium 50 (로고만)</div>
+    <div class="pill"><span class="dot king"></span> KING = 최근 7일 TOP5</div>
+    <div class="pill"><span class="dot premium"></span> Premium 50</div>
     <div class="pill"><span class="dot standard"></span> Standard 50</div>
     <div class="pill"><span class="dot hot"></span> HOT</div>
   </div>
@@ -629,12 +588,13 @@ function trackClickViaImage(brand){
   }catch(e){}
 }
 
-/* ✅ TOP3 JSONP */
-function fetchTop3JSONP(){
+/* ✅ TOP5 JSONP */
+function fetchTopTop5JSONP(){
   return new Promise((resolve) => {
     const cb = "__topcb_" + Math.random().toString(36).slice(2);
     window[cb] = (data) => {
-      resolve((data && data.ok && Array.isArray(data.top)) ? data.top : []);
+      const top = (data && data.ok && Array.isArray(data.top)) ? data.top : [];
+      resolve(top);
       delete window[cb];
       script.remove();
     };
@@ -651,22 +611,8 @@ function fetchTop3JSONP(){
   });
 }
 
-/* ✅ Premium 50 = 치킨20 + 카페20 + 버거10 */
-const premiumBrands = [
-  ...brands100.filter(b => b.cat === "치킨").slice(0, 20),
-  ...brands100.filter(b => b.cat === "카페").slice(0, 20),
-  ...brands100.filter(b => b.cat === "버거").slice(0, 10)
-];
-
-/* ✅ Standard 50 = 분식20 + 한식20 + 중식10 */
-const standardBrands = [
-  ...brands100.filter(b => b.cat === "분식").slice(0, 20),
-  ...brands100.filter(b => b.cat === "한식").slice(0, 20),
-  ...brands100.filter(b => b.cat === "중식").slice(0, 10)
-];
-
 /* -------------------------
-   KING SEAT
+   KING SEAT TOP5
 ------------------------- */
 const kingGrid = document.getElementById("kingGrid");
 const kingMeta = document.getElementById("kingMeta");
@@ -676,7 +622,7 @@ async function renderKingSeats(){
   kingGrid.innerHTML = "";
   kingMeta.textContent = "불러오는 중…";
 
-  const top = await fetchTop3JSONP();
+  const top = await fetchTopTop5JSONP();
   const byUrl = new Map(brands100.map(b => [b.url, b]));
 
   let list = top.map((x) => {
@@ -684,18 +630,18 @@ async function renderKingSeats(){
     return b ? { ...b, clicks: x.count } : { cat:"", name:(x.name||"TOP"), url:x.url, tier:"", clicks:x.count };
   });
 
-  if(list.length < 3){
+  if(list.length < 5){
     const used = new Set(list.map(b=>b.url));
     const pool = shuffle([...brands100]);
     for(const b of pool){
-      if(list.length >= 3) break;
+      if(list.length >= 5) break;
       if(used.has(b.url)) continue;
       list.push({ ...b, clicks: 0 });
       used.add(b.url);
     }
   }
 
-  list.slice(0,3).forEach((b, idx)=>{
+  list.slice(0,5).forEach((b, idx)=>{
     const seatNo = idx + 1;
     const domain = domainFromUrl(b.url);
     const logoLocal = domain ? localLogo(domain) : "";
@@ -731,23 +677,29 @@ refreshKingBtn.addEventListener("click", renderKingSeats);
 renderKingSeats();
 
 /* -------------------------
-   HEATMAP DATA
+   RANDOM 100 SEATS
+   Premium 50 + Standard 50
+   브랜드 상관없이 랜덤
 ------------------------- */
-const premiumSeats = shuffle(premiumBrands).map(b => ({
+const shuffledBrands = shuffle([...brands100]);
+const premiumBrands = shuffledBrands.slice(0, 50);
+const standardBrands = shuffledBrands.slice(50, 100);
+
+const premiumSeats = premiumBrands.map(b => ({
   ...b,
   tier:"premium",
   domain:domainFromUrl(b.url)
 }));
 
-const standardSeats = shuffle(standardBrands).map(b => ({
+const standardSeats = standardBrands.map(b => ({
   ...b,
   tier:"standard",
   domain:domainFromUrl(b.url)
 }));
 
 const seats = [
-  ...premiumSeats,
-  ...standardSeats
+  ...shuffle(premiumSeats),
+  ...shuffle(standardSeats)
 ];
 
 function pickHotIndexes(items, hotCount){
@@ -787,39 +739,17 @@ seats.forEach((b, i) => {
   const logoLocal = b.domain ? localLogo(b.domain) : "";
   const logoAuto  = b.domain ? autoLogo(b.domain)  : "";
 
-  if (b.tier === "premium") {
-    tile.innerHTML = `
-      <div class="badge ${b.tier} ${isHot ? "hot" : ""}">
-        <span class="mini-dot"></span>
-        ${labelFor(b.tier)}${isHot ? " • HOT" : ""}
-      </div>
-      <div class="premium-box">
-        <img src="${escapeHtml(logoLocal)}"
-             alt="${escapeHtml(b.name)} 로고"
-             onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
-      </div>
-    `;
-  } else {
-    tile.innerHTML = `
-      <div class="badge ${b.tier}">
-        <span class="mini-dot"></span>
-        ${labelFor(b.tier)}
-      </div>
-
-      <div class="logo-badge" title="${escapeHtml(b.domain || '')}">
-        <img src="${escapeHtml(logoLocal)}"
-             alt="${escapeHtml(b.name)} 로고"
-             onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
-      </div>
-
-      <div class="std-inner">
-        <div>
-          <div class="name">${escapeHtml(b.name)}</div>
-          <div class="sub">${escapeHtml(b.cat)}</div>
-        </div>
-      </div>
-    `;
-  }
+  tile.innerHTML = `
+    <div class="badge ${b.tier} ${isHot ? "hot" : ""}">
+      <span class="mini-dot"></span>
+      ${labelFor(b.tier)}${isHot ? " • HOT" : ""}
+    </div>
+    <div class="logo-only-box">
+      <img src="${escapeHtml(logoLocal)}"
+           alt="${escapeHtml(b.name)} 로고"
+           onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
+    </div>
+  `;
 
   const clickHandler = () => {
     trackClickViaImage(b);
