@@ -267,7 +267,6 @@
   .dot.king{background:var(--gold)}
   .dot.premium{background:var(--premium)}
   .dot.standard{background:var(--standard)}
-  .dot.hot{background:var(--premium)}
 
   .heatmap{
     margin:18px auto 0;
@@ -303,45 +302,12 @@
   }
   .tile.premium{border-color:rgba(255,59,59,0.55);}
   .tile.standard{border-color:rgba(255,255,255,0.30);}
-
-  .tile.hot{animation:blinkHot 1.2s infinite;}
-  @keyframes blinkHot{
-    0%{box-shadow:0 0 0 rgba(255,59,59,0);}
-    50%{box-shadow:0 0 18px rgba(255,59,59,0.85);border-color:rgba(255,59,59,0.9);}
-    100%{box-shadow:0 0 0 rgba(255,59,59,0);}
-  }
   .tile.filtered-out{
     opacity:0.18;
     filter:grayscale(1);
     pointer-events:none;
   }
 
-  .badge{
-    position:absolute;
-    top:10px;left:10px;
-    font-size:11px;
-    padding:6px 10px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.16);
-    background:rgba(0,0,0,0.35);
-    opacity:0.92;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    white-space:nowrap;
-    z-index:3;
-  }
-  .badge .mini-dot{
-    width:8px;height:8px;border-radius:3px;
-    display:inline-block;background:rgba(255,255,255,0.4);
-  }
-  .badge.premium{border-color:rgba(255,59,59,0.55)}
-  .badge.premium .mini-dot{background:var(--premium)}
-  .badge.standard{border-color:rgba(255,255,255,0.25)}
-  .badge.standard .mini-dot{background:var(--standard)}
-  .badge.hot .mini-dot{background:var(--premium)}
-
-  /* ✅ Premium / Standard 모두 로고만 */
   .logo-only-box{
     width:100%;
     height:100%;
@@ -421,10 +387,9 @@
   </section>
 
   <div class="legend">
-    <div class="pill"><span class="dot king"></span> KING = 최근 7일 TOP5</div>
-    <div class="pill"><span class="dot premium"></span> Premium 50</div>
-    <div class="pill"><span class="dot standard"></span> Standard 50</div>
-    <div class="pill"><span class="dot hot"></span> HOT</div>
+    <div class="pill"><span class="dot.king dot"></span> KING</div>
+    <div class="pill"><span class="dot.premium dot"></span> Premium</div>
+    <div class="pill"><span class="dot.standard dot"></span> Standard</div>
   </div>
 
   <div class="heatmap">
@@ -434,10 +399,8 @@
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyK0LXIrt_2i9z7HiJeErrMDrXch8L7I41lmY2eQBOt5ysjbxPtigH4X96C80QFQT8-/exec";
-const HOT_COUNT = 12;
 
 const brands100 = [
-  // 치킨 20
   { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
   { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
   { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
@@ -459,7 +422,6 @@ const brands100 = [
   { cat:"치킨", name:"누구나홀딱반한닭", url:"https://www.whodak.com/" },
   { cat:"치킨", name:"훌랄라참숯바베큐치킨", url:"https://www.hoolala.co.kr/" },
 
-  // 카페 20
   { cat:"카페", name:"스타벅스", url:"https://www.starbucks.co.kr/" },
   { cat:"카페", name:"이디야", url:"https://www.ediya.com/" },
   { cat:"카페", name:"메가커피", url:"https://www.mega-mgccoffee.com/" },
@@ -481,7 +443,6 @@ const brands100 = [
   { cat:"카페", name:"아티제", url:"https://www.cafeartisee.com/" },
   { cat:"카페", name:"할리스몰", url:"https://www.hollysmall.com/" },
 
-  // 버거 10
   { cat:"버거", name:"맥도날드", url:"https://www.mcdonalds.co.kr/" },
   { cat:"버거", name:"버거킹", url:"https://www.burgerking.co.kr/" },
   { cat:"버거", name:"KFC", url:"https://www.kfckorea.com/" },
@@ -493,7 +454,6 @@ const brands100 = [
   { cat:"버거", name:"프랭크버거", url:"https://www.frankburger.co.kr/" },
   { cat:"버거", name:"롯데잇츠", url:"https://www.lotteeatz.com/" },
 
-  // 분식 20
   { cat:"분식", name:"엽기떡볶이", url:"https://www.yupdduk.com/" },
   { cat:"분식", name:"신전떡볶이", url:"https://sinjeon.co.kr/" },
   { cat:"분식", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr/" },
@@ -515,7 +475,6 @@ const brands100 = [
   { cat:"분식", name:"배스킨라빈스", url:"https://www.baskinrobbins.co.kr/" },
   { cat:"분식", name:"요거프레소", url:"https://www.yogerpresso.co.kr/" },
 
-  // 한식 20
   { cat:"한식", name:"본죽", url:"https://www.bonif.co.kr/" },
   { cat:"한식", name:"원할머니보쌈", url:"https://www.bossam.co.kr/" },
   { cat:"한식", name:"명륜진사갈비", url:"https://www.mrg.kr/" },
@@ -537,7 +496,6 @@ const brands100 = [
   { cat:"한식", name:"청기와타운", url:"https://www.cheonggiwa.co.kr/" },
   { cat:"한식", name:"본아이에프", url:"https://www.bonif.co.kr/" },
 
-  // 중식 10
   { cat:"중식", name:"홍콩반점0410", url:"https://www.theborn.co.kr/" },
   { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
   { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" },
@@ -572,24 +530,19 @@ function domainFromUrl(url){
 function localLogo(domain){ return `logos/${domain}.png`; }
 function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
 
-/* ✅ 이미지 트래킹(GET) */
 function trackClickViaImage(brand){
   try{
     const url = encodeURIComponent(brand.url);
     const name = encodeURIComponent(brand.name);
     const tier = encodeURIComponent(brand.tier || "");
     const ua = encodeURIComponent(navigator.userAgent.slice(0,120));
-
     const img = new Image();
     img.referrerPolicy = "no-referrer";
     img.src = `${API_URL}?action=track&url=${url}&name=${name}&tier=${tier}&ua=${ua}&t=${Date.now()}`;
-    img.onload = () => {};
-    img.onerror = () => {};
   }catch(e){}
 }
 
-/* ✅ TOP5 JSONP */
-function fetchTopTop5JSONP(){
+function fetchTopJSONP(){
   return new Promise((resolve) => {
     const cb = "__topcb_" + Math.random().toString(36).slice(2);
     window[cb] = (data) => {
@@ -598,22 +551,18 @@ function fetchTopTop5JSONP(){
       delete window[cb];
       script.remove();
     };
-
     const script = document.createElement("script");
     script.onerror = () => {
       resolve([]);
       delete window[cb];
       script.remove();
     };
-
     script.src = `${API_URL}?action=top7d_jsonp&cb=${cb}&t=${Date.now()}`;
     document.body.appendChild(script);
   });
 }
 
-/* -------------------------
-   KING SEAT TOP5
-------------------------- */
+/* KING TOP5 */
 const kingGrid = document.getElementById("kingGrid");
 const kingMeta = document.getElementById("kingMeta");
 const refreshKingBtn = document.getElementById("refreshKingBtn");
@@ -622,12 +571,12 @@ async function renderKingSeats(){
   kingGrid.innerHTML = "";
   kingMeta.textContent = "불러오는 중…";
 
-  const top = await fetchTopTop5JSONP();
+  const top = await fetchTopJSONP();
   const byUrl = new Map(brands100.map(b => [b.url, b]));
 
   let list = top.map((x) => {
     const b = byUrl.get(x.url);
-    return b ? { ...b, clicks: x.count } : { cat:"", name:(x.name||"TOP"), url:x.url, tier:"", clicks:x.count };
+    return b ? { ...b, clicks: x.count } : { cat:"", name:(x.name||"TOP"), url:x.url, clicks:x.count };
   });
 
   if(list.length < 5){
@@ -651,7 +600,6 @@ async function renderKingSeats(){
     seat.className = "king-seat";
     seat.tabIndex = 0;
     seat.setAttribute("role","button");
-
     seat.innerHTML = `
       <div class="king-badge">👑 KING ${seatNo}</div>
       <div class="king-logo">
@@ -664,10 +612,8 @@ async function renderKingSeats(){
         <div class="king-desc">최근 7일 클릭 TOP${seatNo} • ${b.clicks}회</div>
       </div>
     `;
-
     seat.addEventListener("click", ()=>go(b.url));
     seat.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") go(b.url); });
-
     kingGrid.appendChild(seat);
   });
 
@@ -676,42 +622,16 @@ async function renderKingSeats(){
 refreshKingBtn.addEventListener("click", renderKingSeats);
 renderKingSeats();
 
-/* -------------------------
-   RANDOM 100 SEATS
-   Premium 50 + Standard 50
-   브랜드 상관없이 랜덤
-------------------------- */
+/* RANDOM 100 SEATS */
 const shuffledBrands = shuffle([...brands100]);
 const premiumBrands = shuffledBrands.slice(0, 50);
 const standardBrands = shuffledBrands.slice(50, 100);
 
-const premiumSeats = premiumBrands.map(b => ({
-  ...b,
-  tier:"premium",
-  domain:domainFromUrl(b.url)
-}));
+const premiumSeats = premiumBrands.map(b => ({ ...b, tier:"premium", domain:domainFromUrl(b.url) }));
+const standardSeats = standardBrands.map(b => ({ ...b, tier:"standard", domain:domainFromUrl(b.url) }));
+const seats = [...shuffle(premiumSeats), ...shuffle(standardSeats)];
 
-const standardSeats = standardBrands.map(b => ({
-  ...b,
-  tier:"standard",
-  domain:domainFromUrl(b.url)
-}));
-
-const seats = [
-  ...shuffle(premiumSeats),
-  ...shuffle(standardSeats)
-];
-
-function pickHotIndexes(items, hotCount){
-  const candidates = [];
-  items.forEach((b, i) => { if(b.tier === "premium") candidates.push(i); });
-  return new Set(shuffle(candidates).slice(0, Math.min(hotCount, candidates.length)));
-}
-const hotSet = pickHotIndexes(seats, HOT_COUNT);
-
-/* -------------------------
-   RENDER TILES
-------------------------- */
+/* RENDER */
 const grid = document.getElementById("grid");
 const countText = document.getElementById("countText");
 const searchInput = document.getElementById("searchInput");
@@ -722,17 +642,13 @@ let currentCat = "ALL";
 let currentQuery = "";
 const tileRefs = [];
 
-function labelFor(tier){
-  return tier === "premium" ? "⭐ Premium" : "⬜ Standard";
-}
 function sizeClassFor(tier){
   return tier === "premium" ? "premSize" : "stdSize";
 }
 
-seats.forEach((b, i) => {
-  const isHot = hotSet.has(i);
+seats.forEach((b) => {
   const tile = document.createElement("div");
-  tile.className = `tile ${b.tier} ${sizeClassFor(b.tier)}` + (isHot ? " hot" : "");
+  tile.className = `tile ${b.tier} ${sizeClassFor(b.tier)}`;
   tile.dataset.cat = b.cat;
   tile.dataset.name = (b.name || "").toLowerCase();
 
@@ -740,10 +656,6 @@ seats.forEach((b, i) => {
   const logoAuto  = b.domain ? autoLogo(b.domain)  : "";
 
   tile.innerHTML = `
-    <div class="badge ${b.tier} ${isHot ? "hot" : ""}">
-      <span class="mini-dot"></span>
-      ${labelFor(b.tier)}${isHot ? " • HOT" : ""}
-    </div>
     <div class="logo-only-box">
       <img src="${escapeHtml(logoLocal)}"
            alt="${escapeHtml(b.name)} 로고"
@@ -766,9 +678,7 @@ seats.forEach((b, i) => {
   tileRefs.push(tile);
 });
 
-/* -------------------------
-   FILTER / SEARCH
-------------------------- */
+/* FILTER / SEARCH */
 function applyFilter(){
   const q = (currentQuery || "").trim().toLowerCase();
   let shown = 0;
@@ -787,7 +697,6 @@ function applyFilter(){
 chips.addEventListener("click", (e) => {
   const chip = e.target.closest(".chip");
   if(!chip) return;
-
   document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
   chip.classList.add("active");
   currentCat = chip.dataset.cat || "ALL";
