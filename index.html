@@ -1,223 +1,308 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KING MAKE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- 파비콘(선택) -->
-<!-- <link rel="icon" href="images/favicon.png"> -->
+<title>Advertise | KING MAKE</title>
 
 <style>
-  body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-    background:#000;
-    color:#fff;
-    text-align:center;
-    overflow-x:hidden;
-  }
 
-  /* NAV */
-  .nav{
-    position:fixed;
-    top:0;
-    width:100%;
-    background:rgba(0,0,0,0.7);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid rgba(255,255,255,0.08);
-    z-index:1000;
-  }
-  .nav-inner{
-    max-width:1200px;
-    margin:auto;
-    padding:14px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    gap:12px;
-  }
-
-  /* LOGO (이미지) */
-  .brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  text-decoration:none;
-  color:#fff;
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+background:#000;
+color:#fff;
+text-align:center;
 }
 
-.brand img{
-  height:48px;
-  width:auto;
+.container{
+max-width:1100px;
+margin:auto;
+padding:80px 20px;
 }
 
-.brand span{
-  font-weight:1000;
-  letter-spacing:2px;
-  font-size:18px;
+h1{
+font-size:42px;
+margin-bottom:10px;
 }
 
-  /* LAYOUT */
-  .container{
-    max-width:1200px;
-    margin:auto;
-    padding:120px 20px 70px;
-  }
+h2{
+font-size:22px;
+opacity:0.7;
+margin-bottom:50px;
+}
 
-  /* HERO TEXT */
-  .hero-title{
-    font-size:44px;
-    margin:0;
-    letter-spacing:-0.5px;
-  }
-  .hero-sub{
-    opacity:0.7;
-    margin-top:12px;
-    font-size:18px;
-    line-height:1.6;
-  }
+.section{
+margin-top:70px;
+}
 
-  /* HERO IMAGE */
-  .hero-image{
-    margin-top:40px;
-    display:flex;
-    justify-content:center;
-  }
-  .hero-image img{
-    width:100%;
-    max-width:900px;
-    border-radius:18px;
-    box-shadow:0 24px 80px rgba(0,0,0,0.75);
-    display:block;
-  }
+.cards{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:30px;
+margin-top:40px;
+}
 
-  /* CATEGORIES (BOTTOM) */
-  .section{
-    margin-top:80px;
-  }
-  .section-title{
-    font-size:20px;
-    margin:0 0 18px;
-    opacity:0.85;
-  }
+.card{
+width:280px;
+border:1px solid rgba(255,255,255,0.2);
+border-radius:20px;
+padding:30px;
+background:rgba(255,255,255,0.03);
+}
 
-  .categories{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:18px;
-  }
+.card h3{
+font-size:22px;
+margin-bottom:10px;
+}
 
-  .cat{
-    width:220px;
-    height:140px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,0.2);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    font-size:20px;
-    cursor:pointer;
-    transition:0.25s;
-    background:rgba(255,255,255,0.03);
-    user-select:none;
-  }
+.price{
+font-size:32px;
+font-weight:bold;
+margin:20px 0;
+}
 
-  .cat:hover{
-    transform:translateY(-6px);
-    border-color:#fff;
-    background:rgba(255,255,255,0.08);
-  }
+.gold{
+border:1px solid gold;
+}
 
-  .cat span{
-    font-size:34px;
-    margin-bottom:8px;
-  }
+.red{
+border:1px solid #ff3b3b;
+}
 
-  /* FOOTER */
-  footer{
-    margin-top:80px;
-    opacity:0.4;
-    font-size:13px;
-  }
+.white{
+border:1px solid #fff;
+}
 
-  /* MOBILE */
-  @media (max-width:768px){
-    .container{padding:110px 16px 60px}
-    .hero-title{font-size:34px}
-    .hero-sub{font-size:16px}
-    .cat{width:46vw; min-width:160px; height:120px; font-size:16px}
-    .cat span{font-size:28px}
-    .nav-inner{padding:12px 16px}
-    .brand img{height:26px}
-    .brand .wordmark{font-size:16px}
-  }
+.btn{
+display:inline-block;
+margin-top:50px;
+padding:16px 40px;
+border:1px solid #fff;
+border-radius:30px;
+text-decoration:none;
+color:#fff;
+font-size:18px;
+transition:0.2s;
+}
+
+.btn:hover{
+background:#fff;
+color:#000;
+}
+
+.footer{
+margin-top:100px;
+font-size:12px;
+opacity:0.5;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="nav">
-  <div class="nav-inner">
-    <!-- ✅ 로고 파일을 아래 경로로 올려주세요:
-         /images/logo.png  (프리미엄 왕관 심볼 + KING MAKE)
-         만약 파일명이 다르면 src만 바꾸면 됩니다. -->
-    <a href="index.html" class="brand">
-      <img src="images/logo.png" alt="KING MAKE Logo">
-      <span>KING MAKE</span>
-    </a>
-  </div>
+<div class="container">
+
+<h1>KING MAKE</h1>
+<h2>K-BRAND ROADMAP</h2>
+
+<p>
+대한민국 브랜드가 모이는<br>
+새로운 광고 플랫폼
+</p>
+
+<div class="section">
+
+<h1>Advertising Seats</h1>
+
+<div class="cards">
+
+<div class="card gold">
+<h3>👑 KING SEAT</h3>
+<p>Top5 브랜드 자동 랭킹</p>
+<div class="price">₩1,000,000 / month</div>
 </div>
+
+<div class="card red">
+<h3>⭐ Premium Seat</h3>
+<p>프리미엄 광고 위치</p>
+<div class="price">₩300,000 / month</div>
+</div>
+
+<div class="card white">
+<h3>⬜ Standard Seat</h3>
+<p>기본 광고 좌석</p>
+<div class="price">₩100,000 / month</div>
+</div>
+
+</div>
+
+</div>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Advertise | KING MAKE</title>
+
+<style>
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+background:#000;
+color:#fff;
+text-align:center;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:80px 20px;
+}
+
+h1{
+font-size:42px;
+margin-bottom:10px;
+}
+
+h2{
+font-size:22px;
+opacity:0.7;
+margin-bottom:50px;
+}
+
+.section{
+margin-top:70px;
+}
+
+.cards{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:30px;
+margin-top:40px;
+}
+
+.card{
+width:280px;
+border:1px solid rgba(255,255,255,0.2);
+border-radius:20px;
+padding:30px;
+background:rgba(255,255,255,0.03);
+}
+
+.card h3{
+font-size:22px;
+margin-bottom:10px;
+}
+
+.price{
+font-size:32px;
+font-weight:bold;
+margin:20px 0;
+}
+
+.gold{
+border:1px solid gold;
+}
+
+.red{
+border:1px solid #ff3b3b;
+}
+
+.white{
+border:1px solid #fff;
+}
+
+.btn{
+display:inline-block;
+margin-top:50px;
+padding:16px 40px;
+border:1px solid #fff;
+border-radius:30px;
+text-decoration:none;
+color:#fff;
+font-size:18px;
+transition:0.2s;
+}
+
+.btn:hover{
+background:#fff;
+color:#000;
+}
+
+.footer{
+margin-top:100px;
+font-size:12px;
+opacity:0.5;
+}
+
+</style>
+</head>
+
+<body>
 
 <div class="container">
 
-  <!-- HERO TEXT -->
-  <h1 class="hero-title">The K-Brand Road Map</h1>
-  <div class="hero-sub">
-    대한민국 브랜드 경쟁이 시작되는 지도 플랫폼
-  </div>
+<h1>KING MAKE</h1>
+<h2>K-BRAND ROADMAP</h2>
 
-  <!-- HERO IMAGE (CENTER) -->
-  <div class="hero-image">
-    <!-- ✅ HERO 이미지 파일: /images/hero1.png -->
-    <img src="images/hero1.png" alt="K-Brand Map Hero">
-  </div>
+<p>
+대한민국 브랜드가 모이는<br>
+새로운 광고 플랫폼
+</p>
 
-  <!-- CATEGORIES (BOTTOM) -->
-  <div class="section">
-    <div class="section-title">카테고리 선택</div>
+<div class="section">
 
-    <div class="categories">
-      <div class="cat" onclick="location.href='kfood.html'">
-        <span>🍗</span>
-        K-FOOD
-      </div>
+<h1>Advertising Seats</h1>
 
-      <div class="cat" onclick="alert('준비중')">
-        <span>💄</span>
-        K-BEAUTY
-      </div>
+<div class="cards">
 
-      <div class="cat" onclick="alert('준비중')">
-        <span>🎬</span>
-        K-CULTURE
-      </div>
+<div class="card gold">
+<h3>👑 KING SEAT</h3>
+<p>Top5 브랜드 자동 랭킹</p>
+<div class="price">₩1,000,000 / month</div>
+</div>
 
-      <div class="cat" onclick="alert('준비중')">
-        <span>👕</span>
-        K-FASHION
-      </div>
+<div class="card red">
+<h3>⭐ Premium Seat</h3>
+<p>프리미엄 광고 위치</p>
+<div class="price">₩300,000 / month</div>
+</div>
 
-      <div class="cat" onclick="alert('준비중')">
-        <span>📱</span>
-        K-TECH
-      </div>
-    </div>
-  </div>
+<div class="card white">
+<h3>⬜ Standard Seat</h3>
+<p>기본 광고 좌석</p>
+<div class="price">₩100,000 / month</div>
+</div>
 
-  <footer>© 2026 KING MAKE</footer>
+</div>
+
+</div>
+
+<a class="btn" href="mailto:contact@kingmake.kr">
+Advertise Your Brand
+</a>
+
+<div class="footer">
+© 2026 KING MAKE
+</div>
+
+</div>
+
+</body>
+</html>
+
+<div class="footer">
+© 2026 KING MAKE
+</div>
+
 </div>
 
 </body>
