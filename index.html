@@ -1,146 +1,223 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>KING MAKE</title>
 
+<!-- 파비콘(선택) -->
+<!-- <link rel="icon" href="images/favicon.png"> -->
+
 <style>
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
+    background:#000;
+    color:#fff;
+    text-align:center;
+    overflow-x:hidden;
+  }
 
-body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-background:#000;
-color:#fff;
-text-align:center;
-}
+  /* NAV */
+  .nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    z-index:1000;
+  }
+  .nav-inner{
+    max-width:1200px;
+    margin:auto;
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:12px;
+  }
 
-.container{
-min-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-padding:80px 20px;
-}
+  /* LOGO (이미지) */
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:#fff;
+  }
+  .brand img{
+    height:28px;
+    width:auto;
+    display:block;
+  }
+  .brand .wordmark{
+    font-weight:700;
+    letter-spacing:1px;
+    font-size:18px;
+    line-height:1;
+  }
 
-.logo{
-display:flex;
-align-items:center;
-gap:10px;
-margin-bottom:30px;
-}
+  /* LAYOUT */
+  .container{
+    max-width:1200px;
+    margin:auto;
+    padding:120px 20px 70px;
+  }
 
-.logo img{
-height:36px;
-}
+  /* HERO TEXT */
+  .hero-title{
+    font-size:44px;
+    margin:0;
+    letter-spacing:-0.5px;
+  }
+  .hero-sub{
+    opacity:0.7;
+    margin-top:12px;
+    font-size:18px;
+    line-height:1.6;
+  }
 
-.logo span{
-font-size:24px;
-font-weight:700;
-letter-spacing:1px;
-}
+  /* HERO IMAGE */
+  .hero-image{
+    margin-top:40px;
+    display:flex;
+    justify-content:center;
+  }
+  .hero-image img{
+    width:100%;
+    max-width:900px;
+    border-radius:18px;
+    box-shadow:0 24px 80px rgba(0,0,0,0.75);
+    display:block;
+  }
 
-.hero-title{
-font-size:56px;
-font-weight:700;
-letter-spacing:-1px;
-margin:20px 0;
-}
+  /* CATEGORIES (BOTTOM) */
+  .section{
+    margin-top:80px;
+  }
+  .section-title{
+    font-size:20px;
+    margin:0 0 18px;
+    opacity:0.85;
+  }
 
-.sub{
-font-size:20px;
-opacity:0.7;
-margin-bottom:40px;
-}
+  .categories{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:18px;
+  }
 
-.hero{
-width:90%;
-max-width:1200px;
-margin:40px 0;
-}
+  .cat{
+    width:220px;
+    height:140px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,0.2);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    font-size:20px;
+    cursor:pointer;
+    transition:0.25s;
+    background:rgba(255,255,255,0.03);
+    user-select:none;
+  }
 
-.hero img{
-width:100%;
-border-radius:14px;
-box-shadow:0 30px 80px rgba(0,0,0,0.6);
-}
+  .cat:hover{
+    transform:translateY(-6px);
+    border-color:#fff;
+    background:rgba(255,255,255,0.08);
+  }
 
-.categories{
-margin-top:60px;
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-justify-content:center;
-}
+  .cat span{
+    font-size:34px;
+    margin-bottom:8px;
+  }
 
-.cat{
-padding:16px 36px;
-border-radius:30px;
-border:1px solid #fff;
-text-decoration:none;
-color:#fff;
-font-size:18px;
-transition:0.2s;
-}
+  /* FOOTER */
+  footer{
+    margin-top:80px;
+    opacity:0.4;
+    font-size:13px;
+  }
 
-.cat:hover{
-background:#fff;
-color:#000;
-}
-
-.footer{
-position:absolute;
-bottom:20px;
-font-size:12px;
-opacity:0.4;
-}
-
+  /* MOBILE */
+  @media (max-width:768px){
+    .container{padding:110px 16px 60px}
+    .hero-title{font-size:34px}
+    .hero-sub{font-size:16px}
+    .cat{width:46vw; min-width:160px; height:120px; font-size:16px}
+    .cat span{font-size:28px}
+    .nav-inner{padding:12px 16px}
+    .brand img{height:26px}
+    .brand .wordmark{font-size:16px}
+  }
 </style>
-
 </head>
 
 <body>
 
+<div class="nav">
+  <div class="nav-inner">
+    <!-- ✅ 로고 파일을 아래 경로로 올려주세요:
+         /images/logo.png  (프리미엄 왕관 심볼 + KING MAKE)
+         만약 파일명이 다르면 src만 바꾸면 됩니다. -->
+    <a class="brand" href="index.html" aria-label="KING MAKE Home">
+      <img src="images/logo.png" alt="KING MAKE 로고" onerror="this.style.display='none'; document.getElementById('wm').style.display='block';">
+      <span id="wm" class="wordmark" style="display:none;">👑 KING MAKE</span>
+    </a>
+  </div>
+</div>
+
 <div class="container">
 
-<div class="logo">
+  <!-- HERO TEXT -->
+  <h1 class="hero-title">The K-Brand Road Map</h1>
+  <div class="hero-sub">
+    대한민국 브랜드 경쟁이 시작되는 지도 플랫폼
+  </div>
 
-<img src="images/logo.png">
-<span>KING MAKE</span>
+  <!-- HERO IMAGE (CENTER) -->
+  <div class="hero-image">
+    <!-- ✅ HERO 이미지 파일: /images/hero1.png -->
+    <img src="images/hero1.png" alt="K-Brand Map Hero">
+  </div>
 
-</div>
+  <!-- CATEGORIES (BOTTOM) -->
+  <div class="section">
+    <div class="section-title">카테고리 선택</div>
 
-<h1 class="hero-title">
-K-BRAND ROADMAP
-</h1>
+    <div class="categories">
+      <div class="cat" onclick="location.href='kfood.html'">
+        <span>🍗</span>
+        K-FOOD
+      </div>
 
-<div class="sub">
-대한민국 브랜드 플랫폼
-</div>
+      <div class="cat" onclick="alert('준비중')">
+        <span>💄</span>
+        K-BEAUTY
+      </div>
 
-<div class="hero">
+      <div class="cat" onclick="alert('준비중')">
+        <span>🎬</span>
+        K-CULTURE
+      </div>
 
-<img src="images/hero1.png">
+      <div class="cat" onclick="alert('준비중')">
+        <span>👕</span>
+        K-FASHION
+      </div>
 
-</div>
+      <div class="cat" onclick="alert('준비중')">
+        <span>📱</span>
+        K-TECH
+      </div>
+    </div>
+  </div>
 
-<div class="categories">
-
-<a class="cat" href="k-food.html">
-K-FOOD
-</a>
-
-</div>
-
-<div class="footer">
-
-© 2026 KING MAKE
-
-</div>
-
+  <footer>© 2026 KING MAKE</footer>
 </div>
 
 </body>
