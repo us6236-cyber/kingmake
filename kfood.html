@@ -141,7 +141,6 @@
     margin-left:6px;
   }
 
-  /* KING ZONE */
   .king-zone{
     max-width:1740px;
     margin:18px auto 0;
@@ -524,6 +523,28 @@ const brands100 = [
   { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
 ];
 
+function shuffle(arr){
+  return arr.map(v => ({ v, r: Math.random() })).sort((a,b)=>a.r-b.r).map(o=>o.v);
+}
+function go(url){
+  if(!url) return;
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function domainFromUrl(url){
+  try{ return new URL(url).hostname.toLowerCase().replace(/^www\./,""); }
+  catch(e){ return ""; }
+}
+function localLogo(domain){ return `logos/${domain}.png`; }
+function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
+
 function trackClickViaImage(brand){
   try{
     const url = encodeURIComponent(brand.url);
@@ -556,7 +577,6 @@ function fetchTopJSONP(){
   });
 }
 
-/* KING TOP5 */
 const kingGrid = document.getElementById("kingGrid");
 const kingMeta = document.getElementById("kingMeta");
 const refreshKingBtn = document.getElementById("refreshKingBtn");
@@ -616,7 +636,6 @@ async function renderKingSeats(){
 refreshKingBtn.addEventListener("click", renderKingSeats);
 renderKingSeats();
 
-/* FIXED SEATS */
 const premiumBrands = brands100.slice(0, 50);
 const standardBrands = brands100.slice(50, 100);
 
@@ -636,7 +655,6 @@ const standardSeats = standardBrands.map((b, idx) => ({
 
 const seats = [...premiumSeats, ...standardSeats];
 
-/* RENDER */
 const grid = document.getElementById("grid");
 const countText = document.getElementById("countText");
 const searchInput = document.getElementById("searchInput");
@@ -684,7 +702,6 @@ seats.forEach((b) => {
   tileRefs.push(tile);
 });
 
-/* FILTER / SEARCH */
 function applyFilter(){
   const q = (currentQuery || "").trim().toLowerCase();
   let shown = 0;
