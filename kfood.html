@@ -308,6 +308,22 @@
     pointer-events:none;
   }
 
+  .seat-no{
+    position:absolute;
+    top:8px;
+    left:8px;
+    min-width:42px;
+    padding:5px 8px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:0.4px;
+    background:rgba(0,0,0,0.42);
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.16);
+    z-index:2;
+  }
+
   .logo-only-box{
     width:100%;
     height:100%;
@@ -346,7 +362,7 @@
       <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
       <b>KING MAKE</b>
     </a>
-    <div class="page-title">K-FOOD • KING TOP5 / PREMIUM 50 / STANDARD 50</div>
+    <div class="page-title">K-FOOD • FIXED SEATS / KING TOP5</div>
   </div>
 </div>
 
@@ -355,7 +371,7 @@
     <h1>🍗 K-FOOD Brand Seats</h1>
     <p>
       KING SEAT 5개 = 최근 7일 TOP5<br>
-      Premium / Standard 총 100석 = 브랜드 구분 없이 랜덤 배치
+      Premium 50석 / Standard 50석 = 고정 좌석 운영
     </p>
   </div>
 
@@ -387,9 +403,9 @@
   </section>
 
   <div class="legend">
-    <div class="pill"><span class="dot.king dot"></span> KING</div>
-    <div class="pill"><span class="dot.premium dot"></span> Premium</div>
-    <div class="pill"><span class="dot.standard dot"></span> Standard</div>
+    <div class="pill"><span class="dot king"></span> KING</div>
+    <div class="pill"><span class="dot premium"></span> Premium</div>
+    <div class="pill"><span class="dot standard"></span> Standard</div>
   </div>
 
   <div class="heatmap">
@@ -508,28 +524,6 @@ const brands100 = [
   { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
 ];
 
-function shuffle(arr){
-  return arr.map(v => ({ v, r: Math.random() })).sort((a,b)=>a.r-b.r).map(o=>o.v);
-}
-function go(url){
-  if(!url) return;
-  window.open(url, "_blank", "noopener,noreferrer");
-}
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-function domainFromUrl(url){
-  try{ return new URL(url).hostname.toLowerCase().replace(/^www\./,""); }
-  catch(e){ return ""; }
-}
-function localLogo(domain){ return `logos/${domain}.png`; }
-function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
-
 function trackClickViaImage(brand){
   try{
     const url = encodeURIComponent(brand.url);
@@ -622,14 +616,25 @@ async function renderKingSeats(){
 refreshKingBtn.addEventListener("click", renderKingSeats);
 renderKingSeats();
 
-/* RANDOM 100 SEATS */
-const shuffledBrands = shuffle([...brands100]);
-const premiumBrands = shuffledBrands.slice(0, 50);
-const standardBrands = shuffledBrands.slice(50, 100);
+/* FIXED SEATS */
+const premiumBrands = brands100.slice(0, 50);
+const standardBrands = brands100.slice(50, 100);
 
-const premiumSeats = premiumBrands.map(b => ({ ...b, tier:"premium", domain:domainFromUrl(b.url) }));
-const standardSeats = standardBrands.map(b => ({ ...b, tier:"standard", domain:domainFromUrl(b.url) }));
-const seats = [...shuffle(premiumSeats), ...shuffle(standardSeats)];
+const premiumSeats = premiumBrands.map((b, idx) => ({
+  ...b,
+  tier:"premium",
+  seatNo:`P${String(idx + 1).padStart(2, "0")}`,
+  domain:domainFromUrl(b.url)
+}));
+
+const standardSeats = standardBrands.map((b, idx) => ({
+  ...b,
+  tier:"standard",
+  seatNo:`S${String(idx + 1).padStart(2, "0")}`,
+  domain:domainFromUrl(b.url)
+}));
+
+const seats = [...premiumSeats, ...standardSeats];
 
 /* RENDER */
 const grid = document.getElementById("grid");
@@ -656,6 +661,7 @@ seats.forEach((b) => {
   const logoAuto  = b.domain ? autoLogo(b.domain)  : "";
 
   tile.innerHTML = `
+    <div class="seat-no">${escapeHtml(b.seatNo)}</div>
     <div class="logo-only-box">
       <img src="${escapeHtml(logoLocal)}"
            alt="${escapeHtml(b.name)} 로고"
