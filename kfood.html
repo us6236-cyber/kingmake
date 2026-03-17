@@ -141,6 +141,7 @@
     margin-left:6px;
   }
 
+  /* KING */
   .king-zone{
     max-width:1740px;
     margin:18px auto 0;
@@ -244,6 +245,7 @@
     text-overflow:ellipsis;
   }
 
+  /* LEGEND */
   .legend{
     margin:14px auto 0;
     display:flex;
@@ -267,32 +269,58 @@
   .dot.premium{background:var(--premium)}
   .dot.standard{background:var(--standard)}
 
-  .heatmap{
-    margin:18px auto 0;
+  /* BOARD */
+  .board-wrap{
     max-width:1740px;
+    margin:18px auto 0;
+    display:grid;
+    gap:18px;
+  }
+
+  .seat-section{
     border:1px solid var(--line);
     border-radius:18px;
     background:var(--panel);
     box-shadow:0 24px 80px rgba(0,0,0,0.65);
     overflow:hidden;
+    text-align:left;
   }
-  .grid{
-    display:grid;
+
+  .seat-section-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
     gap:10px;
+    padding:16px 18px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.02);
+  }
+  .seat-section-head b{
+    font-size:15px;
+    letter-spacing:0.3px;
+  }
+  .seat-section-head span{
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  .seat-grid{
+    display:grid;
+    gap:12px;
     padding:16px;
-    grid-template-columns:repeat(20, 1fr);
-    grid-auto-rows:64px;
+    grid-template-columns:repeat(10, minmax(0, 1fr));
   }
 
   .tile{
     border:1px solid rgba(255,255,255,0.12);
-    border-radius:14px;
+    border-radius:16px;
     background:rgba(255,255,255,0.04);
     cursor:pointer;
     position:relative;
     overflow:hidden;
     transition:transform .18s ease,border-color .18s ease,background .18s ease,opacity .18s ease,filter .18s ease;
     user-select:none;
+    min-height:140px;
   }
   .tile:hover{
     transform:translateY(-2px);
@@ -329,27 +357,33 @@
     display:flex;
     align-items:center;
     justify-content:center;
+    padding:20px 10px 10px;
   }
   .logo-only-box img{
-    width:120px;
-    height:120px;
+    width:100px;
+    height:100px;
     object-fit:contain;
     display:block;
   }
 
-  .premSize{grid-column:span 2;grid-row:span 2;}
-  .stdSize{grid-column:span 2;grid-row:span 1;}
-
   @media (max-width:1200px){
-    .grid{grid-template-columns:repeat(10, 1fr);}
-    .premSize{grid-column:span 2;grid-row:span 2;}
-    .stdSize{grid-column:span 2;grid-row:span 1;}
+    .seat-grid{
+      grid-template-columns:repeat(5, minmax(0, 1fr));
+    }
   }
   @media (max-width:700px){
-    .grid{grid-template-columns:repeat(6, 1fr);gap:8px;padding:12px;grid-auto-rows:58px;}
-    .premSize{grid-column:span 3;grid-row:span 2;}
-    .stdSize{grid-column:span 3;grid-row:span 1;}
-    .logo-only-box img{width:90px;height:90px;}
+    .seat-grid{
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:8px;
+      padding:12px;
+    }
+    .tile{
+      min-height:120px;
+    }
+    .logo-only-box img{
+      width:78px;
+      height:78px;
+    }
   }
 </style>
 </head>
@@ -407,8 +441,22 @@
     <div class="pill"><span class="dot standard"></span> Standard</div>
   </div>
 
-  <div class="heatmap">
-    <div class="grid" id="grid"></div>
+  <div class="board-wrap">
+    <section class="seat-section">
+      <div class="seat-section-head">
+        <b>⭐ Premium Seats</b>
+        <span>P01 ~ P50</span>
+      </div>
+      <div class="seat-grid" id="premiumGrid"></div>
+    </section>
+
+    <section class="seat-section">
+      <div class="seat-section-head">
+        <b>⬜ Standard Seats</b>
+        <span>S01 ~ S50</span>
+      </div>
+      <div class="seat-grid" id="standardGrid"></div>
+    </section>
   </div>
 </div>
 
@@ -655,7 +703,8 @@ const standardSeats = standardBrands.map((b, idx) => ({
 
 const seats = [...premiumSeats, ...standardSeats];
 
-const grid = document.getElementById("grid");
+const premiumGrid = document.getElementById("premiumGrid");
+const standardGrid = document.getElementById("standardGrid");
 const countText = document.getElementById("countText");
 const searchInput = document.getElementById("searchInput");
 const clearBtn = document.getElementById("clearBtn");
@@ -665,13 +714,9 @@ let currentCat = "ALL";
 let currentQuery = "";
 const tileRefs = [];
 
-function sizeClassFor(tier){
-  return tier === "premium" ? "premSize" : "stdSize";
-}
-
-seats.forEach((b) => {
+function createTile(b){
   const tile = document.createElement("div");
-  tile.className = `tile ${b.tier} ${sizeClassFor(b.tier)}`;
+  tile.className = `tile ${b.tier}`;
   tile.dataset.cat = b.cat;
   tile.dataset.name = (b.name || "").toLowerCase();
 
@@ -698,9 +743,12 @@ seats.forEach((b) => {
   tile.tabIndex = 0;
   tile.setAttribute("role","button");
 
-  grid.appendChild(tile);
   tileRefs.push(tile);
-});
+  return tile;
+}
+
+premiumSeats.forEach(b => premiumGrid.appendChild(createTile(b)));
+standardSeats.forEach(b => standardGrid.appendChild(createTile(b)));
 
 function applyFilter(){
   const q = (currentQuery || "").trim().toLowerCase();
