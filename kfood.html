@@ -14,6 +14,9 @@
     --premium:#ff3b3b;
     --standard:#ffffff;
     --muted:rgba(255,255,255,0.70);
+    --live:#2ecc71;
+    --reserved:#f39c12;
+    --open:#8e8e93;
   }
 
   *{box-sizing:border-box}
@@ -141,7 +144,6 @@
     margin-left:6px;
   }
 
-  /* KING */
   .king-zone{
     max-width:1740px;
     margin:18px auto 0;
@@ -245,7 +247,6 @@
     text-overflow:ellipsis;
   }
 
-  /* LEGEND */
   .legend{
     margin:14px auto 0;
     display:flex;
@@ -268,8 +269,10 @@
   .dot.king{background:var(--gold)}
   .dot.premium{background:var(--premium)}
   .dot.standard{background:var(--standard)}
+  .dot.live{background:var(--live)}
+  .dot.reserved{background:var(--reserved)}
+  .dot.open{background:var(--open)}
 
-  /* BOARD */
   .board-wrap{
     max-width:1740px;
     margin:18px auto 0;
@@ -334,6 +337,9 @@
     filter:grayscale(1);
     pointer-events:none;
   }
+  .tile.open-seat{
+    background:rgba(255,255,255,0.02);
+  }
 
   .seat-no{
     position:absolute;
@@ -351,6 +357,25 @@
     z-index:2;
   }
 
+  .seat-status{
+    position:absolute;
+    right:8px;
+    bottom:8px;
+    min-width:74px;
+    padding:5px 8px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    text-align:center;
+    letter-spacing:0.3px;
+    z-index:2;
+    background:rgba(0,0,0,0.45);
+    border:1px solid rgba(255,255,255,0.16);
+  }
+  .seat-status.live{color:var(--live); border-color:rgba(46,204,113,0.45);}
+  .seat-status.reserved{color:var(--reserved); border-color:rgba(243,156,18,0.45);}
+  .seat-status.open{color:#d1d1d6; border-color:rgba(142,142,147,0.45);}
+
   .logo-only-box{
     width:100%;
     height:100%;
@@ -364,6 +389,27 @@
     height:100px;
     object-fit:contain;
     display:block;
+  }
+
+  .open-box{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    color:rgba(255,255,255,0.75);
+    text-align:center;
+    padding:18px 10px 10px;
+  }
+  .open-box strong{
+    font-size:14px;
+    letter-spacing:0.4px;
+  }
+  .open-box span{
+    font-size:11px;
+    color:var(--muted);
   }
 
   @media (max-width:1200px){
@@ -439,6 +485,9 @@
     <div class="pill"><span class="dot king"></span> KING</div>
     <div class="pill"><span class="dot premium"></span> Premium</div>
     <div class="pill"><span class="dot standard"></span> Standard</div>
+    <div class="pill"><span class="dot live"></span> LIVE</div>
+    <div class="pill"><span class="dot reserved"></span> RESERVED</div>
+    <div class="pill"><span class="dot open"></span> OPEN</div>
   </div>
 
   <div class="board-wrap">
@@ -463,6 +512,7 @@
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyK0LXIrt_2i9z7HiJeErrMDrXch8L7I41lmY2eQBOt5ysjbxPtigH4X96C80QFQT8-/exec";
 
+/* 브랜드 100개 */
 const brands100 = [
   { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
   { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
@@ -571,6 +621,12 @@ const brands100 = [
   { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
 ];
 
+/* 상태 설정: LIVE / RESERVED / OPEN */
+const reservedPremium = ["P07","P18","P29","P41","P50"];
+const openPremium = ["P03","P10","P16","P22","P33","P44"];
+const reservedStandard = ["S05","S17","S28","S39"];
+const openStandard = ["S02","S11","S20","S31","S42","S49"];
+
 function shuffle(arr){
   return arr.map(v => ({ v, r: Math.random() })).sort((a,b)=>a.r-b.r).map(o=>o.v);
 }
@@ -592,6 +648,17 @@ function domainFromUrl(url){
 }
 function localLogo(domain){ return `logos/${domain}.png`; }
 function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
+
+function getSeatStatus(seatNo, tier){
+  if (tier === "premium") {
+    if (openPremium.includes(seatNo)) return "OPEN";
+    if (reservedPremium.includes(seatNo)) return "RESERVED";
+    return "LIVE";
+  }
+  if (openStandard.includes(seatNo)) return "OPEN";
+  if (reservedStandard.includes(seatNo)) return "RESERVED";
+  return "LIVE";
+}
 
 function trackClickViaImage(brand){
   try{
@@ -691,6 +758,7 @@ const premiumSeats = premiumBrands.map((b, idx) => ({
   ...b,
   tier:"premium",
   seatNo:`P${String(idx + 1).padStart(2, "0")}`,
+  status:getSeatStatus(`P${String(idx + 1).padStart(2, "0")}`, "premium"),
   domain:domainFromUrl(b.url)
 }));
 
@@ -698,10 +766,9 @@ const standardSeats = standardBrands.map((b, idx) => ({
   ...b,
   tier:"standard",
   seatNo:`S${String(idx + 1).padStart(2, "0")}`,
+  status:getSeatStatus(`S${String(idx + 1).padStart(2, "0")}`, "standard"),
   domain:domainFromUrl(b.url)
 }));
-
-const seats = [...premiumSeats, ...standardSeats];
 
 const premiumGrid = document.getElementById("premiumGrid");
 const standardGrid = document.getElementById("standardGrid");
@@ -716,23 +783,45 @@ const tileRefs = [];
 
 function createTile(b){
   const tile = document.createElement("div");
-  tile.className = `tile ${b.tier}`;
+  tile.className = `tile ${b.tier}` + (b.status === "OPEN" ? " open-seat" : "");
   tile.dataset.cat = b.cat;
   tile.dataset.name = (b.name || "").toLowerCase();
+  tile.dataset.status = b.status;
 
   const logoLocal = b.domain ? localLogo(b.domain) : "";
   const logoAuto  = b.domain ? autoLogo(b.domain)  : "";
 
-  tile.innerHTML = `
-    <div class="seat-no">${escapeHtml(b.seatNo)}</div>
-    <div class="logo-only-box">
-      <img src="${escapeHtml(logoLocal)}"
-           alt="${escapeHtml(b.name)} 로고"
-           onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
-    </div>
-  `;
+  if (b.status === "OPEN") {
+    tile.innerHTML = `
+      <div class="seat-no">${escapeHtml(b.seatNo)}</div>
+      <div class="open-box">
+        <strong>OPEN</strong>
+        <span>Advertise Here</span>
+      </div>
+      <div class="seat-status open">OPEN</div>
+    `;
+  } else {
+    tile.innerHTML = `
+      <div class="seat-no">${escapeHtml(b.seatNo)}</div>
+      <div class="logo-only-box">
+        <img src="${escapeHtml(logoLocal)}"
+             alt="${escapeHtml(b.name)} 로고"
+             onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
+      </div>
+      <div class="seat-status ${b.status.toLowerCase()}">${escapeHtml(b.status)}</div>
+    `;
+  }
 
   const clickHandler = () => {
+    if (b.status === "OPEN") {
+      window.location.href = "advertise.html";
+      return;
+    }
+    if (b.status === "RESERVED") {
+      alert(`${b.seatNo} 좌석은 예약 진행중입니다.`);
+      return;
+    }
+
     trackClickViaImage(b);
     setTimeout(renderKingSeats, 400);
     go(b.url);
