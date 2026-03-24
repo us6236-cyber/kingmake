@@ -4,216 +4,939 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>K-FOOD | KING MAKE</title>
-
 <style>
   :root{
     --bg:#000;
     --panel:rgba(255,255,255,0.03);
     --line:rgba(255,255,255,0.12);
+    --gold:#D4AF37;
     --premium:#ff3b3b;
     --standard:#ffffff;
+    --muted:rgba(255,255,255,0.70);
     --live:#2ecc71;
     --reserved:#f39c12;
     --open:#8e8e93;
   }
 
+  *{box-sizing:border-box}
   body{
     margin:0;
-    background:#000;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--bg);
     color:#fff;
-    font-family:Arial;
+  }
+
+  .top{
+    position:sticky;
+    top:0;
+    z-index:20;
+    backdrop-filter:blur(10px);
+    background:rgba(0,0,0,0.78);
+    border-bottom:1px solid var(--line);
+  }
+  .top-inner{
+    max-width:1800px;
+    margin:auto;
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:#fff;
+  }
+  .brand img{
+    height:26px;
+    width:auto;
+    display:block;
+  }
+  .brand b{letter-spacing:1px}
+  .page-title{
+    font-size:13px;
+    opacity:0.75;
   }
 
   .wrap{
     max-width:1800px;
-    margin:auto;
-    padding:20px;
+    margin:0 auto;
+    padding:22px 18px 70px;
+    text-align:center;
   }
 
-  /* 섹션 */
-  .section{
-    margin-top:20px;
+  .hero h1{
+    margin:0;
+    font-size:34px;
+    letter-spacing:-0.5px;
+  }
+  .hero p{
+    margin:12px 0 0;
+    opacity:0.7;
+    line-height:1.6;
+  }
+
+  .controls{
+    max-width:1740px;
+    margin:18px auto 0;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    padding:10px 12px;
     border:1px solid var(--line);
     border-radius:16px;
-    overflow:hidden;
+    background:rgba(255,255,255,0.03);
+  }
+  .chips{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .chip{
+    padding:9px 12px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.04);
+    color:#fff;
+    font-size:13px;
+    cursor:pointer;
+    user-select:none;
+    transition:0.15s;
+  }
+  .chip:hover{
+    transform:translateY(-1px);
+    border-color:rgba(255,255,255,0.32);
+  }
+  .chip.active{
+    border-color:rgba(255,59,59,0.55);
+    box-shadow:0 0 18px rgba(255,59,59,0.18);
   }
 
-  .section-head{
-    padding:14px;
+  .search{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .search input{
+    width:min(420px, 74vw);
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.14);
+    background:rgba(0,0,0,0.35);
+    color:#fff;
+    outline:none;
+    font-size:13px;
+  }
+  .search input:focus{
+    border-color:rgba(255,255,255,0.35);
+  }
+  .btn{
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.14);
     background:rgba(255,255,255,0.05);
-    font-weight:bold;
+    color:#fff;
+    cursor:pointer;
+    font-size:13px;
+  }
+  .btn:hover{
+    border-color:rgba(255,255,255,0.32);
+  }
+  .count{
+    font-size:13px;
+    opacity:0.75;
+    margin-left:6px;
   }
 
-  /* PREMIUM */
+  /* KING */
+  .king-zone{
+    max-width:1740px;
+    margin:18px auto 0;
+    border:1px solid rgba(212,175,55,0.35);
+    border-radius:18px;
+    background:rgba(212,175,55,0.06);
+    box-shadow:0 24px 80px rgba(0,0,0,0.55);
+    overflow:hidden;
+    padding:14px;
+    text-align:left;
+  }
+  .king-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:6px 4px 12px;
+  }
+  .king-title b{
+    font-size:14px;
+    letter-spacing:0.3px;
+  }
+  .king-title span{
+    font-size:12px;
+    color:var(--muted);
+  }
+  .king-grid{
+    display:grid;
+    gap:12px;
+    grid-template-columns:repeat(5, 1fr);
+  }
+  @media (max-width:1200px){
+    .king-zone{overflow-x:auto;}
+    .king-grid{
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(250px, 1fr);
+      grid-template-columns:none;
+      width:max-content;
+      padding-bottom:6px;
+    }
+  }
+  .king-seat{
+    position:relative;
+    border:1px solid rgba(212,175,55,0.40);
+    background:rgba(255,255,255,0.06);
+    border-radius:14px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
+    min-height:110px;
+    display:flex;
+    align-items:center;
+    padding:16px;
+    gap:14px;
+  }
+  .king-seat:hover{
+    transform:translateY(-2px);
+    border-color:rgba(212,175,55,0.75);
+    background:rgba(255,255,255,0.08);
+    box-shadow:0 0 22px rgba(212,175,55,0.25);
+  }
+  .king-badge{
+    position:absolute;
+    top:10px;
+    left:10px;
+    font-weight:900;
+    font-size:12px;
+    color:rgba(255,255,255,0.88);
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid rgba(212,175,55,0.40);
+    background:rgba(0,0,0,0.30);
+    backdrop-filter:blur(8px);
+  }
+  .king-logo{
+    width:120px;
+    height:70px;
+    border-radius:14px;
+    border:1px solid rgba(212,175,55,0.35);
+    background:rgba(255,255,255,0.92);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex:0 0 auto;
+  }
+  .king-logo img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:12px;
+  }
+  .king-name{
+    font-weight:900;
+    font-size:18px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .king-desc{
+    margin-top:6px;
+    font-size:12px;
+    color:var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .legend{
+    margin:14px auto 0;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    font-size:13px;
+    opacity:0.9;
+  }
+  .pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:rgba(255,255,255,0.04);
+  }
+  .dot{
+    width:10px;
+    height:10px;
+    border-radius:3px;
+    display:inline-block;
+  }
+  .dot.king{background:var(--gold)}
+  .dot.premium{background:var(--premium)}
+  .dot.standard{background:var(--standard)}
+  .dot.live{background:var(--live)}
+  .dot.reserved{background:var(--reserved)}
+  .dot.open{background:var(--open)}
+
+  /* BOARD */
+  .board-wrap{
+    max-width:1740px;
+    margin:18px auto 0;
+    display:grid;
+    gap:18px;
+  }
+  .seat-section{
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:var(--panel);
+    box-shadow:0 24px 80px rgba(0,0,0,0.65);
+    overflow:hidden;
+    text-align:left;
+  }
+  .seat-section-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:16px 18px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.02);
+  }
+  .seat-section-head b{
+    font-size:15px;
+    letter-spacing:0.3px;
+  }
+  .seat-section-head span{
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  /* Premium 유지 */
   .premium-grid{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:14px;
+    gap:12px;
     padding:16px;
+    grid-template-columns:repeat(10, minmax(0, 1fr));
   }
-
   .premium-tile{
-    min-height:170px;
-    border:1px solid var(--premium);
-    border-radius:16px;
-    position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    min-height:140px;
+  }
+  .premium-tile .logo-only-box img{
+    width:100px;
+    height:100px;
   }
 
-  .premium-tile img{
-    width:120px;
-    height:120px;
-    object-fit:contain;
-  }
-
-  /* STANDARD (작게) */
+  /* Standard 조금 작게 */
   .standard-grid{
     display:grid;
-    grid-template-columns:repeat(10,1fr);
     gap:8px;
     padding:14px;
+    grid-template-columns:repeat(10, minmax(0, 1fr));
+  }
+  .standard-tile{
+    min-height:110px;
+    border-radius:12px;
+  }
+  .standard-tile .logo-only-box{
+    padding:18px 8px 8px;
+  }
+  .standard-tile .logo-only-box img{
+    width:72px;
+    height:72px;
   }
 
-  .standard-tile{
-    min-height:95px;
-    border:1px solid var(--standard);
-    border-radius:12px;
+  .tile{
+    border:1px solid rgba(255,255,255,0.12);
+    background:rgba(255,255,255,0.04);
+    cursor:pointer;
     position:relative;
+    overflow:hidden;
+    transition:transform .18s ease,border-color .18s ease,background .18s ease,opacity .18s ease,filter .18s ease;
+    user-select:none;
+  }
+  .tile:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,255,255,0.35);
+    background:rgba(255,255,255,0.07);
+  }
+  .tile.premium{
+    border-color:rgba(255,59,59,0.55);
+    border-radius:16px;
+  }
+  .tile.standard{
+    border-color:rgba(255,255,255,0.30);
+  }
+  .tile.filtered-out{
+    opacity:0.18;
+    filter:grayscale(1);
+    pointer-events:none;
+  }
+  .tile.open-seat{
+    background:rgba(255,255,255,0.02);
+  }
+
+  .seat-no{
+    position:absolute;
+    top:8px;
+    left:8px;
+    min-width:42px;
+    padding:5px 8px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:0.4px;
+    background:rgba(0,0,0,0.42);
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.16);
+    z-index:2;
+  }
+  .seat-status{
+    position:absolute;
+    right:8px;
+    bottom:8px;
+    min-width:74px;
+    padding:5px 8px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    text-align:center;
+    letter-spacing:0.3px;
+    z-index:2;
+    background:rgba(0,0,0,0.45);
+    border:1px solid rgba(255,255,255,0.16);
+  }
+  .seat-status.live{
+    color:var(--live);
+    border-color:rgba(46,204,113,0.45);
+  }
+  .seat-status.reserved{
+    color:var(--reserved);
+    border-color:rgba(243,156,18,0.45);
+  }
+  .seat-status.open{
+    color:#d1d1d6;
+    border-color:rgba(142,142,147,0.45);
+  }
+
+  .logo-only-box{
+    width:100%;
+    height:100%;
     display:flex;
     align-items:center;
     justify-content:center;
+    padding:20px 10px 10px;
   }
-
-  .standard-tile img{
-    width:70px;
-    height:70px;
-    object-fit:contain;
-  }
-
-  /* 공통 */
-  .seat-no{
-    position:absolute;
-    top:6px;
-    left:6px;
-    font-size:10px;
-    background:rgba(0,0,0,0.5);
-    padding:3px 6px;
-    border-radius:6px;
-  }
-
-  .status{
-    position:absolute;
-    bottom:6px;
-    right:6px;
-    font-size:10px;
-  }
-
-  .live{color:var(--live)}
-  .reserved{color:var(--reserved)}
-  .open{color:var(--open)}
 
   .open-box{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    color:rgba(255,255,255,0.75);
     text-align:center;
+    padding:18px 10px 10px;
+  }
+  .open-box strong{
+    font-size:14px;
+    letter-spacing:0.4px;
+  }
+  .open-box span{
     font-size:11px;
-    opacity:0.7;
+    color:var(--muted);
   }
 
+  @media (max-width:1200px){
+    .premium-grid,
+    .standard-grid{
+      grid-template-columns:repeat(5, minmax(0, 1fr));
+    }
+  }
+  @media (max-width:700px){
+    .premium-grid,
+    .standard-grid{
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      padding:12px;
+    }
+    .premium-grid{gap:8px;}
+    .standard-grid{gap:6px;}
+
+    .premium-tile{min-height:120px;}
+    .standard-tile{min-height:96px;}
+
+    .premium-tile .logo-only-box img{
+      width:78px;
+      height:78px;
+    }
+    .standard-tile .logo-only-box img{
+      width:58px;
+      height:58px;
+    }
+  }
 </style>
 </head>
 
 <body>
+<div class="top">
+  <div class="top-inner">
+    <a class="brand" href="index.html" aria-label="KING MAKE Home">
+      <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
+      <b>KING MAKE</b>
+    </a>
+    <div class="page-title">K-FOOD • FIXED SEATS / KING TOP5</div>
+  </div>
+</div>
+
 <div class="wrap">
-
-  <!-- PREMIUM -->
-  <div class="section">
-    <div class="section-head">⭐ Premium Seats</div>
-    <div class="premium-grid" id="premiumGrid"></div>
+  <div class="hero">
+    <h1>🍗 K-FOOD Brand Seats</h1>
+    <p>
+      KING SEAT 5개 = 최근 7일 TOP5<br>
+      Premium 50석 / Standard 50석 = 고정 좌석 운영
+    </p>
   </div>
 
-  <!-- STANDARD -->
-  <div class="section">
-    <div class="section-head">⬜ Standard Seats</div>
-    <div class="standard-grid" id="standardGrid"></div>
+  <div class="controls">
+    <div class="chips" id="chips">
+      <span class="chip active" data-cat="ALL">전체</span>
+      <span class="chip" data-cat="치킨">치킨</span>
+      <span class="chip" data-cat="카페">카페</span>
+      <span class="chip" data-cat="버거">버거</span>
+      <span class="chip" data-cat="분식">분식</span>
+      <span class="chip" data-cat="한식">한식</span>
+      <span class="chip" data-cat="중식">중식</span>
+      <span class="count" id="countText">-</span>
+    </div>
+
+    <div class="search">
+      <input id="searchInput" type="text" placeholder="브랜드 검색" autocomplete="off" />
+      <button class="btn" id="clearBtn" type="button">초기화</button>
+      <button class="btn" id="refreshKingBtn" type="button">KING 갱신</button>
+    </div>
   </div>
 
+  <section class="king-zone">
+    <div class="king-title">
+      <b>👑 KING SEAT (최근 7일 TOP5)</b>
+      <span id="kingMeta">불러오는 중…</span>
+    </div>
+    <div class="king-grid" id="kingGrid"></div>
+  </section>
+
+  <div class="legend">
+    <div class="pill"><span class="dot king"></span> KING</div>
+    <div class="pill"><span class="dot premium"></span> Premium</div>
+    <div class="pill"><span class="dot standard"></span> Standard</div>
+    <div class="pill"><span class="dot live"></span> LIVE</div>
+    <div class="pill"><span class="dot reserved"></span> RESERVED</div>
+    <div class="pill"><span class="dot open"></span> OPEN</div>
+  </div>
+
+  <div class="board-wrap">
+    <section class="seat-section">
+      <div class="seat-section-head">
+        <b>⭐ Premium Seats</b>
+        <span>P01 ~ P50</span>
+      </div>
+      <div class="premium-grid" id="premiumGrid"></div>
+    </section>
+
+    <section class="seat-section">
+      <div class="seat-section-head">
+        <b>⬜ Standard Seats</b>
+        <span>S01 ~ S50</span>
+      </div>
+      <div class="standard-grid" id="standardGrid"></div>
+    </section>
+  </div>
 </div>
 
 <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyK0LXIrt_2i9z7HiJeErrMDrXch8L7I41lmY2eQBOt5ysjbxPtigH4X96C80QFQT8-/exec";
 
-const brands = [
-  "bhc.co.kr","bbq.co.kr","kyochon.com","goobne.co.kr","nenechicken.com",
-  "starbucks.co.kr","ediya.com","mega-mgccoffee.com","composecoffee.com","paikdabang.com",
-  "mcdonalds.co.kr","burgerking.co.kr","kfckorea.com","subway.co.kr","lotteeatz.com",
-  "yupdduk.com","sinjeon.co.kr","jawsfood.co.kr","youngdabang.com","myungranghotdog.com",
-  "bonif.co.kr","bossam.co.kr","mrg.kr","nolboo.co.kr","chae-seon-dang.com",
-  "theborn.co.kr","zzambbongjijon.com","mankanghong.co.kr","hongjajang.com","gyodongjjambbong.com"
+const brands100 = [
+  { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
+  { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
+  { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
+  { cat:"치킨", name:"굽네치킨", url:"https://www.goobne.co.kr/" },
+  { cat:"치킨", name:"네네치킨", url:"https://www.nenechicken.com/" },
+  { cat:"치킨", name:"푸라닭", url:"https://puradakchicken.com/" },
+  { cat:"치킨", name:"노랑통닭", url:"https://www.norangtongdak.co.kr/" },
+  { cat:"치킨", name:"멕시카나", url:"https://www.mexicana.co.kr/" },
+  { cat:"치킨", name:"페리카나", url:"https://www.pelicana.co.kr/" },
+  { cat:"치킨", name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr/" },
+  { cat:"치킨", name:"자담치킨", url:"https://www.ejadam.co.kr/" },
+  { cat:"치킨", name:"치킨플러스", url:"https://chickenplus.co.kr/" },
+  { cat:"치킨", name:"60계치킨", url:"https://www.60chicken.co.kr/" },
+  { cat:"치킨", name:"호식이두마리치킨", url:"https://www.9922.co.kr/" },
+  { cat:"치킨", name:"또래오래", url:"https://www.toreore.com/" },
+  { cat:"치킨", name:"지코바", url:"https://www.zicoba.co.kr/" },
+  { cat:"치킨", name:"부어치킨", url:"https://www.boor.co.kr/" },
+  { cat:"치킨", name:"깐부치킨", url:"https://www.kkanbu.co.kr/" },
+  { cat:"치킨", name:"누구나홀딱반한닭", url:"https://www.whodak.com/" },
+  { cat:"치킨", name:"훌랄라참숯바베큐치킨", url:"https://www.hoolala.co.kr/" },
+
+  { cat:"카페", name:"스타벅스", url:"https://www.starbucks.co.kr/" },
+  { cat:"카페", name:"이디야", url:"https://www.ediya.com/" },
+  { cat:"카페", name:"메가커피", url:"https://www.mega-mgccoffee.com/" },
+  { cat:"카페", name:"컴포즈커피", url:"https://composecoffee.com/" },
+  { cat:"카페", name:"빽다방", url:"https://www.paikdabang.com/" },
+  { cat:"카페", name:"투썸플레이스", url:"https://www.twosome.co.kr/" },
+  { cat:"카페", name:"할리스", url:"https://www.hollys.co.kr/" },
+  { cat:"카페", name:"탐앤탐스", url:"https://www.tomntoms.com/" },
+  { cat:"카페", name:"카페베네", url:"https://www.caffebene.co.kr/" },
+  { cat:"카페", name:"공차", url:"https://www.gong-cha.co.kr/" },
+  { cat:"카페", name:"더벤티", url:"https://www.theventi.co.kr/" },
+  { cat:"카페", name:"폴바셋", url:"https://www.baristapaulbassett.co.kr/" },
+  { cat:"카페", name:"커피빈", url:"https://www.coffeebeankorea.com/" },
+  { cat:"카페", name:"달콤커피", url:"https://www.dalkomm.com/" },
+  { cat:"카페", name:"블루보틀", url:"https://bluebottlecoffee.com/kr/" },
+  { cat:"카페", name:"엔제리너스", url:"https://www.lotteeatz.com/" },
+  { cat:"카페", name:"드롭탑", url:"https://www.droptop.co.kr/" },
+  { cat:"카페", name:"파스쿠찌", url:"https://www.caffe-pascucci.co.kr/" },
+  { cat:"카페", name:"아티제", url:"https://www.cafeartisee.com/" },
+  { cat:"카페", name:"할리스몰", url:"https://www.hollysmall.com/" },
+
+  { cat:"버거", name:"맥도날드", url:"https://www.mcdonalds.co.kr/" },
+  { cat:"버거", name:"버거킹", url:"https://www.burgerking.co.kr/" },
+  { cat:"버거", name:"KFC", url:"https://www.kfckorea.com/" },
+  { cat:"버거", name:"써브웨이", url:"https://www.subway.co.kr/" },
+  { cat:"버거", name:"롯데리아", url:"https://www.lotteeatz.com/" },
+  { cat:"버거", name:"맘스터치", url:"https://www.momstouch.co.kr/" },
+  { cat:"버거", name:"쉐이크쉑", url:"https://www.shakeshack.kr/" },
+  { cat:"버거", name:"노브랜드버거", url:"https://www.nobrandburger.com/" },
+  { cat:"버거", name:"프랭크버거", url:"https://www.frankburger.co.kr/" },
+  { cat:"버거", name:"롯데잇츠", url:"https://www.lotteeatz.com/" },
+
+  { cat:"분식", name:"엽기떡볶이", url:"https://www.yupdduk.com/" },
+  { cat:"분식", name:"신전떡볶이", url:"https://sinjeon.co.kr/" },
+  { cat:"분식", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr/" },
+  { cat:"분식", name:"청년다방", url:"https://www.youngdabang.com/" },
+  { cat:"분식", name:"명랑핫도그", url:"https://myungranghotdog.com/" },
+  { cat:"분식", name:"김가네", url:"https://www.gimgane.co.kr/" },
+  { cat:"분식", name:"김밥천국", url:"https://www.gimbapcheonguk.co.kr/" },
+  { cat:"분식", name:"고봉민김밥", url:"https://www.gbmgimbap.com/" },
+  { cat:"분식", name:"국대떡볶이", url:"https://www.kookdae.co.kr/" },
+  { cat:"분식", name:"바르다김선생", url:"https://www.bareun.co.kr/" },
+  { cat:"분식", name:"봉구스밥버거", url:"https://www.bongousse.co.kr/" },
+  { cat:"분식", name:"한솥도시락", url:"https://www.hsd.co.kr/" },
+  { cat:"분식", name:"삼첩분식", url:"https://samcheop.com/" },
+  { cat:"분식", name:"두끼떡볶이", url:"https://www.dookki.co.kr/" },
+  { cat:"분식", name:"뚜레쥬르", url:"https://www.tlj.co.kr/" },
+  { cat:"분식", name:"파리바게뜨", url:"https://www.paris.co.kr/" },
+  { cat:"분식", name:"크리스피크림", url:"https://www.krispykreme.co.kr/" },
+  { cat:"분식", name:"던킨", url:"https://www.dunkindonuts.co.kr/" },
+  { cat:"분식", name:"배스킨라빈스", url:"https://www.baskinrobbins.co.kr/" },
+  { cat:"분식", name:"요거프레소", url:"https://www.yogerpresso.co.kr/" },
+
+  { cat:"한식", name:"본죽", url:"https://www.bonif.co.kr/" },
+  { cat:"한식", name:"원할머니보쌈", url:"https://www.bossam.co.kr/" },
+  { cat:"한식", name:"명륜진사갈비", url:"https://www.mrg.kr/" },
+  { cat:"한식", name:"놀부", url:"https://www.nolboo.co.kr/" },
+  { cat:"한식", name:"채선당", url:"https://www.chae-seon-dang.com/" },
+  { cat:"한식", name:"더본코리아", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"새마을식당", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"한신포차", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"역전우동0410", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"인생설렁탕", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"연돈볼카츠", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"이차돌", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"미정국수0410", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"리춘시장", url:"https://www.theborn.co.kr/" },
+  { cat:"한식", name:"본도시락", url:"https://www.bondosirak.com/" },
+  { cat:"한식", name:"본죽&비빔밥", url:"https://www.bonif.co.kr/" },
+  { cat:"한식", name:"한솥", url:"https://www.hsd.co.kr/" },
+  { cat:"한식", name:"고봉삼계탕", url:"https://www.gobong.co.kr/" },
+  { cat:"한식", name:"청기와타운", url:"https://www.cheonggiwa.co.kr/" },
+  { cat:"한식", name:"본아이에프", url:"https://www.bonif.co.kr/" },
+
+  { cat:"중식", name:"홍콩반점0410", url:"https://www.theborn.co.kr/" },
+  { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
+  { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" },
+  { cat:"중식", name:"짬뽕지존", url:"https://www.zzambbongjijon.com/" },
+  { cat:"중식", name:"만강홍", url:"https://www.mankanghong.co.kr/" },
+  { cat:"중식", name:"홍짜장", url:"https://www.hongjajang.com/" },
+  { cat:"중식", name:"교동짬뽕", url:"https://www.gyodongjjambbong.com/" },
+  { cat:"중식", name:"리춘시장(중화)", url:"https://www.theborn.co.kr/" },
+  { cat:"중식", name:"더본(중식)", url:"https://www.theborn.co.kr/" },
+  { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
 ];
 
-function logo(domain){
-  return `https://logo.clearbit.com/${domain}`;
-}
+const reservedPremium = ["P07","P18","P29","P41","P50"];
+const openPremium = ["P03","P10","P16","P22","P33","P44"];
+const reservedStandard = ["S05","S17","S28","S39"];
+const openStandard = ["S02","S11","S20","S31","S42","S49"];
 
-/* 상태 랜덤 (테스트용) */
-function getStatus(i){
-  if(i % 7 === 0) return "OPEN";
-  if(i % 5 === 0) return "RESERVED";
+function shuffle(arr){
+  return arr.map(v => ({ v, r: Math.random() })).sort((a,b)=>a.r-b.r).map(o=>o.v);
+}
+function go(url){
+  if(!url) return;
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function domainFromUrl(url){
+  try{ return new URL(url).hostname.toLowerCase().replace(/^www\./,""); }
+  catch(e){ return ""; }
+}
+function localLogo(domain){ return `logos/${domain}.png`; }
+function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
+
+function getSeatStatus(seatNo, tier){
+  if (tier === "premium") {
+    if (openPremium.includes(seatNo)) return "OPEN";
+    if (reservedPremium.includes(seatNo)) return "RESERVED";
+    return "LIVE";
+  }
+  if (openStandard.includes(seatNo)) return "OPEN";
+  if (reservedStandard.includes(seatNo)) return "RESERVED";
   return "LIVE";
 }
 
-function createTile(i, tier){
+function trackClickViaImage(brand){
+  try{
+    const url = encodeURIComponent(brand.url);
+    const name = encodeURIComponent(brand.name);
+    const tier = encodeURIComponent(brand.tier || "");
+    const ua = encodeURIComponent(navigator.userAgent.slice(0,120));
+    const img = new Image();
+    img.referrerPolicy = "no-referrer";
+    img.src = `${API_URL}?action=track&url=${url}&name=${name}&tier=${tier}&ua=${ua}&t=${Date.now()}`;
+  }catch(e){}
+}
 
-  const domain = brands[i % brands.length];
-  const status = getStatus(i);
+function fetchTopJSONP(){
+  return new Promise((resolve) => {
+    const cb = "__topcb_" + Math.random().toString(36).slice(2);
+    window[cb] = (data) => {
+      const top = (data && data.ok && Array.isArray(data.top)) ? data.top : [];
+      resolve(top);
+      delete window[cb];
+      script.remove();
+    };
+    const script = document.createElement("script");
+    script.onerror = () => {
+      resolve([]);
+      delete window[cb];
+      script.remove();
+    };
+    script.src = `${API_URL}?action=top7d_jsonp&cb=${cb}&t=${Date.now()}`;
+    document.body.appendChild(script);
+  });
+}
 
-  const tile = document.createElement("div");
+const kingGrid = document.getElementById("kingGrid");
+const kingMeta = document.getElementById("kingMeta");
+const refreshKingBtn = document.getElementById("refreshKingBtn");
 
-  tile.className = tier === "premium"
-    ? "premium-tile"
-    : "standard-tile";
+async function renderKingSeats(){
+  kingGrid.innerHTML = "";
+  kingMeta.textContent = "불러오는 중…";
 
-  if(status === "OPEN"){
-    tile.innerHTML = `
-      <div class="seat-no">${tier[0].toUpperCase()}${i+1}</div>
-      <div class="open-box">
-        OPEN<br>Advertise
-      </div>
-      <div class="status open">OPEN</div>
-    `;
-  } else {
-    tile.innerHTML = `
-      <div class="seat-no">${tier[0].toUpperCase()}${i+1}</div>
-      <img src="${logo(domain)}">
-      <div class="status ${status.toLowerCase()}">${status}</div>
-    `;
-  }
+  const top = await fetchTopJSONP();
+  const byUrl = new Map(brands100.map(b => [b.url, b]));
 
-  tile.onclick = () => {
-    if(status === "OPEN"){
-      location.href = "advertise.html";
-    }else if(status === "RESERVED"){
-      alert("예약 진행중 좌석입니다");
-    }else{
-      window.open("https://" + domain);
+  let list = top.map((x) => {
+    const b = byUrl.get(x.url);
+    return b ? { ...b, clicks: x.count } : { cat:"", name:(x.name||"TOP"), url:x.url, clicks:x.count };
+  });
+
+  if(list.length < 5){
+    const used = new Set(list.map(b=>b.url));
+    const pool = shuffle([...brands100]);
+    for(const b of pool){
+      if(list.length >= 5) break;
+      if(used.has(b.url)) continue;
+      list.push({ ...b, clicks: 0 });
+      used.add(b.url);
     }
   }
 
+  list.slice(0,5).forEach((b, idx)=>{
+    const seatNo = idx + 1;
+    const domain = domainFromUrl(b.url);
+    const logoLocal = domain ? localLogo(domain) : "";
+    const logoAuto  = domain ? autoLogo(domain)  : "";
+
+    const seat = document.createElement("div");
+    seat.className = "king-seat";
+    seat.tabIndex = 0;
+    seat.setAttribute("role","button");
+    seat.innerHTML = `
+      <div class="king-badge">👑 KING ${seatNo}</div>
+      <div class="king-logo">
+        <img src="${escapeHtml(logoLocal)}"
+             alt="${escapeHtml(b.name)} 로고"
+             onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
+      </div>
+      <div class="king-meta">
+        <div class="king-name">${escapeHtml(b.name)}</div>
+        <div class="king-desc">최근 7일 클릭 TOP${seatNo} • ${b.clicks}회</div>
+      </div>
+    `;
+    seat.addEventListener("click", ()=>go(b.url));
+    seat.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") go(b.url); });
+    kingGrid.appendChild(seat);
+  });
+
+  kingMeta.textContent = `업데이트: ${new Date().toLocaleString()}`;
+}
+refreshKingBtn.addEventListener("click", renderKingSeats);
+renderKingSeats();
+
+const premiumBrands = brands100.slice(0, 50);
+const standardBrands = brands100.slice(50, 100);
+
+const premiumSeats = premiumBrands.map((b, idx) => ({
+  ...b,
+  tier:"premium",
+  seatNo:`P${String(idx + 1).padStart(2, "0")}`,
+  status:getSeatStatus(`P${String(idx + 1).padStart(2, "0")}`, "premium"),
+  domain:domainFromUrl(b.url)
+}));
+
+const standardSeats = standardBrands.map((b, idx) => ({
+  ...b,
+  tier:"standard",
+  seatNo:`S${String(idx + 1).padStart(2, "0")}`,
+  status:getSeatStatus(`S${String(idx + 1).padStart(2, "0")}`, "standard"),
+  domain:domainFromUrl(b.url)
+}));
+
+const premiumGrid = document.getElementById("premiumGrid");
+const standardGrid = document.getElementById("standardGrid");
+const countText = document.getElementById("countText");
+const searchInput = document.getElementById("searchInput");
+const clearBtn = document.getElementById("clearBtn");
+const chips = document.getElementById("chips");
+
+let currentCat = "ALL";
+let currentQuery = "";
+const tileRefs = [];
+
+function createTile(b){
+  const tile = document.createElement("div");
+  const sizeClass = b.tier === "premium" ? "premium-tile" : "standard-tile";
+  tile.className = `tile ${b.tier} ${sizeClass}` + (b.status === "OPEN" ? " open-seat" : "");
+  tile.dataset.cat = b.cat;
+  tile.dataset.name = (b.name || "").toLowerCase();
+  tile.dataset.status = b.status;
+
+  const logoLocal = b.domain ? localLogo(b.domain) : "";
+  const logoAuto  = b.domain ? autoLogo(b.domain)  : "";
+
+  if (b.status === "OPEN") {
+    tile.innerHTML = `
+      <div class="seat-no">${escapeHtml(b.seatNo)}</div>
+      <div class="open-box">
+        <strong>OPEN</strong>
+        <span>Advertise Here</span>
+      </div>
+      <div class="seat-status open">OPEN</div>
+    `;
+  } else {
+    tile.innerHTML = `
+      <div class="seat-no">${escapeHtml(b.seatNo)}</div>
+      <div class="logo-only-box">
+        <img src="${escapeHtml(logoLocal)}"
+             alt="${escapeHtml(b.name)} 로고"
+             onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
+      </div>
+      <div class="seat-status ${b.status.toLowerCase()}">${escapeHtml(b.status)}</div>
+    `;
+  }
+
+  const clickHandler = () => {
+    if (b.status === "OPEN") {
+      window.location.href = "advertise.html";
+      return;
+    }
+    if (b.status === "RESERVED") {
+      alert(`${b.seatNo} 좌석은 예약 진행중입니다.`);
+      return;
+    }
+    trackClickViaImage(b);
+    setTimeout(renderKingSeats, 400);
+    go(b.url);
+  };
+
+  tile.addEventListener("click", clickHandler);
+  tile.addEventListener("keydown", (e)=>{ if(e.key==="Enter" || e.key===" ") clickHandler(); });
+  tile.tabIndex = 0;
+  tile.setAttribute("role","button");
+
+  tileRefs.push(tile);
   return tile;
 }
 
-/* PREMIUM 50 */
-for(let i=0;i<50;i++){
-  document.getElementById("premiumGrid")
-    .appendChild(createTile(i,"premium"));
+premiumSeats.forEach(b => premiumGrid.appendChild(createTile(b)));
+standardSeats.forEach(b => standardGrid.appendChild(createTile(b)));
+
+function applyFilter(){
+  const q = (currentQuery || "").trim().toLowerCase();
+  let shown = 0;
+
+  tileRefs.forEach(tile => {
+    const catOk = (currentCat === "ALL") || (tile.dataset.cat === currentCat);
+    const nameOk = !q || tile.dataset.name.includes(q);
+    const ok = catOk && nameOk;
+    tile.classList.toggle("filtered-out", !ok);
+    if(ok) shown++;
+  });
+
+  countText.textContent = `표시 ${shown} / ${tileRefs.length}`;
 }
 
-/* STANDARD 50 */
-for(let i=0;i<50;i++){
-  document.getElementById("standardGrid")
-    .appendChild(createTile(i,"standard"));
-}
+chips.addEventListener("click", (e) => {
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  currentCat = chip.dataset.cat || "ALL";
+  applyFilter();
+});
 
+searchInput.addEventListener("input", () => {
+  currentQuery = searchInput.value;
+  applyFilter();
+});
+
+clearBtn.addEventListener("click", () => {
+  currentCat = "ALL";
+  currentQuery = "";
+  searchInput.value = "";
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  document.querySelector('.chip[data-cat="ALL"]').classList.add("active");
+  applyFilter();
+});
+
+applyFilter();
 </script>
 </body>
 </html>
