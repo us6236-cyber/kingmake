@@ -328,38 +328,18 @@
     color:var(--muted);
   }
 
-  /* Premium 유지 */
   .premium-grid{
     display:grid;
     gap:12px;
     padding:16px;
     grid-template-columns:repeat(10, minmax(0, 1fr));
   }
-  .premium-tile{
-    min-height:140px;
-  }
-  .premium-tile .logo-only-box img{
-    width:100px;
-    height:100px;
-  }
 
-  /* Standard 조금 작게 */
   .standard-grid{
     display:grid;
-    gap:8px;
-    padding:14px;
+    gap:6px;
+    padding:12px;
     grid-template-columns:repeat(10, minmax(0, 1fr));
-  }
-  .standard-tile{
-    min-height:110px;
-    border-radius:12px;
-  }
-  .standard-tile .logo-only-box{
-    padding:18px 8px 8px;
-  }
-  .standard-tile .logo-only-box img{
-    width:72px;
-    height:72px;
   }
 
   .tile{
@@ -382,6 +362,7 @@
   }
   .tile.standard{
     border-color:rgba(255,255,255,0.30);
+    border-radius:10px;
   }
   .tile.filtered-out{
     opacity:0.18;
@@ -392,32 +373,65 @@
     background:rgba(255,255,255,0.02);
   }
 
+  /* 프리미엄 20% 축소 */
+  .premium-tile{
+    min-height:112px;
+  }
+  .premium-tile .logo-only-box{
+    padding:18px 8px 8px;
+  }
+  .premium-tile .logo-only-box img{
+    width:80px;
+    height:80px;
+  }
+
+  /* 스탠다드 50% 축소 */
+  .standard-tile{
+    min-height:55px;
+  }
+  .standard-tile .logo-only-box{
+    padding:12px 4px 4px;
+  }
+  .standard-tile .logo-only-box img{
+    width:36px;
+    height:36px;
+  }
+
   .seat-no{
     position:absolute;
-    top:8px;
-    left:8px;
-    min-width:42px;
-    padding:5px 8px;
+    top:6px;
+    left:6px;
+    min-width:34px;
+    padding:3px 6px;
     border-radius:999px;
-    font-size:11px;
+    font-size:9px;
     font-weight:800;
-    letter-spacing:0.4px;
+    letter-spacing:0.3px;
     background:rgba(0,0,0,0.42);
     color:#fff;
     border:1px solid rgba(255,255,255,0.16);
     z-index:2;
   }
+
+  .standard-tile .seat-no{
+    top:4px;
+    left:4px;
+    min-width:28px;
+    padding:2px 5px;
+    font-size:8px;
+  }
+
   .seat-status{
     position:absolute;
-    right:8px;
-    bottom:8px;
-    min-width:74px;
-    padding:5px 8px;
+    right:6px;
+    bottom:6px;
+    min-width:62px;
+    padding:4px 6px;
     border-radius:999px;
-    font-size:11px;
+    font-size:9px;
     font-weight:800;
     text-align:center;
-    letter-spacing:0.3px;
+    letter-spacing:0.2px;
     z-index:2;
     background:rgba(0,0,0,0.45);
     border:1px solid rgba(255,255,255,0.16);
@@ -435,13 +449,20 @@
     border-color:rgba(142,142,147,0.45);
   }
 
+  .standard-tile .seat-status{
+    right:4px;
+    bottom:4px;
+    min-width:44px;
+    padding:2px 5px;
+    font-size:7px;
+  }
+
   .logo-only-box{
     width:100%;
     height:100%;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:20px 10px 10px;
   }
 
   .open-box{
@@ -451,18 +472,25 @@
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:10px;
+    gap:4px;
     color:rgba(255,255,255,0.75);
     text-align:center;
-    padding:18px 10px 10px;
+    padding:10px 6px 6px;
   }
   .open-box strong{
-    font-size:14px;
-    letter-spacing:0.4px;
+    font-size:11px;
+    letter-spacing:0.3px;
   }
   .open-box span{
-    font-size:11px;
+    font-size:8px;
     color:var(--muted);
+  }
+
+  .standard-tile .open-box strong{
+    font-size:8px;
+  }
+  .standard-tile .open-box span{
+    font-size:6px;
   }
 
   @media (max-width:1200px){
@@ -475,21 +503,6 @@
     .premium-grid,
     .standard-grid{
       grid-template-columns:repeat(3, minmax(0, 1fr));
-      padding:12px;
-    }
-    .premium-grid{gap:8px;}
-    .standard-grid{gap:6px;}
-
-    .premium-tile{min-height:120px;}
-    .standard-tile{min-height:96px;}
-
-    .premium-tile .logo-only-box img{
-      width:78px;
-      height:78px;
-    }
-    .standard-tile .logo-only-box img{
-      width:58px;
-      height:58px;
     }
   }
 </style>
@@ -841,8 +854,8 @@ let currentQuery = "";
 const tileRefs = [];
 
 function createTile(b){
-  const tile = document.createElement("div");
   const sizeClass = b.tier === "premium" ? "premium-tile" : "standard-tile";
+  const tile = document.createElement("div");
   tile.className = `tile ${b.tier} ${sizeClass}` + (b.status === "OPEN" ? " open-seat" : "");
   tile.dataset.cat = b.cat;
   tile.dataset.name = (b.name || "").toLowerCase();
