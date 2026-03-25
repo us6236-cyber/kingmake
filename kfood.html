@@ -35,7 +35,7 @@
     border-bottom:1px solid var(--line);
   }
   .top-inner{
-    max-width:1800px;
+    max-width:1900px;
     margin:auto;
     padding:14px 18px;
     display:flex;
@@ -62,7 +62,7 @@
   }
 
   .wrap{
-    max-width:1800px;
+    max-width:1900px;
     margin:0 auto;
     padding:22px 18px 70px;
     text-align:center;
@@ -80,7 +80,7 @@
   }
 
   .controls{
-    max-width:1740px;
+    max-width:1840px;
     margin:18px auto 0;
     display:flex;
     gap:10px;
@@ -157,7 +157,7 @@
 
   /* KING */
   .king-zone{
-    max-width:1740px;
+    max-width:1840px;
     margin:18px auto 0;
     border:1px solid rgba(212,175,55,0.35);
     border-radius:18px;
@@ -203,19 +203,12 @@
     background:rgba(255,255,255,0.06);
     border-radius:14px;
     overflow:hidden;
-    cursor:pointer;
-    transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
     min-height:110px;
     display:flex;
     align-items:center;
+    justify-content:center;
     padding:16px;
     gap:14px;
-  }
-  .king-seat:hover{
-    transform:translateY(-2px);
-    border-color:rgba(212,175,55,0.75);
-    background:rgba(255,255,255,0.08);
-    box-shadow:0 0 22px rgba(212,175,55,0.25);
   }
   .king-badge{
     position:absolute;
@@ -228,40 +221,12 @@
     border-radius:999px;
     border:1px solid rgba(212,175,55,0.40);
     background:rgba(0,0,0,0.30);
-    backdrop-filter:blur(8px);
   }
-  .king-logo{
-    width:120px;
-    height:70px;
-    border-radius:14px;
-    border:1px solid rgba(212,175,55,0.35);
-    background:rgba(255,255,255,0.92);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    flex:0 0 auto;
-  }
-  .king-logo img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    padding:12px;
-  }
-  .king-name{
-    font-weight:900;
-    font-size:18px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .king-desc{
-    margin-top:6px;
-    font-size:12px;
+  .king-empty{
+    text-align:center;
     color:var(--muted);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    font-size:13px;
+    line-height:1.6;
   }
 
   .legend{
@@ -295,9 +260,8 @@
   .dot.reserved{background:var(--reserved)}
   .dot.open{background:var(--open)}
 
-  /* BOARD */
   .board-wrap{
-    max-width:1740px;
+    max-width:1840px;
     margin:18px auto 0;
     display:grid;
     gap:18px;
@@ -334,7 +298,6 @@
     padding:16px;
     grid-template-columns:repeat(10, minmax(0, 1fr));
   }
-
   .standard-grid{
     display:grid;
     gap:6px;
@@ -373,28 +336,11 @@
     background:rgba(255,255,255,0.02);
   }
 
-  /* 프리미엄 20% 축소 */
   .premium-tile{
     min-height:112px;
   }
-  .premium-tile .logo-only-box{
-    padding:18px 8px 8px;
-  }
-  .premium-tile .logo-only-box img{
-    width:80px;
-    height:80px;
-  }
-
-  /* 스탠다드 50% 축소 */
   .standard-tile{
     min-height:55px;
-  }
-  .standard-tile .logo-only-box{
-    padding:12px 4px 4px;
-  }
-  .standard-tile .logo-only-box img{
-    width:36px;
-    height:36px;
   }
 
   .seat-no{
@@ -412,7 +358,6 @@
     border:1px solid rgba(255,255,255,0.16);
     z-index:2;
   }
-
   .standard-tile .seat-no{
     top:4px;
     left:4px;
@@ -448,7 +393,6 @@
     color:#d1d1d6;
     border-color:rgba(142,142,147,0.45);
   }
-
   .standard-tile .seat-status{
     right:4px;
     bottom:4px;
@@ -463,6 +407,22 @@
     display:flex;
     align-items:center;
     justify-content:center;
+  }
+  .premium-tile .logo-only-box{
+    padding:18px 8px 8px;
+  }
+  .premium-tile .logo-only-box img{
+    width:80px;
+    height:80px;
+    object-fit:contain;
+  }
+  .standard-tile .logo-only-box{
+    padding:12px 4px 4px;
+  }
+  .standard-tile .logo-only-box img{
+    width:36px;
+    height:36px;
+    object-fit:contain;
   }
 
   .open-box{
@@ -485,7 +445,6 @@
     font-size:8px;
     color:var(--muted);
   }
-
   .standard-tile .open-box strong{
     font-size:8px;
   }
@@ -515,7 +474,7 @@
       <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
       <b>KING MAKE</b>
     </a>
-    <div class="page-title">K-FOOD • FIXED SEATS / KING TOP5</div>
+    <div class="page-title">K-FOOD • PREMIUM 100 / STANDARD 100</div>
   </div>
 </div>
 
@@ -523,34 +482,30 @@
   <div class="hero">
     <h1>🍗 K-FOOD Brand Seats</h1>
     <p>
-      KING SEAT 5개 = 최근 7일 TOP5<br>
-      Premium 50석 / Standard 50석 = 고정 좌석 운영
+      KING SEAT 5개 = 추후 TOP5 연동 가능<br>
+      Premium 100석 / Standard 100석 = 광고 등록 요청 시 순차 등록
     </p>
   </div>
 
   <div class="controls">
     <div class="chips" id="chips">
-      <span class="chip active" data-cat="ALL">전체</span>
-      <span class="chip" data-cat="치킨">치킨</span>
-      <span class="chip" data-cat="카페">카페</span>
-      <span class="chip" data-cat="버거">버거</span>
-      <span class="chip" data-cat="분식">분식</span>
-      <span class="chip" data-cat="한식">한식</span>
-      <span class="chip" data-cat="중식">중식</span>
+      <span class="chip active" data-filter="ALL">전체</span>
+      <span class="chip" data-filter="LIVE">LIVE</span>
+      <span class="chip" data-filter="RESERVED">RESERVED</span>
+      <span class="chip" data-filter="OPEN">OPEN</span>
       <span class="count" id="countText">-</span>
     </div>
 
     <div class="search">
-      <input id="searchInput" type="text" placeholder="브랜드 검색" autocomplete="off" />
+      <input id="searchInput" type="text" placeholder="좌석번호 검색 (예: P01, S12)" autocomplete="off" />
       <button class="btn" id="clearBtn" type="button">초기화</button>
-      <button class="btn" id="refreshKingBtn" type="button">KING 갱신</button>
     </div>
   </div>
 
   <section class="king-zone">
     <div class="king-title">
-      <b>👑 KING SEAT (최근 7일 TOP5)</b>
-      <span id="kingMeta">불러오는 중…</span>
+      <b>👑 KING SEAT</b>
+      <span>현재는 광고 등록 후 TOP5 연동 예정</span>
     </div>
     <div class="king-grid" id="kingGrid"></div>
   </section>
@@ -568,7 +523,7 @@
     <section class="seat-section">
       <div class="seat-section-head">
         <b>⭐ Premium Seats</b>
-        <span>P01 ~ P50</span>
+        <span>P001 ~ P100</span>
       </div>
       <div class="premium-grid" id="premiumGrid"></div>
     </section>
@@ -576,7 +531,7 @@
     <section class="seat-section">
       <div class="seat-section-head">
         <b>⬜ Standard Seats</b>
-        <span>S01 ~ S50</span>
+        <span>S001 ~ S100</span>
       </div>
       <div class="standard-grid" id="standardGrid"></div>
     </section>
@@ -584,263 +539,44 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyK0LXIrt_2i9z7HiJeErrMDrXch8L7I41lmY2eQBOt5ysjbxPtigH4X96C80QFQT8-/exec";
+/* 좌석 상태 샘플
+   실제 광고 요청이 오면 아래 배열에 seatNo를 추가해서 관리하면 됩니다.
+*/
+const premiumLive = [];
+const premiumReserved = ["P007", "P018"];
+const premiumOpen = []; // 비워둬도 기본 OPEN 처리
 
-const brands100 = [
-  { cat:"치킨", name:"BHC", url:"https://www.bhc.co.kr/" },
-  { cat:"치킨", name:"BBQ", url:"https://bbq.co.kr/" },
-  { cat:"치킨", name:"교촌치킨", url:"https://www.kyochon.com/" },
-  { cat:"치킨", name:"굽네치킨", url:"https://www.goobne.co.kr/" },
-  { cat:"치킨", name:"네네치킨", url:"https://www.nenechicken.com/" },
-  { cat:"치킨", name:"푸라닭", url:"https://puradakchicken.com/" },
-  { cat:"치킨", name:"노랑통닭", url:"https://www.norangtongdak.co.kr/" },
-  { cat:"치킨", name:"멕시카나", url:"https://www.mexicana.co.kr/" },
-  { cat:"치킨", name:"페리카나", url:"https://www.pelicana.co.kr/" },
-  { cat:"치킨", name:"처갓집양념치킨", url:"https://www.cheogajip.co.kr/" },
-  { cat:"치킨", name:"자담치킨", url:"https://www.ejadam.co.kr/" },
-  { cat:"치킨", name:"치킨플러스", url:"https://chickenplus.co.kr/" },
-  { cat:"치킨", name:"60계치킨", url:"https://www.60chicken.co.kr/" },
-  { cat:"치킨", name:"호식이두마리치킨", url:"https://www.9922.co.kr/" },
-  { cat:"치킨", name:"또래오래", url:"https://www.toreore.com/" },
-  { cat:"치킨", name:"지코바", url:"https://www.zicoba.co.kr/" },
-  { cat:"치킨", name:"부어치킨", url:"https://www.boor.co.kr/" },
-  { cat:"치킨", name:"깐부치킨", url:"https://www.kkanbu.co.kr/" },
-  { cat:"치킨", name:"누구나홀딱반한닭", url:"https://www.whodak.com/" },
-  { cat:"치킨", name:"훌랄라참숯바베큐치킨", url:"https://www.hoolala.co.kr/" },
+const standardLive = [];
+const standardReserved = ["S011", "S025"];
+const standardOpen = []; // 비워둬도 기본 OPEN 처리
 
-  { cat:"카페", name:"스타벅스", url:"https://www.starbucks.co.kr/" },
-  { cat:"카페", name:"이디야", url:"https://www.ediya.com/" },
-  { cat:"카페", name:"메가커피", url:"https://www.mega-mgccoffee.com/" },
-  { cat:"카페", name:"컴포즈커피", url:"https://composecoffee.com/" },
-  { cat:"카페", name:"빽다방", url:"https://www.paikdabang.com/" },
-  { cat:"카페", name:"투썸플레이스", url:"https://www.twosome.co.kr/" },
-  { cat:"카페", name:"할리스", url:"https://www.hollys.co.kr/" },
-  { cat:"카페", name:"탐앤탐스", url:"https://www.tomntoms.com/" },
-  { cat:"카페", name:"카페베네", url:"https://www.caffebene.co.kr/" },
-  { cat:"카페", name:"공차", url:"https://www.gong-cha.co.kr/" },
-  { cat:"카페", name:"더벤티", url:"https://www.theventi.co.kr/" },
-  { cat:"카페", name:"폴바셋", url:"https://www.baristapaulbassett.co.kr/" },
-  { cat:"카페", name:"커피빈", url:"https://www.coffeebeankorea.com/" },
-  { cat:"카페", name:"달콤커피", url:"https://www.dalkomm.com/" },
-  { cat:"카페", name:"블루보틀", url:"https://bluebottlecoffee.com/kr/" },
-  { cat:"카페", name:"엔제리너스", url:"https://www.lotteeatz.com/" },
-  { cat:"카페", name:"드롭탑", url:"https://www.droptop.co.kr/" },
-  { cat:"카페", name:"파스쿠찌", url:"https://www.caffe-pascucci.co.kr/" },
-  { cat:"카페", name:"아티제", url:"https://www.cafeartisee.com/" },
-  { cat:"카페", name:"할리스몰", url:"https://www.hollysmall.com/" },
-
-  { cat:"버거", name:"맥도날드", url:"https://www.mcdonalds.co.kr/" },
-  { cat:"버거", name:"버거킹", url:"https://www.burgerking.co.kr/" },
-  { cat:"버거", name:"KFC", url:"https://www.kfckorea.com/" },
-  { cat:"버거", name:"써브웨이", url:"https://www.subway.co.kr/" },
-  { cat:"버거", name:"롯데리아", url:"https://www.lotteeatz.com/" },
-  { cat:"버거", name:"맘스터치", url:"https://www.momstouch.co.kr/" },
-  { cat:"버거", name:"쉐이크쉑", url:"https://www.shakeshack.kr/" },
-  { cat:"버거", name:"노브랜드버거", url:"https://www.nobrandburger.com/" },
-  { cat:"버거", name:"프랭크버거", url:"https://www.frankburger.co.kr/" },
-  { cat:"버거", name:"롯데잇츠", url:"https://www.lotteeatz.com/" },
-
-  { cat:"분식", name:"엽기떡볶이", url:"https://www.yupdduk.com/" },
-  { cat:"분식", name:"신전떡볶이", url:"https://sinjeon.co.kr/" },
-  { cat:"분식", name:"죠스떡볶이", url:"https://www.jawsfood.co.kr/" },
-  { cat:"분식", name:"청년다방", url:"https://www.youngdabang.com/" },
-  { cat:"분식", name:"명랑핫도그", url:"https://myungranghotdog.com/" },
-  { cat:"분식", name:"김가네", url:"https://www.gimgane.co.kr/" },
-  { cat:"분식", name:"김밥천국", url:"https://www.gimbapcheonguk.co.kr/" },
-  { cat:"분식", name:"고봉민김밥", url:"https://www.gbmgimbap.com/" },
-  { cat:"분식", name:"국대떡볶이", url:"https://www.kookdae.co.kr/" },
-  { cat:"분식", name:"바르다김선생", url:"https://www.bareun.co.kr/" },
-  { cat:"분식", name:"봉구스밥버거", url:"https://www.bongousse.co.kr/" },
-  { cat:"분식", name:"한솥도시락", url:"https://www.hsd.co.kr/" },
-  { cat:"분식", name:"삼첩분식", url:"https://samcheop.com/" },
-  { cat:"분식", name:"두끼떡볶이", url:"https://www.dookki.co.kr/" },
-  { cat:"분식", name:"뚜레쥬르", url:"https://www.tlj.co.kr/" },
-  { cat:"분식", name:"파리바게뜨", url:"https://www.paris.co.kr/" },
-  { cat:"분식", name:"크리스피크림", url:"https://www.krispykreme.co.kr/" },
-  { cat:"분식", name:"던킨", url:"https://www.dunkindonuts.co.kr/" },
-  { cat:"분식", name:"배스킨라빈스", url:"https://www.baskinrobbins.co.kr/" },
-  { cat:"분식", name:"요거프레소", url:"https://www.yogerpresso.co.kr/" },
-
-  { cat:"한식", name:"본죽", url:"https://www.bonif.co.kr/" },
-  { cat:"한식", name:"원할머니보쌈", url:"https://www.bossam.co.kr/" },
-  { cat:"한식", name:"명륜진사갈비", url:"https://www.mrg.kr/" },
-  { cat:"한식", name:"놀부", url:"https://www.nolboo.co.kr/" },
-  { cat:"한식", name:"채선당", url:"https://www.chae-seon-dang.com/" },
-  { cat:"한식", name:"더본코리아", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"새마을식당", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"한신포차", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"역전우동0410", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"인생설렁탕", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"연돈볼카츠", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"이차돌", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"미정국수0410", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"리춘시장", url:"https://www.theborn.co.kr/" },
-  { cat:"한식", name:"본도시락", url:"https://www.bondosirak.com/" },
-  { cat:"한식", name:"본죽&비빔밥", url:"https://www.bonif.co.kr/" },
-  { cat:"한식", name:"한솥", url:"https://www.hsd.co.kr/" },
-  { cat:"한식", name:"고봉삼계탕", url:"https://www.gobong.co.kr/" },
-  { cat:"한식", name:"청기와타운", url:"https://www.cheonggiwa.co.kr/" },
-  { cat:"한식", name:"본아이에프", url:"https://www.bonif.co.kr/" },
-
-  { cat:"중식", name:"홍콩반점0410", url:"https://www.theborn.co.kr/" },
-  { cat:"중식", name:"탕화쿵푸마라탕", url:"https://www.tanghuokungfu.co.kr/" },
-  { cat:"중식", name:"라화쿵부마라탕", url:"https://www.lahuo.co.kr/" },
-  { cat:"중식", name:"짬뽕지존", url:"https://www.zzambbongjijon.com/" },
-  { cat:"중식", name:"만강홍", url:"https://www.mankanghong.co.kr/" },
-  { cat:"중식", name:"홍짜장", url:"https://www.hongjajang.com/" },
-  { cat:"중식", name:"교동짬뽕", url:"https://www.gyodongjjambbong.com/" },
-  { cat:"중식", name:"리춘시장(중화)", url:"https://www.theborn.co.kr/" },
-  { cat:"중식", name:"더본(중식)", url:"https://www.theborn.co.kr/" },
-  { cat:"중식", name:"홍콩반점(브랜드)", url:"https://www.theborn.co.kr/" }
-];
-
-const reservedPremium = ["P07","P18","P29","P41","P50"];
-const openPremium = ["P03","P10","P16","P22","P33","P44"];
-const reservedStandard = ["S05","S17","S28","S39"];
-const openStandard = ["S02","S11","S20","S31","S42","S49"];
-
-function shuffle(arr){
-  return arr.map(v => ({ v, r: Math.random() })).sort((a,b)=>a.r-b.r).map(o=>o.v);
+function makeSeatNo(prefix, n){
+  return `${prefix}${String(n).padStart(3, "0")}`;
 }
-function go(url){
-  if(!url) return;
-  window.open(url, "_blank", "noopener,noreferrer");
-}
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-function domainFromUrl(url){
-  try{ return new URL(url).hostname.toLowerCase().replace(/^www\./,""); }
-  catch(e){ return ""; }
-}
-function localLogo(domain){ return `logos/${domain}.png`; }
-function autoLogo(domain){ return `https://logo.clearbit.com/${domain}`; }
 
 function getSeatStatus(seatNo, tier){
   if (tier === "premium") {
-    if (openPremium.includes(seatNo)) return "OPEN";
-    if (reservedPremium.includes(seatNo)) return "RESERVED";
-    return "LIVE";
+    if (premiumLive.includes(seatNo)) return "LIVE";
+    if (premiumReserved.includes(seatNo)) return "RESERVED";
+    return "OPEN";
   }
-  if (openStandard.includes(seatNo)) return "OPEN";
-  if (reservedStandard.includes(seatNo)) return "RESERVED";
-  return "LIVE";
-}
-
-function trackClickViaImage(brand){
-  try{
-    const url = encodeURIComponent(brand.url);
-    const name = encodeURIComponent(brand.name);
-    const tier = encodeURIComponent(brand.tier || "");
-    const ua = encodeURIComponent(navigator.userAgent.slice(0,120));
-    const img = new Image();
-    img.referrerPolicy = "no-referrer";
-    img.src = `${API_URL}?action=track&url=${url}&name=${name}&tier=${tier}&ua=${ua}&t=${Date.now()}`;
-  }catch(e){}
-}
-
-function fetchTopJSONP(){
-  return new Promise((resolve) => {
-    const cb = "__topcb_" + Math.random().toString(36).slice(2);
-    window[cb] = (data) => {
-      const top = (data && data.ok && Array.isArray(data.top)) ? data.top : [];
-      resolve(top);
-      delete window[cb];
-      script.remove();
-    };
-    const script = document.createElement("script");
-    script.onerror = () => {
-      resolve([]);
-      delete window[cb];
-      script.remove();
-    };
-    script.src = `${API_URL}?action=top7d_jsonp&cb=${cb}&t=${Date.now()}`;
-    document.body.appendChild(script);
-  });
+  if (standardLive.includes(seatNo)) return "LIVE";
+  if (standardReserved.includes(seatNo)) return "RESERVED";
+  return "OPEN";
 }
 
 const kingGrid = document.getElementById("kingGrid");
-const kingMeta = document.getElementById("kingMeta");
-const refreshKingBtn = document.getElementById("refreshKingBtn");
-
-async function renderKingSeats(){
-  kingGrid.innerHTML = "";
-  kingMeta.textContent = "불러오는 중…";
-
-  const top = await fetchTopJSONP();
-  const byUrl = new Map(brands100.map(b => [b.url, b]));
-
-  let list = top.map((x) => {
-    const b = byUrl.get(x.url);
-    return b ? { ...b, clicks: x.count } : { cat:"", name:(x.name||"TOP"), url:x.url, clicks:x.count };
-  });
-
-  if(list.length < 5){
-    const used = new Set(list.map(b=>b.url));
-    const pool = shuffle([...brands100]);
-    for(const b of pool){
-      if(list.length >= 5) break;
-      if(used.has(b.url)) continue;
-      list.push({ ...b, clicks: 0 });
-      used.add(b.url);
-    }
-  }
-
-  list.slice(0,5).forEach((b, idx)=>{
-    const seatNo = idx + 1;
-    const domain = domainFromUrl(b.url);
-    const logoLocal = domain ? localLogo(domain) : "";
-    const logoAuto  = domain ? autoLogo(domain)  : "";
-
-    const seat = document.createElement("div");
-    seat.className = "king-seat";
-    seat.tabIndex = 0;
-    seat.setAttribute("role","button");
-    seat.innerHTML = `
-      <div class="king-badge">👑 KING ${seatNo}</div>
-      <div class="king-logo">
-        <img src="${escapeHtml(logoLocal)}"
-             alt="${escapeHtml(b.name)} 로고"
-             onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
-      </div>
-      <div class="king-meta">
-        <div class="king-name">${escapeHtml(b.name)}</div>
-        <div class="king-desc">최근 7일 클릭 TOP${seatNo} • ${b.clicks}회</div>
-      </div>
-    `;
-    seat.addEventListener("click", ()=>go(b.url));
-    seat.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") go(b.url); });
-    kingGrid.appendChild(seat);
-  });
-
-  kingMeta.textContent = `업데이트: ${new Date().toLocaleString()}`;
+for(let i=1;i<=5;i++){
+  const seat = document.createElement("div");
+  seat.className = "king-seat";
+  seat.innerHTML = `
+    <div class="king-badge">👑 KING ${i}</div>
+    <div class="king-empty">
+      광고 등록 후<br>자동 TOP${i} 연동
+    </div>
+  `;
+  kingGrid.appendChild(seat);
 }
-refreshKingBtn.addEventListener("click", renderKingSeats);
-renderKingSeats();
-
-const premiumBrands = brands100.slice(0, 50);
-const standardBrands = brands100.slice(50, 100);
-
-const premiumSeats = premiumBrands.map((b, idx) => ({
-  ...b,
-  tier:"premium",
-  seatNo:`P${String(idx + 1).padStart(2, "0")}`,
-  status:getSeatStatus(`P${String(idx + 1).padStart(2, "0")}`, "premium"),
-  domain:domainFromUrl(b.url)
-}));
-
-const standardSeats = standardBrands.map((b, idx) => ({
-  ...b,
-  tier:"standard",
-  seatNo:`S${String(idx + 1).padStart(2, "0")}`,
-  status:getSeatStatus(`S${String(idx + 1).padStart(2, "0")}`, "standard"),
-  domain:domainFromUrl(b.url)
-}));
 
 const premiumGrid = document.getElementById("premiumGrid");
 const standardGrid = document.getElementById("standardGrid");
@@ -849,58 +585,59 @@ const searchInput = document.getElementById("searchInput");
 const clearBtn = document.getElementById("clearBtn");
 const chips = document.getElementById("chips");
 
-let currentCat = "ALL";
+let currentFilter = "ALL";
 let currentQuery = "";
 const tileRefs = [];
 
-function createTile(b){
-  const sizeClass = b.tier === "premium" ? "premium-tile" : "standard-tile";
+function createTile(seatNo, tier){
+  const status = getSeatStatus(seatNo, tier);
+  const sizeClass = tier === "premium" ? "premium-tile" : "standard-tile";
+
   const tile = document.createElement("div");
-  tile.className = `tile ${b.tier} ${sizeClass}` + (b.status === "OPEN" ? " open-seat" : "");
-  tile.dataset.cat = b.cat;
-  tile.dataset.name = (b.name || "").toLowerCase();
-  tile.dataset.status = b.status;
+  tile.className = `tile ${tier} ${sizeClass}` + (status === "OPEN" ? " open-seat" : "");
+  tile.dataset.seat = seatNo.toLowerCase();
+  tile.dataset.status = status;
 
-  const logoLocal = b.domain ? localLogo(b.domain) : "";
-  const logoAuto  = b.domain ? autoLogo(b.domain)  : "";
-
-  if (b.status === "OPEN") {
+  if (status === "OPEN") {
     tile.innerHTML = `
-      <div class="seat-no">${escapeHtml(b.seatNo)}</div>
+      <div class="seat-no">${seatNo}</div>
       <div class="open-box">
         <strong>OPEN</strong>
         <span>Advertise Here</span>
       </div>
       <div class="seat-status open">OPEN</div>
     `;
+  } else if (status === "RESERVED") {
+    tile.innerHTML = `
+      <div class="seat-no">${seatNo}</div>
+      <div class="open-box">
+        <strong>RESERVED</strong>
+        <span>예약 진행중</span>
+      </div>
+      <div class="seat-status reserved">RESERVED</div>
+    `;
   } else {
     tile.innerHTML = `
-      <div class="seat-no">${escapeHtml(b.seatNo)}</div>
+      <div class="seat-no">${seatNo}</div>
       <div class="logo-only-box">
-        <img src="${escapeHtml(logoLocal)}"
-             alt="${escapeHtml(b.name)} 로고"
-             onerror="this.onerror=null; this.src='${escapeHtml(logoAuto)}';">
+        <img src="images/logo.png" alt="Brand Logo">
       </div>
-      <div class="seat-status ${b.status.toLowerCase()}">${escapeHtml(b.status)}</div>
+      <div class="seat-status live">LIVE</div>
     `;
   }
 
-  const clickHandler = () => {
-    if (b.status === "OPEN") {
+  tile.addEventListener("click", () => {
+    if (status === "OPEN") {
       window.location.href = "advertise.html";
       return;
     }
-    if (b.status === "RESERVED") {
-      alert(`${b.seatNo} 좌석은 예약 진행중입니다.`);
+    if (status === "RESERVED") {
+      alert(`${seatNo} 좌석은 예약 진행중입니다.`);
       return;
     }
-    trackClickViaImage(b);
-    setTimeout(renderKingSeats, 400);
-    go(b.url);
-  };
+    alert(`${seatNo} 좌석은 LIVE 상태입니다. 추후 브랜드 링크 연결 예정입니다.`);
+  });
 
-  tile.addEventListener("click", clickHandler);
-  tile.addEventListener("keydown", (e)=>{ if(e.key==="Enter" || e.key===" ") clickHandler(); });
   tile.tabIndex = 0;
   tile.setAttribute("role","button");
 
@@ -908,19 +645,26 @@ function createTile(b){
   return tile;
 }
 
-premiumSeats.forEach(b => premiumGrid.appendChild(createTile(b)));
-standardSeats.forEach(b => standardGrid.appendChild(createTile(b)));
+/* Premium 100 */
+for(let i=1;i<=100;i++){
+  premiumGrid.appendChild(createTile(makeSeatNo("P", i), "premium"));
+}
+
+/* Standard 100 */
+for(let i=1;i<=100;i++){
+  standardGrid.appendChild(createTile(makeSeatNo("S", i), "standard"));
+}
 
 function applyFilter(){
-  const q = (currentQuery || "").trim().toLowerCase();
+  const q = currentQuery.trim().toLowerCase();
   let shown = 0;
 
   tileRefs.forEach(tile => {
-    const catOk = (currentCat === "ALL") || (tile.dataset.cat === currentCat);
-    const nameOk = !q || tile.dataset.name.includes(q);
-    const ok = catOk && nameOk;
+    const filterOk = (currentFilter === "ALL") || (tile.dataset.status === currentFilter);
+    const queryOk = !q || tile.dataset.seat.includes(q);
+    const ok = filterOk && queryOk;
     tile.classList.toggle("filtered-out", !ok);
-    if(ok) shown++;
+    if (ok) shown++;
   });
 
   countText.textContent = `표시 ${shown} / ${tileRefs.length}`;
@@ -929,9 +673,10 @@ function applyFilter(){
 chips.addEventListener("click", (e) => {
   const chip = e.target.closest(".chip");
   if(!chip) return;
+
   document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
   chip.classList.add("active");
-  currentCat = chip.dataset.cat || "ALL";
+  currentFilter = chip.dataset.filter || "ALL";
   applyFilter();
 });
 
@@ -941,11 +686,11 @@ searchInput.addEventListener("input", () => {
 });
 
 clearBtn.addEventListener("click", () => {
-  currentCat = "ALL";
+  currentFilter = "ALL";
   currentQuery = "";
   searchInput.value = "";
   document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-  document.querySelector('.chip[data-cat="ALL"]').classList.add("active");
+  document.querySelector('.chip[data-filter="ALL"]').classList.add("active");
   applyFilter();
 });
 
