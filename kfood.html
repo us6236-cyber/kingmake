@@ -542,13 +542,22 @@
 /* 좌석 상태 샘플
    실제 광고 요청이 오면 아래 배열에 seatNo를 추가해서 관리하면 됩니다.
 */
-const premiumLive = [];
+const premiumLive = [P001];
 const premiumReserved = ["P007", "P018"];
 const premiumOpen = []; // 비워둬도 기본 OPEN 처리
 
 const standardLive = [];
 const standardReserved = ["S011", "S025"];
 const standardOpen = []; // 비워둬도 기본 OPEN 처리
+
+const liveAds = {
+  "P001": {
+    name: "BHC",
+    category: "치킨",
+    url: "https://www.bhc.co.kr/",
+    logo: "logos/bhc.co.kr.png"
+  }
+};    
 
 function makeSeatNo(prefix, n){
   return `${prefix}${String(n).padStart(3, "0")}`;
