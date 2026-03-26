@@ -526,14 +526,15 @@
     </p>
   </div>
 
-  <div class="controls">
-    <div class="chips" id="chips">
-      <span class="chip active" data-filter="ALL">전체</span>
-      <span class="chip" data-filter="LIVE">LIVE</span>
-      <span class="chip" data-filter="RESERVED">RESERVED</span>
-      <span class="chip" data-filter="OPEN">OPEN</span>
-      <span class="count" id="countText">-</span>
-    </div>
+<div class="chips">
+  <span class="chip active" data-cat="ALL">전체</span>
+  <span class="chip" data-cat="치킨">치킨</span>
+  <span class="chip" data-cat="버거">버거</span>
+  <span class="chip" data-cat="카페">카페</span>
+  <span class="chip" data-cat="분식">분식</span>
+  <span class="chip" data-cat="한식">한식</span>
+  <span class="chip" data-cat="중식">중식</span>
+</div>
 
     <div class="search">
       <input id="searchInput" type="text" placeholder="좌석번호 검색 (예: P001, S012)" autocomplete="off" />
@@ -582,7 +583,7 @@
   실제 광고 등록 예시:
   치킨 BHC 광고가 Premium P001에 LIVE 상태로 등록됨
 */
-const premiumLive = ["P001"];
+const premiumLive = ["P001", "P002"];
 const premiumReserved = ["P007", "P018"];
 const standardLive = [];
 const standardReserved = ["S011", "S025"];
