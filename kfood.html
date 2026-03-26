@@ -209,6 +209,12 @@
     justify-content:center;
     padding:16px;
     gap:14px;
+    cursor:pointer;
+  }
+  .king-seat:hover{
+    transform:translateY(-2px);
+    border-color:rgba(212,175,55,0.75);
+    background:rgba(255,255,255,0.08);
   }
   .king-badge{
     position:absolute;
@@ -227,6 +233,39 @@
     color:var(--muted);
     font-size:13px;
     line-height:1.6;
+  }
+  .king-logo{
+    width:120px;
+    height:70px;
+    border-radius:14px;
+    border:1px solid rgba(212,175,55,0.35);
+    background:rgba(255,255,255,0.92);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex:0 0 auto;
+  }
+  .king-logo img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    padding:12px;
+  }
+  .king-name{
+    font-weight:900;
+    font-size:18px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .king-desc{
+    margin-top:6px;
+    font-size:12px;
+    color:var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
   .legend{
@@ -497,7 +536,7 @@
     </div>
 
     <div class="search">
-      <input id="searchInput" type="text" placeholder="좌석번호 검색 (예: P01, S12)" autocomplete="off" />
+      <input id="searchInput" type="text" placeholder="좌석번호 검색 (예: P001, S012)" autocomplete="off" />
       <button class="btn" id="clearBtn" type="button">초기화</button>
     </div>
   </div>
@@ -505,7 +544,7 @@
   <section class="king-zone">
     <div class="king-title">
       <b>👑 KING SEAT</b>
-      <span>현재는 광고 등록 후 TOP5 연동 예정</span>
+      <span>광고 누적 데이터 후 자동 TOP5 연동 예정</span>
     </div>
     <div class="king-grid" id="kingGrid"></div>
   </section>
@@ -539,17 +578,19 @@
 </div>
 
 <script>
-/* 좌석 상태 샘플
-   실제 광고 요청이 오면 아래 배열에 seatNo를 추가해서 관리하면 됩니다.
+/*
+  실제 광고 등록 예시:
+  치킨 BHC 광고가 Premium P001에 LIVE 상태로 등록됨
 */
-const premiumLive = [P001];
+const premiumLive = ["P001"];
 const premiumReserved = ["P007", "P018"];
-const premiumOpen = []; // 비워둬도 기본 OPEN 처리
-
 const standardLive = [];
 const standardReserved = ["S011", "S025"];
-const standardOpen = []; // 비워둬도 기본 OPEN 처리
 
+/*
+  LIVE 광고 정보 등록
+  seatNo 를 키로 사용
+*/
 const liveAds = {
   "P001": {
     name: "BHC",
@@ -557,7 +598,7 @@ const liveAds = {
     url: "https://www.bhc.co.kr/",
     logo: "logos/bhc.co.kr.png"
   }
-};    
+};
 
 function makeSeatNo(prefix, n){
   return `${prefix}${String(n).padStart(3, "0")}`;
@@ -574,29 +615,22 @@ function getSeatStatus(seatNo, tier){
   return "OPEN";
 }
 
-const kingGrid = document.getElementById("kingGrid");
-for(let i=1;i<=5;i++){
-  const seat = document.createElement("div");
-  seat.className = "king-seat";
-  seat.innerHTML = `
-    <div class="king-badge">👑 KING ${i}</div>
-    <div class="king-empty">
-      광고 등록 후<br>자동 TOP${i} 연동
-    </div>
-  `;
-  kingGrid.appendChild(seat);
+function createKingSeats(){
+  const kingGrid = document.getElementById("kingGrid");
+  kingGrid.innerHTML = "";
+
+  for(let i=1;i<=5;i++){
+    const seat = document.createElement("div");
+    seat.className = "king-seat";
+    seat.innerHTML = `
+      <div class="king-badge">👑 KING ${i}</div>
+      <div class="king-empty">
+        광고 등록 후<br>자동 TOP${i} 연동
+      </div>
+    `;
+    kingGrid.appendChild(seat);
+  }
 }
-
-const premiumGrid = document.getElementById("premiumGrid");
-const standardGrid = document.getElementById("standardGrid");
-const countText = document.getElementById("countText");
-const searchInput = document.getElementById("searchInput");
-const clearBtn = document.getElementById("clearBtn");
-const chips = document.getElementById("chips");
-
-let currentFilter = "ALL";
-let currentQuery = "";
-const tileRefs = [];
 
 function createTile(seatNo, tier){
   const status = getSeatStatus(seatNo, tier);
@@ -626,10 +660,14 @@ function createTile(seatNo, tier){
       <div class="seat-status reserved">RESERVED</div>
     `;
   } else {
+    const ad = liveAds[seatNo];
+    const logoSrc = ad && ad.logo ? ad.logo : "images/logo.png";
+    const brandName = ad && ad.name ? ad.name : "LIVE";
+
     tile.innerHTML = `
       <div class="seat-no">${seatNo}</div>
       <div class="logo-only-box">
-        <img src="images/logo.png" alt="Brand Logo">
+        <img src="${logoSrc}" alt="${brandName}" onerror="this.onerror=null; this.src='images/logo.png';">
       </div>
       <div class="seat-status live">LIVE</div>
     `;
@@ -644,24 +682,50 @@ function createTile(seatNo, tier){
       alert(`${seatNo} 좌석은 예약 진행중입니다.`);
       return;
     }
-    alert(`${seatNo} 좌석은 LIVE 상태입니다. 추후 브랜드 링크 연결 예정입니다.`);
+    const ad = liveAds[seatNo];
+    if (ad && ad.url) {
+      window.open(ad.url, "_blank", "noopener,noreferrer");
+    } else {
+      alert(`${seatNo} 좌석은 LIVE 상태입니다.`);
+    }
   });
 
   tile.tabIndex = 0;
-  tile.setAttribute("role","button");
-
-  tileRefs.push(tile);
+  tile.setAttribute("role", "button");
   return tile;
 }
 
-/* Premium 100 */
-for(let i=1;i<=100;i++){
-  premiumGrid.appendChild(createTile(makeSeatNo("P", i), "premium"));
-}
+const premiumGrid = document.getElementById("premiumGrid");
+const standardGrid = document.getElementById("standardGrid");
+const countText = document.getElementById("countText");
+const searchInput = document.getElementById("searchInput");
+const clearBtn = document.getElementById("clearBtn");
+const chips = document.getElementById("chips");
 
-/* Standard 100 */
-for(let i=1;i<=100;i++){
-  standardGrid.appendChild(createTile(makeSeatNo("S", i), "standard"));
+let currentFilter = "ALL";
+let currentQuery = "";
+const tileRefs = [];
+
+function renderSeats(){
+  premiumGrid.innerHTML = "";
+  standardGrid.innerHTML = "";
+  tileRefs.length = 0;
+
+  for(let i=1;i<=100;i++){
+    const seatNo = makeSeatNo("P", i);
+    const tile = createTile(seatNo, "premium");
+    premiumGrid.appendChild(tile);
+    tileRefs.push(tile);
+  }
+
+  for(let i=1;i<=100;i++){
+    const seatNo = makeSeatNo("S", i);
+    const tile = createTile(seatNo, "standard");
+    standardGrid.appendChild(tile);
+    tileRefs.push(tile);
+  }
+
+  applyFilter();
 }
 
 function applyFilter(){
@@ -673,7 +737,7 @@ function applyFilter(){
     const queryOk = !q || tile.dataset.seat.includes(q);
     const ok = filterOk && queryOk;
     tile.classList.toggle("filtered-out", !ok);
-    if (ok) shown++;
+    if(ok) shown++;
   });
 
   countText.textContent = `표시 ${shown} / ${tileRefs.length}`;
@@ -703,7 +767,8 @@ clearBtn.addEventListener("click", () => {
   applyFilter();
 });
 
-applyFilter();
+createKingSeats();
+renderSeats();
 </script>
 </body>
 </html>
