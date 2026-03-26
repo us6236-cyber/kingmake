@@ -1,251 +1,799 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>K-FOOD | KING MAKE</title>
-
-<style>
-body{
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family:sans-serif;
-}
-
-/* 상단 */
-.top{
-  padding:15px;
-  border-bottom:1px solid #222;
-  display:flex;
-  justify-content:space-between;
-}
-
-/* 필터 */
-.chips{
-  padding:10px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.chip{
-  padding:6px 12px;
-  border:1px solid #444;
-  border-radius:20px;
-  cursor:pointer;
-}
-.chip.active{
-  border-color:red;
-}
-
-/* 검색 */
-.search{
-  padding:10px;
-}
-
-/* KING */
-.king{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:10px;
-  padding:10px;
-}
-.king div{
-  border:1px solid gold;
-  padding:20px;
-  text-align:center;
-}
-
-/* 좌석 */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(10,1fr);
-  gap:10px;
-  padding:10px;
-}
-
-.tile{
-  border:1px solid #333;
-  cursor:pointer;
-  position:relative;
-}
-
-/* 크기 차이 */
-.premium{ height:120px; border-color:red; }
-.standard{ height:60px; }
-
-.seat-no{
-  position:absolute;
-  top:5px;
-  left:5px;
-  font-size:10px;
-}
-
-.logo{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100%;
-}
-.logo img{
-  max-width:80%;
-  max-height:80%;
-}
-
-.open{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100%;
-  font-size:12px;
-  color:#aaa;
-}
-</style>
-</head>
-
-<body>
-
-<div class="top">
-  <b>KING MAKE</b>
-  <div>K-FOOD</div>
-</div>
-
-<!-- 카테고리 -->
-<div class="chips">
-  <span class="chip active" data-cat="ALL">전체</span>
-  <span class="chip" data-cat="치킨">치킨</span>
-  <span class="chip" data-cat="버거">버거</span>
-  <span class="chip" data-cat="카페">카페</span>
-  <span class="chip" data-cat="분식">분식</span>
-  <span class="chip" data-cat="한식">한식</span>
-  <span class="chip" data-cat="중식">중식</span>
-</div>
-
-<!-- 검색 -->
-<div class="search">
-  <input id="searchInput" placeholder="브랜드 검색">
-</div>
-
-<!-- KING -->
-<div class="king">
-  <div>👑 KING1</div>
-  <div>👑 KING2</div>
-  <div>👑 KING3</div>
-  <div>👑 KING4</div>
-  <div>👑 KING5</div>
-</div>
-
-<h3 style="padding-left:10px;">Premium 100</h3>
-<div id="premiumGrid" class="grid"></div>
-
-<h3 style="padding-left:10px;">Standard 100</h3>
-<div id="standardGrid" class="grid"></div>
-
-<script>
-
-/* 광고 데이터 */
-const liveAds = {
-  "P001":{
-    name:"BHC",
-    category:"치킨",
-    url:"https://www.bhc.co.kr/",
-    logo:"logos/bhc.co.kr.png"
-  }
-};
-
-/* 좌석 상태 */
-const premiumLive=["P001"];
-const premiumReserved=[];
-const standardLive=[];
-const standardReserved=[];
-
-/* 생성 */
-function createTile(seatNo,tier){
-  let status="OPEN";
-  if(tier==="premium"){
-    if(premiumLive.includes(seatNo)) status="LIVE";
-  }
-
-  const tile=document.createElement("div");
-  tile.className=`tile ${tier}`;
-  tile.dataset.seat=seatNo.toLowerCase();
-
-  const ad=liveAds[seatNo];
-  const cat=ad?ad.category:"기타";
-
-  tile.dataset.cat=cat;
-  tile.dataset.name=(ad?.name||"").toLowerCase();
-
-  if(status==="OPEN"){
-    tile.innerHTML=`
-      <div class="seat-no">${seatNo}</div>
-      <div class="open">OPEN</div>
-    `;
-  }else{
-    tile.innerHTML=`
-      <div class="seat-no">${seatNo}</div>
-      <div class="logo">
-        <img src="${ad.logo}">
-      </div>
-    `;
-  }
-
-  tile.onclick=()=>{
-    if(status==="OPEN"){
-      location.href="advertise.html";
-    }else{
-      window.open(ad.url);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K-FOOD | KING MAKE</title>
+  <style>
+    :root{
+      --bg:#000;
+      --panel:rgba(255,255,255,0.03);
+      --line:rgba(255,255,255,0.12);
+      --gold:#D4AF37;
+      --premium:#ff3b3b;
+      --standard:#ffffff;
+      --muted:rgba(255,255,255,0.70);
+      --live:#2ecc71;
+      --reserved:#f39c12;
+      --open:#8e8e93;
     }
-  };
 
-  return tile;
-}
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:#fff;
+    }
 
-/* 렌더 */
-const premiumGrid=document.getElementById("premiumGrid");
-const standardGrid=document.getElementById("standardGrid");
+    .top{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:blur(10px);
+      background:rgba(0,0,0,0.78);
+      border-bottom:1px solid var(--line);
+    }
+    .top-inner{
+      max-width:1900px;
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+      color:#fff;
+    }
+    .brand img{
+      height:26px;
+      width:auto;
+      display:block;
+    }
+    .brand b{
+      letter-spacing:1px;
+    }
+    .page-title{
+      font-size:13px;
+      opacity:.75;
+    }
 
-for(let i=1;i<=100;i++){
-  const num="P"+String(i).padStart(3,"0");
-  premiumGrid.appendChild(createTile(num,"premium"));
-}
+    .wrap{
+      max-width:1900px;
+      margin:0 auto;
+      padding:24px 18px 80px;
+    }
 
-for(let i=1;i<=100;i++){
-  const num="S"+String(i).padStart(3,"0");
-  standardGrid.appendChild(createTile(num,"standard"));
-}
+    .hero{
+      text-align:center;
+      margin-bottom:18px;
+    }
+    .hero h1{
+      margin:0;
+      font-size:34px;
+      letter-spacing:-0.5px;
+    }
+    .hero p{
+      margin:12px 0 0;
+      color:var(--muted);
+      line-height:1.6;
+    }
 
-/* 필터 */
-let currentCat="ALL";
-let currentQuery="";
+    .controls{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      padding:12px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(255,255,255,0.03);
+      margin-bottom:18px;
+    }
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .chip{
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.04);
+      color:#fff;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      transition:.15s ease;
+    }
+    .chip:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,0.32);
+    }
+    .chip.active{
+      border-color:rgba(255,59,59,0.55);
+      box-shadow:0 0 18px rgba(255,59,59,0.18);
+    }
+    .search{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .search input{
+      width:min(420px,74vw);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(0,0,0,0.35);
+      color:#fff;
+      outline:none;
+      font-size:13px;
+    }
+    .search input:focus{
+      border-color:rgba(255,255,255,0.35);
+    }
+    .btn{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.05);
+      color:#fff;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .btn:hover{
+      border-color:rgba(255,255,255,0.32);
+    }
+    .count{
+      font-size:13px;
+      color:var(--muted);
+    }
 
-function applyFilter(){
-  const q=currentQuery.toLowerCase();
+    .king-zone{
+      border:1px solid rgba(212,175,55,0.35);
+      border-radius:18px;
+      background:rgba(212,175,55,0.06);
+      box-shadow:0 24px 80px rgba(0,0,0,0.55);
+      overflow:hidden;
+      padding:14px;
+      margin-bottom:16px;
+    }
+    .king-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:6px 4px 12px;
+    }
+    .king-title b{
+      font-size:14px;
+      letter-spacing:.3px;
+    }
+    .king-title span{
+      font-size:12px;
+      color:var(--muted);
+    }
+    .king-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
+    }
+    .king-seat{
+      position:relative;
+      min-height:110px;
+      border:1px solid rgba(212,175,55,0.40);
+      border-radius:14px;
+      background:rgba(255,255,255,0.06);
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:16px;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+    .king-seat:hover{
+      transform:translateY(-2px);
+      border-color:rgba(212,175,55,0.75);
+      background:rgba(255,255,255,0.08);
+      box-shadow:0 0 22px rgba(212,175,55,0.25);
+    }
+    .king-badge{
+      position:absolute;
+      top:10px;
+      left:10px;
+      font-size:12px;
+      font-weight:900;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,0.40);
+      background:rgba(0,0,0,0.30);
+      color:#fff;
+    }
+    .king-logo{
+      width:120px;
+      height:70px;
+      border-radius:14px;
+      border:1px solid rgba(212,175,55,0.35);
+      background:rgba(255,255,255,0.92);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .king-logo img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      padding:12px;
+    }
+    .king-name{
+      font-weight:900;
+      font-size:18px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .king-desc{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .king-empty{
+      width:100%;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+      padding-top:10px;
+    }
 
-  document.querySelectorAll(".tile").forEach(tile=>{
-    const catOk=currentCat==="ALL"||tile.dataset.cat===currentCat;
-    const nameOk=!q||tile.dataset.name.includes(q);
-    tile.style.display=(catOk&&nameOk)?"":"none";
-  });
-}
+    .legend{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-bottom:16px;
+      font-size:13px;
+    }
+    .pill{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,0.04);
+    }
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:3px;
+      display:inline-block;
+    }
+    .dot.king{background:var(--gold)}
+    .dot.premium{background:var(--premium)}
+    .dot.standard{background:var(--standard)}
+    .dot.live{background:var(--live)}
+    .dot.reserved{background:var(--reserved)}
+    .dot.open{background:var(--open)}
 
-/* 카테고리 */
-document.querySelectorAll(".chip").forEach(c=>{
-  c.onclick=()=>{
-    document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
-    c.classList.add("active");
-    currentCat=c.dataset.cat;
-    applyFilter();
-  };
-});
+    .board-wrap{
+      display:grid;
+      gap:18px;
+    }
+    .seat-section{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:var(--panel);
+      box-shadow:0 24px 80px rgba(0,0,0,0.65);
+      overflow:hidden;
+    }
+    .seat-section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:16px 18px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.02);
+    }
+    .seat-section-head b{
+      font-size:15px;
+      letter-spacing:.3px;
+    }
+    .seat-section-head span{
+      font-size:12px;
+      color:var(--muted);
+    }
 
-/* 검색 */
-searchInput.oninput=()=>{
-  currentQuery=searchInput.value;
-  applyFilter();
-};
+    .premium-grid{
+      display:grid;
+      grid-template-columns:repeat(10,minmax(0,1fr));
+      gap:12px;
+      padding:16px;
+    }
+    .standard-grid{
+      display:grid;
+      grid-template-columns:repeat(10,minmax(0,1fr));
+      gap:6px;
+      padding:12px;
+    }
 
-</script>
+    .tile{
+      position:relative;
+      overflow:hidden;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.12);
+      cursor:pointer;
+      transition:.18s ease;
+      user-select:none;
+    }
+    .tile:hover{
+      transform:translateY(-2px);
+      border-color:rgba(255,255,255,0.35);
+      background:rgba(255,255,255,0.07);
+    }
+    .tile.filtered-out{
+      opacity:.16;
+      filter:grayscale(1);
+      pointer-events:none;
+    }
+    .tile.open-seat{
+      background:rgba(255,255,255,0.02);
+    }
 
+    .tile.premium{
+      border-color:rgba(255,59,59,0.55);
+      border-radius:16px;
+    }
+    .tile.standard{
+      border-color:rgba(255,255,255,0.30);
+      border-radius:10px;
+    }
+
+    .premium-tile{
+      min-height:112px;
+    }
+    .standard-tile{
+      min-height:55px;
+    }
+
+    .seat-no{
+      position:absolute;
+      top:6px;
+      left:6px;
+      min-width:34px;
+      padding:3px 6px;
+      border-radius:999px;
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.3px;
+      background:rgba(0,0,0,0.42);
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.16);
+      z-index:2;
+    }
+    .standard-tile .seat-no{
+      top:4px;
+      left:4px;
+      min-width:28px;
+      padding:2px 5px;
+      font-size:8px;
+    }
+
+    .seat-status{
+      position:absolute;
+      right:6px;
+      bottom:6px;
+      min-width:62px;
+      padding:4px 6px;
+      border-radius:999px;
+      font-size:9px;
+      font-weight:800;
+      text-align:center;
+      letter-spacing:.2px;
+      z-index:2;
+      background:rgba(0,0,0,0.45);
+      border:1px solid rgba(255,255,255,0.16);
+    }
+    .seat-status.live{
+      color:var(--live);
+      border-color:rgba(46,204,113,0.45);
+    }
+    .seat-status.reserved{
+      color:var(--reserved);
+      border-color:rgba(243,156,18,0.45);
+    }
+    .seat-status.open{
+      color:#d1d1d6;
+      border-color:rgba(142,142,147,0.45);
+    }
+    .standard-tile .seat-status{
+      right:4px;
+      bottom:4px;
+      min-width:44px;
+      padding:2px 5px;
+      font-size:7px;
+    }
+
+    .logo-only-box{
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .premium-tile .logo-only-box{
+      padding:18px 8px 8px;
+    }
+    .premium-tile .logo-only-box img{
+      width:80px;
+      height:80px;
+      object-fit:contain;
+    }
+    .standard-tile .logo-only-box{
+      padding:12px 4px 4px;
+    }
+    .standard-tile .logo-only-box img{
+      width:36px;
+      height:36px;
+      object-fit:contain;
+    }
+
+    .open-box{
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      color:rgba(255,255,255,0.75);
+      text-align:center;
+      padding:10px 6px 6px;
+    }
+    .open-box strong{
+      font-size:11px;
+      letter-spacing:.3px;
+    }
+    .open-box span{
+      font-size:8px;
+      color:var(--muted);
+    }
+    .standard-tile .open-box strong{
+      font-size:8px;
+    }
+    .standard-tile .open-box span{
+      font-size:6px;
+    }
+
+    @media (max-width:1200px){
+      .premium-grid,
+      .standard-grid{
+        grid-template-columns:repeat(5,minmax(0,1fr));
+      }
+    }
+    @media (max-width:700px){
+      .premium-grid,
+      .standard-grid{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+      .king-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="top-inner">
+      <a class="brand" href="index.html" aria-label="KING MAKE Home">
+        <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
+        <b>KING MAKE</b>
+      </a>
+      <div class="page-title">K-FOOD • PREMIUM 100 / STANDARD 100</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <h1>🍗 K-FOOD Brand Seats</h1>
+      <p>
+        KING SEAT 5개 = 광고 누적 데이터 후 TOP5 연동 예정<br>
+        Premium 100석 / Standard 100석 = 광고 등록 요청 시 순차 등록
+      </p>
+    </div>
+
+    <div class="controls">
+      <div class="chips" id="chips">
+        <span class="chip active" data-cat="ALL">전체</span>
+        <span class="chip" data-cat="치킨">치킨</span>
+        <span class="chip" data-cat="버거">버거</span>
+        <span class="chip" data-cat="카페">카페</span>
+        <span class="chip" data-cat="분식">분식</span>
+        <span class="chip" data-cat="한식">한식</span>
+        <span class="chip" data-cat="중식">중식</span>
+        <span class="count" id="countText">-</span>
+      </div>
+
+      <div class="search">
+        <input id="searchInput" type="text" placeholder="브랜드명 또는 좌석번호 검색" autocomplete="off" />
+        <button class="btn" id="clearBtn" type="button">초기화</button>
+      </div>
+    </div>
+
+    <section class="king-zone">
+      <div class="king-title">
+        <b>👑 KING SEAT</b>
+        <span>광고 누적 데이터 후 자동 TOP5 연동</span>
+      </div>
+      <div class="king-grid" id="kingGrid"></div>
+    </section>
+
+    <div class="legend">
+      <div class="pill"><span class="dot king"></span> KING</div>
+      <div class="pill"><span class="dot premium"></span> Premium</div>
+      <div class="pill"><span class="dot standard"></span> Standard</div>
+      <div class="pill"><span class="dot live"></span> LIVE</div>
+      <div class="pill"><span class="dot reserved"></span> RESERVED</div>
+      <div class="pill"><span class="dot open"></span> OPEN</div>
+    </div>
+
+    <div class="board-wrap">
+      <section class="seat-section">
+        <div class="seat-section-head">
+          <b>⭐ Premium Seats</b>
+          <span>P001 ~ P100</span>
+        </div>
+        <div class="premium-grid" id="premiumGrid"></div>
+      </section>
+
+      <section class="seat-section">
+        <div class="seat-section-head">
+          <b>⬜ Standard Seats</b>
+          <span>S001 ~ S100</span>
+        </div>
+        <div class="standard-grid" id="standardGrid"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    /*
+      샘플 광고 등록:
+      치킨 BHC 가 Premium P001에 LIVE 상태로 등록
+    */
+    const premiumLive = ["P001"];
+    const premiumReserved = ["P007", "P018"];
+    const standardLive = [];
+    const standardReserved = ["S011", "S025"];
+
+    /*
+      실제 광고 정보
+      광고가 들어오면 seatNo 기준으로 여기 추가하면 됩니다.
+    */
+    const liveAds = {
+      "P001": {
+        name: "BHC",
+        category: "치킨",
+        url: "https://www.bhc.co.kr/",
+        logo: "logos/bhc.co.kr.png"
+      }
+    };
+
+    function makeSeatNo(prefix, n){
+      return `${prefix}${String(n).padStart(3, "0")}`;
+    }
+
+    function getSeatStatus(seatNo, tier){
+      if (tier === "premium") {
+        if (premiumLive.includes(seatNo)) return "LIVE";
+        if (premiumReserved.includes(seatNo)) return "RESERVED";
+        return "OPEN";
+      }
+      if (standardLive.includes(seatNo)) return "LIVE";
+      if (standardReserved.includes(seatNo)) return "RESERVED";
+      return "OPEN";
+    }
+
+    function createKingSeats(){
+      const kingGrid = document.getElementById("kingGrid");
+      kingGrid.innerHTML = "";
+
+      const liveSeatNos = Object.keys(liveAds);
+      const liveList = liveSeatNos.map(seatNo => ({
+        seatNo,
+        ...liveAds[seatNo]
+      }));
+
+      for(let i = 0; i < 5; i++){
+        const card = document.createElement("div");
+        card.className = "king-seat";
+
+        if (liveList[i]) {
+          const ad = liveList[i];
+          card.innerHTML = `
+            <div class="king-badge">👑 KING ${i + 1}</div>
+            <div class="king-logo">
+              <img src="${ad.logo}" alt="${ad.name}" onerror="this.onerror=null; this.src='images/logo.png';">
+            </div>
+            <div>
+              <div class="king-name">${ad.name}</div>
+              <div class="king-desc">${ad.category} · ${ad.seatNo}</div>
+            </div>
+          `;
+          card.addEventListener("click", () => {
+            window.open(ad.url, "_blank", "noopener,noreferrer");
+          });
+        } else {
+          card.innerHTML = `
+            <div class="king-badge">👑 KING ${i + 1}</div>
+            <div class="king-empty">
+              광고 등록 후<br>자동 TOP${i + 1} 연동
+            </div>
+          `;
+        }
+
+        kingGrid.appendChild(card);
+      }
+    }
+
+    function createTile(seatNo, tier){
+      const status = getSeatStatus(seatNo, tier);
+      const sizeClass = tier === "premium" ? "premium-tile" : "standard-tile";
+
+      const tile = document.createElement("div");
+      tile.className = `tile ${tier} ${sizeClass}` + (status === "OPEN" ? " open-seat" : "");
+      tile.dataset.seat = seatNo.toLowerCase();
+      tile.dataset.status = status;
+
+      const ad = liveAds[seatNo] || null;
+      const category = ad?.category || "";
+      const brandName = ad?.name || "";
+
+      tile.dataset.cat = category;
+      tile.dataset.name = brandName.toLowerCase();
+
+      if (status === "OPEN") {
+        tile.innerHTML = `
+          <div class="seat-no">${seatNo}</div>
+          <div class="open-box">
+            <strong>OPEN</strong>
+            <span>Advertise Here</span>
+          </div>
+          <div class="seat-status open">OPEN</div>
+        `;
+      } else if (status === "RESERVED") {
+        tile.innerHTML = `
+          <div class="seat-no">${seatNo}</div>
+          <div class="open-box">
+            <strong>RESERVED</strong>
+            <span>예약 진행중</span>
+          </div>
+          <div class="seat-status reserved">RESERVED</div>
+        `;
+      } else {
+        tile.innerHTML = `
+          <div class="seat-no">${seatNo}</div>
+          <div class="logo-only-box">
+            <img src="${ad.logo}" alt="${ad.name}" onerror="this.onerror=null; this.src='images/logo.png';">
+          </div>
+          <div class="seat-status live">LIVE</div>
+        `;
+      }
+
+      tile.addEventListener("click", () => {
+        if (status === "OPEN") {
+          window.location.href = "advertise.html";
+          return;
+        }
+        if (status === "RESERVED") {
+          alert(`${seatNo} 좌석은 예약 진행중입니다.`);
+          return;
+        }
+        if (ad?.url) {
+          window.open(ad.url, "_blank", "noopener,noreferrer");
+        }
+      });
+
+      tile.tabIndex = 0;
+      tile.setAttribute("role", "button");
+      return tile;
+    }
+
+    const premiumGrid = document.getElementById("premiumGrid");
+    const standardGrid = document.getElementById("standardGrid");
+    const chips = document.getElementById("chips");
+    const searchInput = document.getElementById("searchInput");
+    const clearBtn = document.getElementById("clearBtn");
+    const countText = document.getElementById("countText");
+
+    let currentCat = "ALL";
+    let currentQuery = "";
+    const tileRefs = [];
+
+    function renderSeats(){
+      premiumGrid.innerHTML = "";
+      standardGrid.innerHTML = "";
+      tileRefs.length = 0;
+
+      for(let i = 1; i <= 100; i++){
+        const seatNo = makeSeatNo("P", i);
+        const tile = createTile(seatNo, "premium");
+        premiumGrid.appendChild(tile);
+        tileRefs.push(tile);
+      }
+
+      for(let i = 1; i <= 100; i++){
+        const seatNo = makeSeatNo("S", i);
+        const tile = createTile(seatNo, "standard");
+        standardGrid.appendChild(tile);
+        tileRefs.push(tile);
+      }
+
+      applyFilter();
+    }
+
+    function applyFilter(){
+      const q = currentQuery.trim().toLowerCase();
+      let shown = 0;
+
+      tileRefs.forEach(tile => {
+        const cat = tile.dataset.cat || "";
+        const name = tile.dataset.name || "";
+        const seat = tile.dataset.seat || "";
+
+        const catOk = currentCat === "ALL" || cat === currentCat;
+        const searchOk = !q || name.includes(q) || seat.includes(q);
+        const ok = catOk && searchOk;
+
+        tile.classList.toggle("filtered-out", !ok);
+        if (ok) shown++;
+      });
+
+      countText.textContent = `표시 ${shown} / ${tileRefs.length}`;
+    }
+
+    chips.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      currentCat = chip.dataset.cat || "ALL";
+      applyFilter();
+    });
+
+    searchInput.addEventListener("input", () => {
+      currentQuery = searchInput.value;
+      applyFilter();
+    });
+
+    clearBtn.addEventListener("click", () => {
+      currentCat = "ALL";
+      currentQuery = "";
+      searchInput.value = "";
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      const allChip = document.querySelector('.chip[data-cat="ALL"]');
+      if (allChip) allChip.classList.add("active");
+      applyFilter();
+    });
+
+    createKingSeats();
+    renderSeats();
+  </script>
 </body>
 </html>
