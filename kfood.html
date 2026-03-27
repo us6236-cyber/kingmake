@@ -55,9 +55,7 @@
       width:auto;
       display:block;
     }
-    .brand b{
-      letter-spacing:1px;
-    }
+    .brand b{letter-spacing:1px}
     .page-title{
       font-size:13px;
       opacity:.75;
@@ -512,7 +510,7 @@
     <div class="hero">
       <h1>🍗 K-FOOD Brand Seats</h1>
       <p>
-        KING SEAT 5개 = 광고 누적 데이터 후 TOP5 연동 예정<br>
+        KING SEAT 5개 = 누적 조회수 TOP5<br>
         Premium 100석 / Standard 100석 = 광고 등록 요청 시 순차 등록
       </p>
     </div>
@@ -532,13 +530,14 @@
       <div class="search">
         <input id="searchInput" type="text" placeholder="브랜드명 또는 좌석번호 검색" autocomplete="off" />
         <button class="btn" id="clearBtn" type="button">초기화</button>
+        <button class="btn" id="refreshKingBtn" type="button">KING 갱신</button>
       </div>
     </div>
 
     <section class="king-zone">
       <div class="king-title">
         <b>👑 KING SEAT</b>
-        <span>광고 누적 데이터 후 자동 TOP5 연동</span>
+        <span id="kingMeta">누적 조회수 기준 불러오는 중…</span>
       </div>
       <div class="king-grid" id="kingGrid"></div>
     </section>
@@ -572,9 +571,11 @@
   </div>
 
   <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbyK0LXIrt_2i9z7HiJeErrMDrXch8L7I41lmY2eQBOt5ysjbxPtigH4X96C80QFQT8-/exec";
+
     /*
       샘플 광고 등록:
-      치킨 BHC 가 Premium P001에 LIVE 상태로 등록
+      치킨 BHC 가 Premium P001 에 LIVE 상태
     */
     const premiumLive = ["P001"];
     const premiumReserved = ["P007", "P018"];
@@ -583,7 +584,7 @@
 
     /*
       실제 광고 정보
-      광고가 들어오면 seatNo 기준으로 여기 추가하면 됩니다.
+      광고가 들어오면 seatNo 기준으로 여기에 추가
     */
     const liveAds = {
       "P001": {
@@ -609,46 +610,103 @@
       return "OPEN";
     }
 
-    function createKingSeats(){
-      const kingGrid = document.getElementById("kingGrid");
-      kingGrid.innerHTML = "";
+    function fetchTopAllJSONP(){
+      return new Promise((resolve) => {
+        const cb = "__topallcb_" + Math.random().toString(36).slice(2);
 
-      const liveSeatNos = Object.keys(liveAds);
-      const liveList = liveSeatNos.map(seatNo => ({
-        seatNo,
-        ...liveAds[seatNo]
-      }));
+        window[cb] = (data) => {
+          const top = (data && data.ok && Array.isArray(data.top)) ? data.top : [];
+          resolve(top);
+          delete window[cb];
+          script.remove();
+        };
+
+        const script = document.createElement("script");
+        script.onerror = () => {
+          resolve([]);
+          delete window[cb];
+          script.remove();
+        };
+
+        script.src = `${API_URL}?action=topall_jsonp&cb=${cb}&t=${Date.now()}`;
+        document.body.appendChild(script);
+      });
+    }
+
+    function trackClickViaImage(ad, tier){
+      try{
+        const url = encodeURIComponent(ad.url || "");
+        const name = encodeURIComponent(ad.name || "");
+        const t = encodeURIComponent(tier || "");
+        const ua = encodeURIComponent(navigator.userAgent.slice(0,120));
+
+        const img = new Image();
+        img.referrerPolicy = "no-referrer";
+        img.src = `${API_URL}?action=track&url=${url}&name=${name}&tier=${t}&ua=${ua}&t=${Date.now()}`;
+      }catch(e){}
+    }
+
+    const kingGrid = document.getElementById("kingGrid");
+    const kingMeta = document.getElementById("kingMeta");
+    const refreshKingBtn = document.getElementById("refreshKingBtn");
+
+    async function createKingSeats(){
+      kingGrid.innerHTML = "";
+      kingMeta.textContent = "누적 조회수 기준 불러오는 중…";
+
+      const top = await fetchTopAllJSONP();
 
       for(let i = 0; i < 5; i++){
+        const ranked = top[i];
         const card = document.createElement("div");
         card.className = "king-seat";
 
-        if (liveList[i]) {
-          const ad = liveList[i];
+        if (ranked) {
+          let matchedSeatNo = "";
+          let matchedAd = null;
+
+          for (const seatNo of Object.keys(liveAds)) {
+            const ad = liveAds[seatNo];
+            if (ad.url === ranked.url) {
+              matchedSeatNo = seatNo;
+              matchedAd = ad;
+              break;
+            }
+          }
+
+          const logo = matchedAd?.logo || "images/logo.png";
+          const name = matchedAd?.name || ranked.name || "BRAND";
+          const url = matchedAd?.url || ranked.url || "#";
+          const seatNo = matchedSeatNo || "LIVE";
+          const count = Number(ranked.count || 0);
+
           card.innerHTML = `
             <div class="king-badge">👑 KING ${i + 1}</div>
             <div class="king-logo">
-              <img src="${ad.logo}" alt="${ad.name}" onerror="this.onerror=null; this.src='images/logo.png';">
+              <img src="${logo}" alt="${name}" onerror="this.onerror=null; this.src='images/logo.png';">
             </div>
             <div>
-              <div class="king-name">${ad.name}</div>
-              <div class="king-desc">${ad.category} · ${ad.seatNo}</div>
+              <div class="king-name">${name}</div>
+              <div class="king-desc">누적 조회수 ${count}회 · ${seatNo}</div>
             </div>
           `;
+
           card.addEventListener("click", () => {
-            window.open(ad.url, "_blank", "noopener,noreferrer");
+            window.open(url, "_blank", "noopener,noreferrer");
           });
         } else {
           card.innerHTML = `
             <div class="king-badge">👑 KING ${i + 1}</div>
             <div class="king-empty">
-              광고 등록 후<br>자동 TOP${i + 1} 연동
+              광고 등록 후<br>누적 조회수 TOP${i + 1} 연동
             </div>
           `;
         }
 
         kingGrid.appendChild(card);
       }
+
+      kingMeta.textContent = `누적 조회수 기준 · 업데이트 ${new Date().toLocaleString()}`;
     }
 
     function createTile(seatNo, tier){
@@ -658,7 +716,6 @@
       const tile = document.createElement("div");
       tile.className = `tile ${tier} ${sizeClass}` + (status === "OPEN" ? " open-seat" : "");
       tile.dataset.seat = seatNo.toLowerCase();
-      tile.dataset.status = status;
 
       const ad = liveAds[seatNo] || null;
       const category = ad?.category || "";
@@ -705,6 +762,8 @@
           return;
         }
         if (ad?.url) {
+          trackClickViaImage(ad, tier);
+          setTimeout(createKingSeats, 300);
           window.open(ad.url, "_blank", "noopener,noreferrer");
         }
       });
@@ -791,6 +850,8 @@
       if (allChip) allChip.classList.add("active");
       applyFilter();
     });
+
+    refreshKingBtn.addEventListener("click", createKingSeats);
 
     createKingSeats();
     renderSeats();
