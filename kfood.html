@@ -573,20 +573,13 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbyK0LXIrt_2i9z7HiJeErrMDrXch8L7I41lmY2eQBOt5ysjbxPtigH4X96C80QFQT8-/exec";
 
-    /*
-      실제 광고 등록 예시
-      KING SEAT에는 등록하지 않음
-      Premium / Standard LIVE 광고만 등록
-    */
+    /* 실제 광고 등록 예시 */
     const premiumLive = ["P001"];
     const premiumReserved = ["P007", "P018"];
     const standardLive = [];
     const standardReserved = ["S011", "S025"];
 
-    /*
-      LIVE 광고 정보
-      광고 요청이 오면 seatNo 기준으로 추가
-    */
+    /* 광고 데이터 */
     const liveAds = {
       "P001": {
         name: "BHC",
@@ -598,6 +591,15 @@
 
     function makeSeatNo(prefix, n){
       return `${prefix}${String(n).padStart(3, "0")}`;
+    }
+
+    function normalizeUrl(url){
+      try{
+        const u = new URL(url);
+        return (u.origin + u.pathname).replace(/\/+$/, "");
+      }catch(e){
+        return String(url || "").trim().replace(/\/+$/, "");
+      }
     }
 
     function getSeatStatus(seatNo, tier){
@@ -667,9 +669,13 @@
           let matchedAd = null;
           let matchedTier = "";
 
+          const rankedUrl = normalizeUrl(ranked.url);
+
           for (const seatNo of Object.keys(liveAds)) {
             const ad = liveAds[seatNo];
-            if (ad.url === ranked.url) {
+            const adUrl = normalizeUrl(ad.url);
+
+            if (adUrl === rankedUrl) {
               matchedSeatNo = seatNo;
               matchedAd = ad;
               matchedTier = seatNo.startsWith("P") ? "Premium" : "Standard";
@@ -690,7 +696,7 @@
             </div>
             <div>
               <div class="king-name">${name}</div>
-              <div class="king-desc">누적 클릭 ${count}회 · ${matchedTier} · ${seatNo}</div>
+              <div class="king-desc">누적 클릭 ${count}회 · ${matchedTier || "LIVE"} · ${seatNo}</div>
             </div>
           `;
 
@@ -766,7 +772,7 @@
         }
         if (ad?.url) {
           trackClickViaImage(ad, tier);
-          setTimeout(createKingSeats, 300);
+          setTimeout(createKingSeats, 500);
           window.open(ad.url, "_blank", "noopener,noreferrer");
         }
       });
