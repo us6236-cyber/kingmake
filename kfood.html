@@ -510,7 +510,7 @@
     <div class="hero">
       <h1>🍗 K-FOOD Brand Seats</h1>
       <p>
-        KING SEAT 5개 = 누적 조회수 TOP5<br>
+        KING SEAT 5개 = Premium / Standard 누적 클릭 TOP5 자동 표시<br>
         Premium 100석 / Standard 100석 = 광고 등록 요청 시 순차 등록
       </p>
     </div>
@@ -537,7 +537,7 @@
     <section class="king-zone">
       <div class="king-title">
         <b>👑 KING SEAT</b>
-        <span id="kingMeta">누적 조회수 기준 불러오는 중…</span>
+        <span id="kingMeta">누적 클릭 TOP5 불러오는 중…</span>
       </div>
       <div class="king-grid" id="kingGrid"></div>
     </section>
@@ -574,8 +574,9 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbyK0LXIrt_2i9z7HiJeErrMDrXch8L7I41lmY2eQBOt5ysjbxPtigH4X96C80QFQT8-/exec";
 
     /*
-      샘플 광고 등록:
-      치킨 BHC 가 Premium P001 에 LIVE 상태
+      실제 광고 등록 예시
+      KING SEAT에는 등록하지 않음
+      Premium / Standard LIVE 광고만 등록
     */
     const premiumLive = ["P001"];
     const premiumReserved = ["P007", "P018"];
@@ -583,8 +584,8 @@
     const standardReserved = ["S011", "S025"];
 
     /*
-      실제 광고 정보
-      광고가 들어오면 seatNo 기준으로 여기에 추가
+      LIVE 광고 정보
+      광고 요청이 오면 seatNo 기준으로 추가
     */
     const liveAds = {
       "P001": {
@@ -652,7 +653,7 @@
 
     async function createKingSeats(){
       kingGrid.innerHTML = "";
-      kingMeta.textContent = "누적 조회수 기준 불러오는 중…";
+      kingMeta.textContent = "누적 클릭 TOP5 불러오는 중…";
 
       const top = await fetchTopAllJSONP();
 
@@ -664,12 +665,14 @@
         if (ranked) {
           let matchedSeatNo = "";
           let matchedAd = null;
+          let matchedTier = "";
 
           for (const seatNo of Object.keys(liveAds)) {
             const ad = liveAds[seatNo];
             if (ad.url === ranked.url) {
               matchedSeatNo = seatNo;
               matchedAd = ad;
+              matchedTier = seatNo.startsWith("P") ? "Premium" : "Standard";
               break;
             }
           }
@@ -687,7 +690,7 @@
             </div>
             <div>
               <div class="king-name">${name}</div>
-              <div class="king-desc">누적 조회수 ${count}회 · ${seatNo}</div>
+              <div class="king-desc">누적 클릭 ${count}회 · ${matchedTier} · ${seatNo}</div>
             </div>
           `;
 
@@ -698,7 +701,7 @@
           card.innerHTML = `
             <div class="king-badge">👑 KING ${i + 1}</div>
             <div class="king-empty">
-              광고 등록 후<br>누적 조회수 TOP${i + 1} 연동
+              Premium / Standard 광고 클릭 누적 후<br>자동 TOP${i + 1} 표시
             </div>
           `;
         }
@@ -706,7 +709,7 @@
         kingGrid.appendChild(card);
       }
 
-      kingMeta.textContent = `누적 조회수 기준 · 업데이트 ${new Date().toLocaleString()}`;
+      kingMeta.textContent = `누적 클릭 기준 · 업데이트 ${new Date().toLocaleString()}`;
     }
 
     function createTile(seatNo, tier){
