@@ -575,8 +575,11 @@
 
     /* 실제 광고 등록 예시 */
     const premiumLive = ["P001"];
-    const premiumLive = ["P002"];
-      /* 광고 데이터 */
+    const premiumReserved = ["P007", "P018"];
+    const standardLive = [];
+    const standardReserved = ["S011", "S025"];
+
+    /* LIVE 광고 정보 */
     const liveAds = {
       "P001": {
         name: "BHC",
@@ -611,27 +614,27 @@
     }
 
     function fetchTopAllJSONP(){
-  return new Promise((resolve) => {
-    const cb = "__topallcb_" + Math.random().toString(36).slice(2);
+      return new Promise((resolve) => {
+        const cb = "__topallcb_" + Math.random().toString(36).slice(2);
 
-    window[cb] = (data) => {
-      const top = (data && data.ok && Array.isArray(data.top)) ? data.top : [];
-      resolve(top);
-      try { delete window[cb]; } catch(e) {}
-      if (script && script.parentNode) script.parentNode.removeChild(script);
-    };
+        window[cb] = (data) => {
+          const top = (data && data.ok && Array.isArray(data.top)) ? data.top : [];
+          resolve(top);
+          try { delete window[cb]; } catch(e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+        };
 
-    const script = document.createElement("script");
-    script.onerror = () => {
-      resolve([]);
-      try { delete window[cb]; } catch(e) {}
-      if (script && script.parentNode) script.parentNode.removeChild(script);
-    };
+        const script = document.createElement("script");
+        script.onerror = () => {
+          resolve([]);
+          try { delete window[cb]; } catch(e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+        };
 
-    script.src = `${API_URL}?action=topall_jsonp&cb=${cb}&t=${Date.now()}`;
-    document.body.appendChild(script);
-  });
-}
+        script.src = `${API_URL}?action=topall_jsonp&cb=${cb}&t=${Date.now()}`;
+        document.body.appendChild(script);
+      });
+    }
 
     function trackClickViaImage(ad, tier){
       try{
@@ -651,69 +654,69 @@
     const refreshKingBtn = document.getElementById("refreshKingBtn");
 
     async function createKingSeats(){
-  kingGrid.innerHTML = "";
-  kingMeta.textContent = "누적 클릭 TOP5 불러오는 중…";
+      kingGrid.innerHTML = "";
+      kingMeta.textContent = "누적 클릭 TOP5 불러오는 중…";
 
-  const top = await fetchTopAllJSONP();
+      const top = await fetchTopAllJSONP();
 
-  for(let i = 0; i < 5; i++){
-    const ranked = top[i];
-    const card = document.createElement("div");
-    card.className = "king-seat";
+      for(let i = 0; i < 5; i++){
+        const ranked = top[i];
+        const card = document.createElement("div");
+        card.className = "king-seat";
 
-    if (ranked) {
-      let matchedSeatNo = "";
-      let matchedAd = null;
-      let matchedTier = "";
+        if (ranked) {
+          let matchedSeatNo = "";
+          let matchedAd = null;
+          let matchedTier = "";
 
-      const rankedUrl = normalizeUrl(ranked.url);
+          const rankedUrl = normalizeUrl(ranked.url);
 
-      for (const seatNo of Object.keys(liveAds)) {
-        const ad = liveAds[seatNo];
-        const adUrl = normalizeUrl(ad.url);
+          for (const seatNo of Object.keys(liveAds)) {
+            const ad = liveAds[seatNo];
+            const adUrl = normalizeUrl(ad.url);
 
-        if (adUrl === rankedUrl) {
-          matchedSeatNo = seatNo;
-          matchedAd = ad;
-          matchedTier = seatNo.startsWith("P") ? "Premium" : "Standard";
-          break;
+            if (adUrl === rankedUrl) {
+              matchedSeatNo = seatNo;
+              matchedAd = ad;
+              matchedTier = seatNo.startsWith("P") ? "Premium" : "Standard";
+              break;
+            }
+          }
+
+          const logo = matchedAd?.logo || "images/logo.png";
+          const name = matchedAd?.name || ranked.name || "BRAND";
+          const url = matchedAd?.url || ranked.url || "#";
+          const seatNo = matchedSeatNo || "-";
+          const count = Number(ranked.count || 0);
+
+          card.innerHTML = `
+            <div class="king-badge">👑 KING ${i + 1}</div>
+            <div class="king-logo">
+              <img src="${logo}" alt="${name}" onerror="this.onerror=null; this.src='images/logo.png';">
+            </div>
+            <div>
+              <div class="king-name">${name}</div>
+              <div class="king-desc">누적 클릭 ${count}회 · ${matchedTier || "LIVE"} · ${seatNo}</div>
+            </div>
+          `;
+
+          card.addEventListener("click", () => {
+            window.open(url, "_blank", "noopener,noreferrer");
+          });
+        } else {
+          card.innerHTML = `
+            <div class="king-badge">👑 KING ${i + 1}</div>
+            <div class="king-empty">
+              Premium / Standard 광고 클릭 누적 후<br>자동 TOP${i + 1} 표시
+            </div>
+          `;
         }
+
+        kingGrid.appendChild(card);
       }
 
-      const logo = matchedAd?.logo || "images/logo.png";
-      const name = matchedAd?.name || ranked.name || "BRAND";
-      const url = matchedAd?.url || ranked.url || "#";
-      const seatNo = matchedSeatNo || "-";
-      const count = Number(ranked.count || 0);
-
-      card.innerHTML = `
-        <div class="king-badge">👑 KING ${i + 1}</div>
-        <div class="king-logo">
-          <img src="${logo}" alt="${name}" onerror="this.onerror=null; this.src='images/logo.png';">
-        </div>
-        <div>
-          <div class="king-name">${name}</div>
-          <div class="king-desc">누적 클릭 ${count}회 · ${matchedTier || "LIVE"} · ${seatNo}</div>
-        </div>
-      `;
-
-      card.addEventListener("click", () => {
-        window.open(url, "_blank", "noopener,noreferrer");
-      });
-    } else {
-      card.innerHTML = `
-        <div class="king-badge">👑 KING ${i + 1}</div>
-        <div class="king-empty">
-          Premium / Standard 광고 클릭 누적 후<br>자동 TOP${i + 1} 표시
-        </div>
-      `;
+      kingMeta.textContent = `누적 클릭 기준 · 업데이트 ${new Date().toLocaleString()}`;
     }
-
-    kingGrid.appendChild(card);
-  }
-
-  kingMeta.textContent = `누적 클릭 기준 · 업데이트 ${new Date().toLocaleString()}`;
-}
 
     function createTile(seatNo, tier){
       const status = getSeatStatus(seatNo, tier);
@@ -769,7 +772,7 @@
         }
         if (ad?.url) {
           trackClickViaImage(ad, tier);
-          setTimeout(createKingSeats, 500);
+          setTimeout(createKingSeats, 600);
           window.open(ad.url, "_blank", "noopener,noreferrer");
         }
       });
