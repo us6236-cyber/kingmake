@@ -162,7 +162,7 @@
       box-shadow:0 24px 80px rgba(0,0,0,0.55);
       overflow:hidden;
       padding:14px;
-      margin-bottom:16px;
+      margin-bottom:10px;
     }
     .king-title{
       display:flex;
@@ -256,6 +256,18 @@
       font-size:13px;
       line-height:1.6;
       padding-top:10px;
+    }
+
+    .debug-box{
+      margin:0 0 16px;
+      padding:10px 12px;
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:12px;
+      background:rgba(255,255,255,0.03);
+      color:#cfcfcf;
+      font-size:12px;
+      line-height:1.6;
+      white-space:pre-wrap;
     }
 
     .legend{
@@ -542,6 +554,8 @@
       <div class="king-grid" id="kingGrid"></div>
     </section>
 
+    <div class="debug-box" id="debugBox">DEBUG: 시작 전</div>
+
     <div class="legend">
       <div class="pill"><span class="dot king"></span> KING</div>
       <div class="pill"><span class="dot premium"></span> Premium</div>
@@ -573,13 +587,11 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbyK0LXIrt_2i9z7HiJeErrMDrXch8L7I41lmY2eQBOt5ysjbxPtigH4X96C80QFQT8-/exec";
 
-    /* 실제 광고 등록 예시 */
     const premiumLive = ["P001"];
     const premiumReserved = ["P007", "P018"];
     const standardLive = [];
     const standardReserved = ["S011", "S025"];
 
-    /* LIVE 광고 정보 */
     const liveAds = {
       "P001": {
         name: "BHC",
@@ -588,6 +600,13 @@
         logo: "logos/bhc.co.kr.png"
       }
     };
+
+    const debugBox = document.getElementById("debugBox");
+
+    function debug(msg){
+      console.log(msg);
+      debugBox.textContent = String(msg);
+    }
 
     function makeSeatNo(prefix, n){
       return `${prefix}${String(n).padStart(3, "0")}`;
@@ -616,20 +635,36 @@
     function fetchTopAllJSONP(){
       return new Promise((resolve) => {
         const cb = "__topallcb_" + Math.random().toString(36).slice(2);
+        let done = false;
+
+        function finish(value){
+          if (done) return;
+          done = true;
+          resolve(value);
+        }
 
         window[cb] = (data) => {
           const top = (data && data.ok && Array.isArray(data.top)) ? data.top : [];
-          resolve(top);
+          debug("DEBUG JSONP 성공 / top 개수: " + top.length + "\n" + JSON.stringify(top, null, 2));
           try { delete window[cb]; } catch(e) {}
           if (script.parentNode) script.parentNode.removeChild(script);
+          finish(top);
         };
 
         const script = document.createElement("script");
         script.onerror = () => {
-          resolve([]);
+          debug("DEBUG JSONP 실패: script onerror");
           try { delete window[cb]; } catch(e) {}
           if (script.parentNode) script.parentNode.removeChild(script);
+          finish([]);
         };
+
+        setTimeout(() => {
+          debug("DEBUG JSONP 타임아웃: 응답 없음");
+          try { delete window[cb]; } catch(e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+          finish([]);
+        }, 8000);
 
         script.src = `${API_URL}?action=topall_jsonp&cb=${cb}&t=${Date.now()}`;
         document.body.appendChild(script);
@@ -772,7 +807,7 @@
         }
         if (ad?.url) {
           trackClickViaImage(ad, tier);
-          setTimeout(createKingSeats, 600);
+          setTimeout(createKingSeats, 1000);
           window.open(ad.url, "_blank", "noopener,noreferrer");
         }
       });
