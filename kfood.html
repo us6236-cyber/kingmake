@@ -162,7 +162,7 @@
       box-shadow:0 24px 80px rgba(0,0,0,0.55);
       overflow:hidden;
       padding:14px;
-      margin-bottom:10px;
+      margin-bottom:16px;
     }
     .king-title{
       display:flex;
@@ -256,18 +256,6 @@
       font-size:13px;
       line-height:1.6;
       padding-top:10px;
-    }
-
-    .debug-box{
-      margin:0 0 16px;
-      padding:10px 12px;
-      border:1px solid rgba(255,255,255,0.12);
-      border-radius:12px;
-      background:rgba(255,255,255,0.03);
-      color:#cfcfcf;
-      font-size:12px;
-      line-height:1.6;
-      white-space:pre-wrap;
     }
 
     .legend{
@@ -554,8 +542,6 @@
       <div class="king-grid" id="kingGrid"></div>
     </section>
 
-    <div class="debug-box" id="debugBox">DEBUG: 시작 전</div>
-
     <div class="legend">
       <div class="pill"><span class="dot king"></span> KING</div>
       <div class="pill"><span class="dot premium"></span> Premium</div>
@@ -585,7 +571,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwbhOxSUVp3m6JMmK71yjMzCKP2JgHTtMwyo0_ocpt_v98uaJIf3t2LO2yWFVqU_Rj6/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyK0LXIrt_2i9z7HiJeErrMDrXch8L7I41lmY2eQBOt5ysjbxPtigH4X96C80QFQT8-/exec";
 
     const premiumLive = ["P001"];
     const premiumReserved = ["P007", "P018"];
@@ -600,13 +586,6 @@
         logo: "logos/bhc.co.kr.png"
       }
     };
-
-    const debugBox = document.getElementById("debugBox");
-
-    function debug(msg){
-      console.log(msg);
-      debugBox.textContent = String(msg);
-    }
 
     function makeSeatNo(prefix, n){
       return `${prefix}${String(n).padStart(3, "0")}`;
@@ -645,7 +624,6 @@
 
         window[cb] = (data) => {
           const top = (data && data.ok && Array.isArray(data.top)) ? data.top : [];
-          debug("DEBUG JSONP 성공 / top 개수: " + top.length + "\n" + JSON.stringify(top, null, 2));
           try { delete window[cb]; } catch(e) {}
           if (script.parentNode) script.parentNode.removeChild(script);
           finish(top);
@@ -653,14 +631,12 @@
 
         const script = document.createElement("script");
         script.onerror = () => {
-          debug("DEBUG JSONP 실패: script onerror");
           try { delete window[cb]; } catch(e) {}
           if (script.parentNode) script.parentNode.removeChild(script);
           finish([]);
         };
 
         setTimeout(() => {
-          debug("DEBUG JSONP 타임아웃: 응답 없음");
           try { delete window[cb]; } catch(e) {}
           if (script.parentNode) script.parentNode.removeChild(script);
           finish([]);
