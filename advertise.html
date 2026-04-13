@@ -1,149 +1,508 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>광고 등록 | KING MAKE</title>
+  <style>
+    :root{
+      --bg:#000;
+      --panel:rgba(255,255,255,0.04);
+      --line:rgba(255,255,255,0.12);
+      --text:#fff;
+      --muted:rgba(255,255,255,0.7);
+      --gold:#D4AF37;
+      --premium:#ff3b3b;
+      --standard:#ffffff;
+      --ok:#2ecc71;
+      --warn:#f39c12;
+    }
 
-<title>Advertise | KING MAKE</title>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    }
 
-<style>
+    .top{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(10px);
+      background:rgba(0,0,0,0.78);
+      border-bottom:1px solid var(--line);
+    }
+    .top-inner{
+      max-width:900px;
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#fff;
+      text-decoration:none;
+    }
+    .brand img{
+      height:26px;
+      width:auto;
+      display:block;
+    }
 
-body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-background:#000;
-color:#fff;
-text-align:center;
-}
+    .wrap{
+      max-width:900px;
+      margin:0 auto;
+      padding:24px 18px 80px;
+    }
 
-.container{
-max-width:1100px;
-margin:auto;
-padding:80px 20px;
-}
+    .hero{
+      text-align:center;
+      margin-bottom:20px;
+    }
+    .hero h1{
+      margin:0;
+      font-size:32px;
+    }
+    .hero p{
+      margin:10px 0 0;
+      color:var(--muted);
+      line-height:1.6;
+    }
 
-h1{
-font-size:42px;
-margin-bottom:10px;
-}
+    .card{
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:var(--panel);
+      padding:18px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.45);
+    }
 
-h2{
-font-size:22px;
-opacity:0.7;
-margin-bottom:50px;
-}
+    .seat-summary{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .seat-box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:rgba(255,255,255,0.03);
+    }
+    .seat-box b{
+      display:block;
+      font-size:13px;
+      margin-bottom:8px;
+      color:var(--muted);
+    }
+    .seat-value{
+      font-size:22px;
+      font-weight:800;
+    }
+    .premium-text{ color:var(--premium); }
+    .standard-text{ color:#fff; }
 
-.section{
-margin-top:70px;
-}
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    .full{
+      grid-column:1 / -1;
+    }
 
-.cards{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:30px;
-margin-top:40px;
-}
+    .field label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    .field input,
+    .field select,
+    .field textarea{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(0,0,0,0.35);
+      color:#fff;
+      outline:none;
+      font-size:14px;
+    }
+    .field textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus{
+      border-color:rgba(255,255,255,0.35);
+    }
 
-.card{
-width:280px;
-border:1px solid rgba(255,255,255,0.2);
-border-radius:20px;
-padding:30px;
-background:rgba(255,255,255,0.03);
-}
+    .notice{
+      margin-top:16px;
+      padding:14px;
+      border:1px solid rgba(212,175,55,0.28);
+      background:rgba(212,175,55,0.08);
+      border-radius:14px;
+      color:#f5e6b3;
+      font-size:13px;
+      line-height:1.6;
+    }
 
-.card h3{
-font-size:22px;
-margin-bottom:10px;
-}
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+    .btn{
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.05);
+      color:#fff;
+      padding:12px 16px;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:700;
+    }
+    .btn:hover{
+      border-color:rgba(255,255,255,0.32);
+    }
+    .btn-primary{
+      background:rgba(255,59,59,0.16);
+      border-color:rgba(255,59,59,0.45);
+    }
+    .btn-success{
+      background:rgba(46,204,113,0.15);
+      border-color:rgba(46,204,113,0.42);
+    }
+    .btn-warn{
+      background:rgba(243,156,18,0.14);
+      border-color:rgba(243,156,18,0.42);
+    }
 
-.price{
-font-size:32px;
-font-weight:bold;
-margin:20px 0;
-}
+    .status-box{
+      margin-top:16px;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.03);
+      color:#ddd;
+      font-size:14px;
+      line-height:1.5;
+      white-space:pre-wrap;
+    }
 
-.gold{
-border:1px solid gold;
-}
+    .foot-actions{
+      margin-top:18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
 
-.red{
-border:1px solid #ff3b3b;
-}
-
-.white{
-border:1px solid #fff;
-}
-
-.btn{
-display:inline-block;
-margin-top:50px;
-padding:16px 40px;
-border:1px solid #fff;
-border-radius:30px;
-text-decoration:none;
-color:#fff;
-font-size:18px;
-transition:0.2s;
-}
-
-.btn:hover{
-background:#fff;
-color:#000;
-}
-
-.footer{
-margin-top:100px;
-font-size:12px;
-opacity:0.5;
-}
-
-</style>
+    @media (max-width:700px){
+      .seat-summary,
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="top">
+    <div class="top-inner">
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
+        <strong>KING MAKE</strong>
+      </a>
+      <div>광고 등록</div>
+    </div>
+  </div>
 
-<div class="container">
+  <div class="wrap">
+    <div class="hero">
+      <h1>광고 좌석 등록</h1>
+      <p>
+        좌석 선점 후 결제 완료 처리까지 진행합니다.<br>
+        결제 시스템 연결 전까지는 아래 테스트 버튼으로 운영 가능합니다.
+      </p>
+    </div>
 
-<h1>KING MAKE</h1>
-<h2>K-BRAND ROADMAP</h2>
+    <div class="card">
+      <div class="seat-summary">
+        <div class="seat-box">
+          <b>좌석번호</b>
+          <div class="seat-value" id="seatPreview">-</div>
+        </div>
+        <div class="seat-box">
+          <b>등급</b>
+          <div class="seat-value" id="tierPreview">-</div>
+        </div>
+        <div class="seat-box">
+          <b>현재 상태</b>
+          <div class="seat-value" id="statusPreview">입력 전</div>
+        </div>
+      </div>
 
-<p>
-대한민국 브랜드가 모이는<br>
-새로운 광고 플랫폼
-</p>
+      <div class="form-grid">
+        <div class="field">
+          <label for="seatNo">좌석번호</label>
+          <input id="seatNo" placeholder="예: P001, S012" />
+        </div>
 
-<div class="section">
+        <div class="field">
+          <label for="tier">등급</label>
+          <select id="tier">
+            <option value="premium">premium</option>
+            <option value="standard">standard</option>
+          </select>
+        </div>
 
-<h1>Advertising Seats</h1>
+        <div class="field">
+          <label for="brandName">브랜드명</label>
+          <input id="brandName" placeholder="예: BHC" />
+        </div>
 
-<div class="cards">
+        <div class="field">
+          <label for="category">카테고리</label>
+          <select id="category">
+            <option value="치킨">치킨</option>
+            <option value="버거">버거</option>
+            <option value="카페">카페</option>
+            <option value="분식">분식</option>
+            <option value="한식">한식</option>
+            <option value="중식">중식</option>
+          </select>
+        </div>
 
-<div class="card red">
-<h3>⭐ Premium Seat</h3>
-<p>프리미엄 광고 위치</p>
-<div class="price">₩300,000 / month</div>
-</div>
+        <div class="field full">
+          <label for="brandUrl">브랜드 URL</label>
+          <input id="brandUrl" placeholder="예: https://www.bhc.co.kr/" />
+        </div>
 
-<div class="card white">
-<h3>⬜ Standard Seat</h3>
-<p>기본 광고 좌석</p>
-<div class="price">₩100,000 / month</div>
-</div>
+        <div class="field full">
+          <label for="logoUrl">로고 경로</label>
+          <input id="logoUrl" placeholder="예: logos/bhc.co.kr.png" />
+        </div>
 
-</div>
+        <div class="field full">
+          <label for="memo">메모</label>
+          <textarea id="memo" placeholder="광고주명, 계약 메모, 시작일 등 운영용 메모"></textarea>
+        </div>
+      </div>
 
-</div>
+      <div class="notice">
+        운영 흐름:<br>
+        1) 좌석 선점 → RESERVED<br>
+        2) 결제 확인 → LIVE 전환<br>
+        3) k-food.html 자동 반영<br>
+        4) 클릭 누적 시 KING SEAT 자동 노출
+      </div>
 
-<a class="btn" href="mailto:contact@kingmake.kr">
-Advertise Your Brand
-</a>
+      <div class="actions">
+        <button class="btn btn-warn" id="reserveBtn" type="button">1. 좌석 선점</button>
+        <button class="btn btn-success" id="confirmBtn" type="button">2. 결제 완료 처리</button>
+        <button class="btn" id="releaseBtn" type="button">예약 해제</button>
+      </div>
 
-<div class="footer">
-© 2026 KING MAKE
-</div>
+      <div class="status-box" id="resultBox">대기중...</div>
 
-</div>
+      <div class="foot-actions">
+        <button class="btn" id="goBoardBtn" type="button">광고판으로 돌아가기</button>
+        <button class="btn btn-primary" id="fillSampleBtn" type="button">BHC 샘플 채우기</button>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbwsqI78i_gzmpxEmejC716IwVHVF0xjxdAd7Gv3ph39TrgKZkN1waeyjCsMrz2kfgo3/exec";
+    const resultBox = document.getElementById("resultBox");
+
+    function qs(name){
+      const params = new URLSearchParams(location.search);
+      return params.get(name) || "";
+    }
+
+    function setStatusText(text){
+      resultBox.textContent = text;
+    }
+
+    function updatePreview(statusText = "입력 중"){
+      const seatNo = document.getElementById("seatNo").value.trim();
+      const tier = document.getElementById("tier").value.trim();
+      document.getElementById("seatPreview").textContent = seatNo || "-";
+      document.getElementById("tierPreview").textContent = tier || "-";
+      document.getElementById("statusPreview").textContent = statusText;
+      document.getElementById("tierPreview").className = "seat-value " + (tier === "premium" ? "premium-text" : "standard-text");
+    }
+
+    function collectFormData(){
+      return {
+        seatNo: document.getElementById("seatNo").value.trim(),
+        tier: document.getElementById("tier").value.trim(),
+        name: document.getElementById("brandName").value.trim(),
+        category: document.getElementById("category").value.trim(),
+        url: document.getElementById("brandUrl").value.trim(),
+        logo: document.getElementById("logoUrl").value.trim(),
+        memo: document.getElementById("memo").value.trim()
+      };
+    }
+
+    async function callPost(data){
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+      return res.json();
+    }
+
+    async function reserveSeat(){
+      const data = collectFormData();
+
+      if (!data.seatNo) {
+        setStatusText("좌석번호를 입력하세요.");
+        return;
+      }
+
+      updatePreview("예약 요청중");
+      setStatusText("좌석 선점 요청중...");
+
+      try{
+        const result = await callPost({
+          mode: "reserve",
+          seatNo: data.seatNo,
+          tier: data.tier
+        });
+
+        if (result.ok) {
+          updatePreview("RESERVED");
+          setStatusText(`좌석 선점 완료\nseatNo: ${data.seatNo}`);
+        } else {
+          updatePreview("실패");
+          setStatusText(`좌석 선점 실패\n${result.error || "알 수 없는 오류"}`);
+        }
+      }catch(err){
+        updatePreview("오류");
+        setStatusText(`요청 오류\n${String(err)}`);
+      }
+    }
+
+    async function confirmPayment(){
+      const data = collectFormData();
+
+      if (!data.seatNo || !data.name || !data.url) {
+        setStatusText("결제 완료 처리에는 좌석번호, 브랜드명, URL이 필요합니다.");
+        return;
+      }
+
+      updatePreview("LIVE 처리중");
+      setStatusText("결제 완료 처리중...");
+
+      try{
+        const result = await callPost({
+          mode: "confirm",
+          seatNo: data.seatNo,
+          status: "LIVE",
+          name: data.name,
+          category: data.category,
+          url: data.url,
+          logo: data.logo,
+          tier: data.tier,
+          memo: data.memo
+        });
+
+        if (result.ok) {
+          updatePreview("LIVE");
+          setStatusText(
+            `결제 완료 처리 성공\n` +
+            `seatNo: ${data.seatNo}\n` +
+            `brand: ${data.name}\n` +
+            `status: LIVE`
+          );
+        } else {
+          updatePreview("실패");
+          setStatusText(`결제 완료 처리 실패\n${result.error || "알 수 없는 오류"}`);
+        }
+      }catch(err){
+        updatePreview("오류");
+        setStatusText(`요청 오류\n${String(err)}`);
+      }
+    }
+
+    async function releaseSeat(){
+      const data = collectFormData();
+
+      if (!data.seatNo) {
+        setStatusText("좌석번호를 입력하세요.");
+        return;
+      }
+
+      updatePreview("해제 요청중");
+      setStatusText("예약 해제 요청중...");
+
+      try{
+        const result = await callPost({
+          mode: "release",
+          seatNo: data.seatNo
+        });
+
+        if (result.ok) {
+          updatePreview("OPEN");
+          setStatusText(`예약 해제 완료\nseatNo: ${data.seatNo}`);
+        } else {
+          updatePreview("실패");
+          setStatusText(`예약 해제 실패\n${result.error || "알 수 없는 오류"}`);
+        }
+      }catch(err){
+        updatePreview("오류");
+        setStatusText(`요청 오류\n${String(err)}`);
+      }
+    }
+
+    function fillSample(){
+      document.getElementById("seatNo").value = qs("seatNo") || "P001";
+      document.getElementById("tier").value = qs("tier") || "premium";
+      document.getElementById("brandName").value = "BHC";
+      document.getElementById("category").value = "치킨";
+      document.getElementById("brandUrl").value = "https://www.bhc.co.kr/";
+      document.getElementById("logoUrl").value = "logos/bhc.co.kr.png";
+      document.getElementById("memo").value = "테스트 등록";
+      updatePreview("샘플 입력 완료");
+    }
+
+    function initFromQuery(){
+      const seatNo = qs("seatNo");
+      const tier = qs("tier");
+
+      if (seatNo) document.getElementById("seatNo").value = seatNo;
+      if (tier) document.getElementById("tier").value = tier;
+
+      updatePreview("입력 중");
+    }
+
+    document.getElementById("seatNo").addEventListener("input", () => updatePreview("입력 중"));
+    document.getElementById("tier").addEventListener("change", () => updatePreview("입력 중"));
+
+    document.getElementById("reserveBtn").addEventListener("click", reserveSeat);
+    document.getElementById("confirmBtn").addEventListener("click", confirmPayment);
+    document.getElementById("releaseBtn").addEventListener("click", releaseSeat);
+    document.getElementById("fillSampleBtn").addEventListener("click", fillSample);
+    document.getElementById("goBoardBtn").addEventListener("click", () => {
+      location.href = "k-food.html";
+    });
+
+    initFromQuery();
+  </script>
 </body>
 </html>
