@@ -570,290 +570,290 @@
     </div>
   </div>
 
-<script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbwsqI78i_gzmpxEmejC716IwVHVF0xjxdAd7Gv3ph39TrgKZkN1waeyjCsMrz2kfgo3/exec";
+  <script>
+    const API_URL = "여기에_현재_웹앱URL";
 
-  let adsData = {};
+    let adsData = {};
 
-  function makeSeatNo(prefix, n){
-    return `${prefix}${String(n).padStart(3, "0")}`;
-  }
+    function makeSeatNo(prefix, n){
+      return `${prefix}${String(n).padStart(3, "0")}`;
+    }
 
-  function fetchJSONP(action){
-    return new Promise((resolve) => {
-      const cb = "__cb_" + action + "_" + Math.random().toString(36).slice(2);
-      let done = false;
+    function fetchJSONP(action){
+      return new Promise((resolve) => {
+        const cb = "__cb_" + action + "_" + Math.random().toString(36).slice(2);
+        let done = false;
 
-      function finish(value){
-        if (done) return;
-        done = true;
-        resolve(value);
+        function finish(value){
+          if (done) return;
+          done = true;
+          resolve(value);
+        }
+
+        window[cb] = (data) => {
+          try { delete window[cb]; } catch(e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+          finish(data || {});
+        };
+
+        const script = document.createElement("script");
+        script.onerror = () => {
+          try { delete window[cb]; } catch(e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+          finish({});
+        };
+
+        setTimeout(() => {
+          try { delete window[cb]; } catch(e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+          finish({});
+        }, 8000);
+
+        script.src = `${API_URL}?action=${action}&cb=${cb}&t=${Date.now()}`;
+        document.body.appendChild(script);
+      });
+    }
+
+    async function loadAdsData(){
+      const res = await fetchJSONP("ads_jsonp");
+      adsData = (res && res.ok && res.ads) ? res.ads : {};
+    }
+
+    function getSeatInfo(seatNo, tier){
+      const ad = adsData[seatNo];
+      if (!ad) {
+        return {
+          seatNo,
+          status: "OPEN",
+          name: "",
+          category: "",
+          url: "",
+          logo: "",
+          tier
+        };
       }
-
-      window[cb] = (data) => {
-        try { delete window[cb]; } catch(e) {}
-        if (script.parentNode) script.parentNode.removeChild(script);
-        finish(data || {});
-      };
-
-      const script = document.createElement("script");
-      script.onerror = () => {
-        try { delete window[cb]; } catch(e) {}
-        if (script.parentNode) script.parentNode.removeChild(script);
-        finish({});
-      };
-
-      setTimeout(() => {
-        try { delete window[cb]; } catch(e) {}
-        if (script.parentNode) script.parentNode.removeChild(script);
-        finish({});
-      }, 8000);
-
-      script.src = `${API_URL}?action=${action}&cb=${cb}&t=${Date.now()}`;
-      document.body.appendChild(script);
-    });
-  }
-
-  async function loadAdsData(){
-    const res = await fetchJSONP("ads_jsonp");
-    adsData = (res && res.ok && res.ads) ? res.ads : {};
-  }
-
-  function getSeatInfo(seatNo, tier){
-    const ad = adsData[seatNo];
-    if (!ad) {
       return {
         seatNo,
-        status: "OPEN",
-        name: "",
-        category: "",
-        url: "",
-        logo: "",
-        tier
+        status: String(ad.status || "OPEN").toUpperCase(),
+        name: ad.name || "",
+        category: ad.category || "",
+        url: ad.url || "",
+        logo: ad.logo || "",
+        tier: ad.tier || tier
       };
     }
-    return {
-      seatNo,
-      status: String(ad.status || "OPEN").toUpperCase(),
-      name: ad.name || "",
-      category: ad.category || "",
-      url: ad.url || "",
-      logo: ad.logo || "",
-      tier: ad.tier || tier
-    };
-  }
 
-  function trackClickViaImage(ad, seatNo, tier){
-    try{
-      const seat = encodeURIComponent(seatNo || "");
-      const url = encodeURIComponent(ad.url || "");
-      const name = encodeURIComponent(ad.name || "");
-      const t = encodeURIComponent(tier || "");
-      const ua = encodeURIComponent(navigator.userAgent.slice(0,120));
+    function trackClickViaImage(ad, seatNo, tier){
+      try{
+        const seat = encodeURIComponent(seatNo || "");
+        const url = encodeURIComponent(ad.url || "");
+        const name = encodeURIComponent(ad.name || "");
+        const t = encodeURIComponent(tier || "");
+        const ua = encodeURIComponent(navigator.userAgent.slice(0,120));
 
-      const img = new Image();
-      img.referrerPolicy = "no-referrer";
-      img.src = `${API_URL}?action=track&seatNo=${seat}&url=${url}&name=${name}&tier=${t}&ua=${ua}&t=${Date.now()}`;
-    }catch(e){}
-  }
+        const img = new Image();
+        img.referrerPolicy = "no-referrer";
+        img.src = `${API_URL}?action=track&seatNo=${seat}&url=${url}&name=${name}&tier=${t}&ua=${ua}&t=${Date.now()}`;
+      }catch(e){}
+    }
 
-  const kingGrid = document.getElementById("kingGrid");
-  const kingMeta = document.getElementById("kingMeta");
-  const refreshKingBtn = document.getElementById("refreshKingBtn");
+    const kingGrid = document.getElementById("kingGrid");
+    const kingMeta = document.getElementById("kingMeta");
+    const refreshKingBtn = document.getElementById("refreshKingBtn");
 
-  async function createKingSeats(){
-    kingGrid.innerHTML = "";
-    kingMeta.textContent = "누적 클릭 TOP5 불러오는 중…";
+    async function createKingSeats(){
+      kingGrid.innerHTML = "";
+      kingMeta.textContent = "누적 클릭 TOP5 불러오는 중…";
 
-    const res = await fetchJSONP("topall_jsonp");
-    const top = (res && res.ok && Array.isArray(res.top)) ? res.top : [];
+      const res = await fetchJSONP("topall_jsonp");
+      const top = (res && res.ok && Array.isArray(res.top)) ? res.top : [];
 
-    for(let i = 0; i < 5; i++){
-      const ranked = top[i];
-      const card = document.createElement("div");
-      card.className = "king-seat";
+      for(let i = 0; i < 5; i++){
+        const ranked = top[i];
+        const card = document.createElement("div");
+        card.className = "king-seat";
 
-      if (ranked && ranked.seatNo && adsData[ranked.seatNo]) {
-        const ad = adsData[ranked.seatNo];
-        const seatNo = ranked.seatNo;
-        const count = Number(ranked.count || 0);
-        const tierText = seatNo.startsWith("P") ? "Premium" : "Standard";
+        if (ranked && ranked.seatNo && adsData[ranked.seatNo]) {
+          const ad = adsData[ranked.seatNo];
+          const seatNo = ranked.seatNo;
+          const count = Number(ranked.count || 0);
+          const tierText = seatNo.startsWith("P") ? "Premium" : "Standard";
 
-        card.innerHTML = `
-          <div class="king-badge">👑 KING ${i + 1}</div>
-          <div class="king-logo">
-            <img src="${ad.logo || 'images/logo.png'}" alt="${ad.name || 'BRAND'}" onerror="this.onerror=null; this.src='images/logo.png';">
-          </div>
-          <div>
-            <div class="king-name">${ad.name || ranked.name || "BRAND"}</div>
-            <div class="king-desc">누적 클릭 ${count}회 · ${tierText} · ${seatNo}</div>
-          </div>
-        `;
+          card.innerHTML = `
+            <div class="king-badge">👑 KING ${i + 1}</div>
+            <div class="king-logo">
+              <img src="${ad.logo || 'images/logo.png'}" alt="${ad.name || 'BRAND'}" onerror="this.onerror=null; this.src='images/logo.png';">
+            </div>
+            <div>
+              <div class="king-name">${ad.name || ranked.name || "BRAND"}</div>
+              <div class="king-desc">누적 클릭 ${count}회 · ${tierText} · ${seatNo}</div>
+            </div>
+          `;
 
-        card.addEventListener("click", () => {
-          if (ad.url) window.open(ad.url, "_blank", "noopener,noreferrer");
-        });
-      } else {
-        card.innerHTML = `
-          <div class="king-badge">👑 KING ${i + 1}</div>
-          <div class="king-empty">
-            Premium / Standard 광고 클릭 누적 후<br>자동 TOP${i + 1} 표시
-          </div>
-        `;
+          card.addEventListener("click", () => {
+            if (ad.url) window.open(ad.url, "_blank", "noopener,noreferrer");
+          });
+        } else {
+          card.innerHTML = `
+            <div class="king-badge">👑 KING ${i + 1}</div>
+            <div class="king-empty">
+              Premium / Standard 광고 클릭 누적 후<br>자동 TOP${i + 1} 표시
+            </div>
+          `;
+        }
+
+        kingGrid.appendChild(card);
       }
 
-      kingGrid.appendChild(card);
+      kingMeta.textContent = `누적 클릭 기준 · 업데이트 ${new Date().toLocaleString()}`;
     }
 
-    kingMeta.textContent = `누적 클릭 기준 · 업데이트 ${new Date().toLocaleString()}`;
-  }
+    function createTile(seatNo, tier){
+      const info = getSeatInfo(seatNo, tier);
+      const sizeClass = tier === "premium" ? "premium-tile" : "standard-tile";
 
-  function createTile(seatNo, tier){
-    const info = getSeatInfo(seatNo, tier);
-    const sizeClass = tier === "premium" ? "premium-tile" : "standard-tile";
+      const tile = document.createElement("div");
+      tile.className = `tile ${tier} ${sizeClass}` + (info.status === "OPEN" ? " open-seat" : "");
+      tile.dataset.seat = seatNo.toLowerCase();
+      tile.dataset.cat = info.category || "";
+      tile.dataset.name = (info.name || "").toLowerCase();
 
-    const tile = document.createElement("div");
-    tile.className = `tile ${tier} ${sizeClass}` + (info.status === "OPEN" ? " open-seat" : "");
-    tile.dataset.seat = seatNo.toLowerCase();
-    tile.dataset.cat = info.category || "";
-    tile.dataset.name = (info.name || "").toLowerCase();
-
-    if (info.status === "OPEN") {
-      tile.innerHTML = `
-        <div class="seat-no">${seatNo}</div>
-        <div class="open-box">
-          <strong>OPEN</strong>
-          <span>Advertise Here</span>
-        </div>
-        <div class="seat-status open">OPEN</div>
-      `;
-    } else if (info.status === "RESERVED") {
-      tile.innerHTML = `
-        <div class="seat-no">${seatNo}</div>
-        <div class="open-box">
-          <strong>RESERVED</strong>
-          <span>예약 진행중</span>
-        </div>
-        <div class="seat-status reserved">RESERVED</div>
-      `;
-    } else {
-      tile.innerHTML = `
-        <div class="seat-no">${seatNo}</div>
-        <div class="logo-only-box">
-          <img src="${info.logo || 'images/logo.png'}" alt="${info.name || 'BRAND'}" onerror="this.onerror=null; this.src='images/logo.png';">
-        </div>
-        <div class="seat-status live">LIVE</div>
-      `;
-    }
-
-    tile.addEventListener("click", async () => {
       if (info.status === "OPEN") {
-        window.location.href = "advertise.html";
-        return;
+        tile.innerHTML = `
+          <div class="seat-no">${seatNo}</div>
+          <div class="open-box">
+            <strong>OPEN</strong>
+            <span>Advertise Here</span>
+          </div>
+          <div class="seat-status open">OPEN</div>
+        `;
+      } else if (info.status === "RESERVED") {
+        tile.innerHTML = `
+          <div class="seat-no">${seatNo}</div>
+          <div class="open-box">
+            <strong>RESERVED</strong>
+            <span>예약 진행중</span>
+          </div>
+          <div class="seat-status reserved">RESERVED</div>
+        `;
+      } else {
+        tile.innerHTML = `
+          <div class="seat-no">${seatNo}</div>
+          <div class="logo-only-box">
+            <img src="${info.logo || 'images/logo.png'}" alt="${info.name || 'BRAND'}" onerror="this.onerror=null; this.src='images/logo.png';">
+          </div>
+          <div class="seat-status live">LIVE</div>
+        `;
       }
-      if (info.status === "RESERVED") {
-        alert(`${seatNo} 좌석은 예약 진행중입니다.`);
-        return;
-      }
-      if (info.url) {
-        trackClickViaImage(info, seatNo, tier);
-        setTimeout(createKingSeats, 1000);
-        window.open(info.url, "_blank", "noopener,noreferrer");
-      }
-    });
 
-    tile.tabIndex = 0;
-    tile.setAttribute("role", "button");
-    return tile;
-  }
+      tile.addEventListener("click", async () => {
+        if (info.status === "OPEN") {
+          window.location.href = `advertise.html?seatNo=${encodeURIComponent(seatNo)}&tier=${encodeURIComponent(tier)}`;
+          return;
+        }
+        if (info.status === "RESERVED") {
+          alert(`${seatNo} 좌석은 예약 진행중입니다.`);
+          return;
+        }
+        if (info.url) {
+          trackClickViaImage(info, seatNo, tier);
+          setTimeout(createKingSeats, 1000);
+          window.open(info.url, "_blank", "noopener,noreferrer");
+        }
+      });
 
-  const premiumGrid = document.getElementById("premiumGrid");
-  const standardGrid = document.getElementById("standardGrid");
-  const chips = document.getElementById("chips");
-  const searchInput = document.getElementById("searchInput");
-  const clearBtn = document.getElementById("clearBtn");
-  const countText = document.getElementById("countText");
-
-  let currentCat = "ALL";
-  let currentQuery = "";
-  const tileRefs = [];
-
-  function renderSeats(){
-    premiumGrid.innerHTML = "";
-    standardGrid.innerHTML = "";
-    tileRefs.length = 0;
-
-    for(let i = 1; i <= 100; i++){
-      const seatNo = makeSeatNo("P", i);
-      const tile = createTile(seatNo, "premium");
-      premiumGrid.appendChild(tile);
-      tileRefs.push(tile);
+      tile.tabIndex = 0;
+      tile.setAttribute("role", "button");
+      return tile;
     }
 
-    for(let i = 1; i <= 100; i++){
-      const seatNo = makeSeatNo("S", i);
-      const tile = createTile(seatNo, "standard");
-      standardGrid.appendChild(tile);
-      tileRefs.push(tile);
+    const premiumGrid = document.getElementById("premiumGrid");
+    const standardGrid = document.getElementById("standardGrid");
+    const chips = document.getElementById("chips");
+    const searchInput = document.getElementById("searchInput");
+    const clearBtn = document.getElementById("clearBtn");
+    const countText = document.getElementById("countText");
+
+    let currentCat = "ALL";
+    let currentQuery = "";
+    const tileRefs = [];
+
+    function renderSeats(){
+      premiumGrid.innerHTML = "";
+      standardGrid.innerHTML = "";
+      tileRefs.length = 0;
+
+      for(let i = 1; i <= 100; i++){
+        const seatNo = makeSeatNo("P", i);
+        const tile = createTile(seatNo, "premium");
+        premiumGrid.appendChild(tile);
+        tileRefs.push(tile);
+      }
+
+      for(let i = 1; i <= 100; i++){
+        const seatNo = makeSeatNo("S", i);
+        const tile = createTile(seatNo, "standard");
+        standardGrid.appendChild(tile);
+        tileRefs.push(tile);
+      }
+
+      applyFilter();
     }
 
-    applyFilter();
-  }
+    function applyFilter(){
+      const q = currentQuery.trim().toLowerCase();
+      let shown = 0;
 
-  function applyFilter(){
-    const q = currentQuery.trim().toLowerCase();
-    let shown = 0;
+      tileRefs.forEach(tile => {
+        const cat = tile.dataset.cat || "";
+        const name = tile.dataset.name || "";
+        const seat = tile.dataset.seat || "";
 
-    tileRefs.forEach(tile => {
-      const cat = tile.dataset.cat || "";
-      const name = tile.dataset.name || "";
-      const seat = tile.dataset.seat || "";
+        const catOk = currentCat === "ALL" || cat === currentCat;
+        const searchOk = !q || name.includes(q) || seat.includes(q);
+        const ok = catOk && searchOk;
 
-      const catOk = currentCat === "ALL" || cat === currentCat;
-      const searchOk = !q || name.includes(q) || seat.includes(q);
-      const ok = catOk && searchOk;
+        tile.classList.toggle("filtered-out", !ok);
+        if (ok) shown++;
+      });
 
-      tile.classList.toggle("filtered-out", !ok);
-      if (ok) shown++;
+      countText.textContent = `표시 ${shown} / ${tileRefs.length}`;
+    }
+
+    chips.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      currentCat = chip.dataset.cat || "ALL";
+      applyFilter();
     });
 
-    countText.textContent = `표시 ${shown} / ${tileRefs.length}`;
-  }
+    searchInput.addEventListener("input", () => {
+      currentQuery = searchInput.value;
+      applyFilter();
+    });
 
-  chips.addEventListener("click", (e) => {
-    const chip = e.target.closest(".chip");
-    if (!chip) return;
+    clearBtn.addEventListener("click", () => {
+      currentCat = "ALL";
+      currentQuery = "";
+      searchInput.value = "";
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      const allChip = document.querySelector('.chip[data-cat="ALL"]');
+      if (allChip) allChip.classList.add("active");
+      applyFilter();
+    });
 
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-    chip.classList.add("active");
-    currentCat = chip.dataset.cat || "ALL";
-    applyFilter();
-  });
+    refreshKingBtn.addEventListener("click", createKingSeats);
 
-  searchInput.addEventListener("input", () => {
-    currentQuery = searchInput.value;
-    applyFilter();
-  });
+    async function boot(){
+      await loadAdsData();
+      renderSeats();
+      await createKingSeats();
+    }
 
-  clearBtn.addEventListener("click", () => {
-    currentCat = "ALL";
-    currentQuery = "";
-    searchInput.value = "";
-    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-    const allChip = document.querySelector('.chip[data-cat="ALL"]');
-    if (allChip) allChip.classList.add("active");
-    applyFilter();
-  });
-
-  refreshKingBtn.addEventListener("click", createKingSeats);
-
-  async function boot(){
-    await loadAdsData();
-    renderSeats();
-    await createKingSeats();
-  }
-
-  boot();
-</script>
+    boot();
+  </script>
 </body>
 </html>
