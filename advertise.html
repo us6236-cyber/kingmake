@@ -86,7 +86,7 @@
 
     .seat-summary{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
+      grid-template-columns:repeat(4,1fr);
       gap:12px;
       margin-bottom:18px;
     }
@@ -105,6 +105,7 @@
     .seat-value{
       font-size:22px;
       font-weight:800;
+      word-break:break-word;
     }
     .premium-text{ color:var(--premium); }
     .standard-text{ color:#fff; }
@@ -148,7 +149,7 @@
       border-radius:14px;
       color:#f5e6b3;
       font-size:13px;
-      line-height:1.6;
+      line-height:1.7;
     }
 
     .actions{
@@ -270,6 +271,10 @@
           <b>현재 상태</b>
           <div class="seat-value" id="statusPreview">입력 전</div>
         </div>
+        <div class="seat-box">
+          <b>광고비</b>
+          <div class="seat-value" id="pricePreview">-</div>
+        </div>
       </div>
 
       <div class="form-grid">
@@ -327,7 +332,10 @@
       <div class="notice">
         운영 흐름:<br>
         1) 고객이 좌석 신청<br>
-        2) 관리자가 결제 완료 처리
+        2) 관리자가 결제 완료 처리<br><br>
+        가격 정책:<br>
+        Premium 1~10: 50만원 / 11~50: 30만원 / 51~100: 10만원<br>
+        Standard 1~50: 5만원 / 51~100: 2만원
       </div>
 
       <div class="actions">
@@ -360,6 +368,8 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwsqI78i_gzmpxEmejC716IwVHVF0xjxdAd7Gv3ph39TrgKZkN1waeyjCsMrz2kfgo3/exec";
+    const BOARD_URL = "kfood.html";
+
     const resultBox = document.getElementById("resultBox");
     const adminActions = document.getElementById("adminActions");
     const toggleAdminBtn = document.getElementById("toggleAdminBtn");
@@ -373,12 +383,40 @@
       resultBox.textContent = text;
     }
 
+    function getSeatPrice(seatNo, tier){
+      if (!seatNo) return 0;
+
+      const num = parseInt(String(seatNo).replace(/[^\d]/g, ""), 10);
+      if (Number.isNaN(num)) return 0;
+
+      if (tier === "premium") {
+        if (num >= 1 && num <= 10) return 500000;
+        if (num >= 11 && num <= 50) return 300000;
+        return 100000;
+      }
+
+      if (tier === "standard") {
+        if (num >= 1 && num <= 50) return 50000;
+        return 20000;
+      }
+
+      return 0;
+    }
+
+    function formatWon(value){
+      return Number(value || 0).toLocaleString("ko-KR") + "원";
+    }
+
     function updatePreview(statusText = "입력 중"){
       const seatNo = document.getElementById("seatNo").value.trim();
       const tier = document.getElementById("tier").value.trim();
+      const price = getSeatPrice(seatNo, tier);
+
       document.getElementById("seatPreview").textContent = seatNo || "-";
       document.getElementById("tierPreview").textContent = tier || "-";
       document.getElementById("statusPreview").textContent = statusText;
+      document.getElementById("pricePreview").textContent = price ? formatWon(price) : "-";
+
       document.getElementById("tierPreview").className =
         "seat-value " + (tier === "premium" ? "premium-text" : "standard-text");
     }
@@ -422,7 +460,10 @@
         const result = await callPost({
           mode: "reserve",
           seatNo: data.seatNo,
-          tier: data.tier
+          tier: data.tier,
+          advertiserName: data.advertiserName,
+          managerPhone: data.managerPhone,
+          managerEmail: data.managerEmail
         });
 
         if (result.ok) {
@@ -431,6 +472,7 @@
             `좌석 신청 완료\n` +
             `seatNo: ${data.seatNo}\n` +
             `등급: ${data.tier}\n` +
+            `광고비: ${formatWon(getSeatPrice(data.seatNo, data.tier))}\n` +
             `다음 단계는 관리자의 결제 완료 처리입니다.`
           );
         } else {
@@ -443,56 +485,57 @@
       }
     }
 
-async function confirmPayment(){
-  const data = collectFormData();
-  const adminPassword = prompt("관리자 비밀번호를 입력하세요.");
+    async function confirmPayment(){
+      const data = collectFormData();
+      const adminPassword = prompt("관리자 비밀번호를 입력하세요.");
 
-  if (!adminPassword) {
-    setStatusText("관리자 비밀번호가 필요합니다.");
-    return;
-  }
+      if (!adminPassword) {
+        setStatusText("관리자 비밀번호가 필요합니다.");
+        return;
+      }
 
-  if (!data.seatNo || !data.name || !data.url) {
-    setStatusText("결제 완료 처리에는 좌석번호, 브랜드명, URL이 필요합니다.");
-    return;
-  }
+      if (!data.seatNo || !data.name || !data.url) {
+        setStatusText("결제 완료 처리에는 좌석번호, 브랜드명, URL이 필요합니다.");
+        return;
+      }
 
-  updatePreview("LIVE 처리중");
-  setStatusText("관리자 결제 완료 처리중...");
+      updatePreview("LIVE 처리중");
+      setStatusText("관리자 결제 완료 처리중...");
 
-  try{
-    const result = await callPost({
-      mode: "confirm",
-      adminPassword: adminPassword,
-      seatNo: data.seatNo,
-      status: "LIVE",
-      name: data.name,
-      category: data.category,
-      url: data.url,
-      logo: "",
-      tier: data.tier,
-      advertiserName: data.advertiserName,
-      managerPhone: data.managerPhone,
-      managerEmail: data.managerEmail
-    });
+      try{
+        const result = await callPost({
+          mode: "confirm",
+          adminPassword: adminPassword,
+          seatNo: data.seatNo,
+          status: "LIVE",
+          name: data.name,
+          category: data.category,
+          url: data.url,
+          logo: "",
+          tier: data.tier,
+          advertiserName: data.advertiserName,
+          managerPhone: data.managerPhone,
+          managerEmail: data.managerEmail
+        });
 
-    if (result.ok) {
-      updatePreview("LIVE");
-      setStatusText(
-        `결제 완료 처리 성공\n` +
-        `seatNo: ${data.seatNo}\n` +
-        `brand: ${data.name}\n` +
-        `status: LIVE`
-      );
-    } else {
-      updatePreview("실패");
-      setStatusText(`결제 완료 처리 실패\n${result.error || "알 수 없는 오류"}`);
+        if (result.ok) {
+          updatePreview("LIVE");
+          setStatusText(
+            `결제 완료 처리 성공\n` +
+            `seatNo: ${data.seatNo}\n` +
+            `brand: ${data.name}\n` +
+            `광고비: ${formatWon(getSeatPrice(data.seatNo, data.tier))}\n` +
+            `status: LIVE`
+          );
+        } else {
+          updatePreview("실패");
+          setStatusText(`결제 완료 처리 실패\n${result.error || "알 수 없는 오류"}`);
+        }
+      }catch(err){
+        updatePreview("오류");
+        setStatusText(`요청 오류\n${String(err)}`);
+      }
     }
-  }catch(err){
-    updatePreview("오류");
-    setStatusText(`요청 오류\n${String(err)}`);
-  }
-}
 
     async function releaseSeat(){
       const data = collectFormData();
@@ -561,7 +604,7 @@ async function confirmPayment(){
     document.getElementById("releaseBtn").addEventListener("click", releaseSeat);
     document.getElementById("fillSampleBtn").addEventListener("click", fillSample);
     document.getElementById("goBoardBtn").addEventListener("click", () => {
-      location.href = "kfood.html";
+      window.location.href = BOARD_URL;
     });
     toggleAdminBtn.addEventListener("click", toggleAdmin);
 
