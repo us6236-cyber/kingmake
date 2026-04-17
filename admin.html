@@ -13,7 +13,7 @@ body{
   font-family:Arial;
 }
 .wrap{
-  max-width:1200px;
+  max-width:1400px;
   margin:0 auto;
   padding:24px;
 }
@@ -61,6 +61,7 @@ th,td{
   border-bottom:1px solid rgba(255,255,255,0.1);
   padding:8px;
   font-size:13px;
+  text-align:left;
 }
 
 th{color:#aaa;}
@@ -70,22 +71,41 @@ th{color:#aaa;}
   gap:10px;
   flex-wrap:wrap;
 }
+
+.tag{
+  padding:4px 8px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.live{background:#2ecc71;}
+.reserved{background:#f39c12;}
+.open{background:#555;}
 </style>
 </head>
 
 <body>
 <div class="wrap">
 
-<h1>👑 관리자 대시보드</h1>
+<h1>👑 KING MAKE 관리자 대시보드</h1>
 
 <div class="card filter">
   <input id="password" type="password" placeholder="관리자 비밀번호">
+  
   <select id="statusFilter">
-    <option value="ALL">전체</option>
+    <option value="ALL">전체 상태</option>
     <option value="LIVE">LIVE</option>
     <option value="RESERVED">RESERVED</option>
     <option value="OPEN">OPEN</option>
   </select>
+
+  <select id="taxFilter">
+    <option value="ALL">세금계산서 전체</option>
+    <option value="예">세금계산서 요청</option>
+    <option value="아니오">미요청</option>
+  </select>
+
   <button onclick="loadData()">불러오기</button>
 </div>
 
@@ -104,10 +124,14 @@ th{color:#aaa;}
 <th>상태</th>
 <th>브랜드</th>
 <th>등급</th>
-<th>클릭</th>
 <th>가격</th>
 <th>광고주</th>
+<th>입금자</th>
 <th>연락처</th>
+<th>이메일</th>
+<th>세금계산서</th>
+<th>사업자명</th>
+<th>사업자번호</th>
 </tr>
 </thead>
 <tbody id="tbody"></tbody>
@@ -117,7 +141,7 @@ th{color:#aaa;}
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyPc9SCOE3Ubb5fLk9k6er7pTdcyQDEOakByKhGc4RmeNEP33ZiCCb7TTBW__ssHFsU/exec";
+const API_URL = "여기에_웹앱URL";
 
 function getPrice(seatNo, tier){
   const num = parseInt(seatNo.replace(/[^\d]/g,""));
@@ -138,9 +162,16 @@ function format(num){
   return num.toLocaleString()+"원";
 }
 
+function statusTag(status){
+  if(status==="LIVE") return `<span class="tag live">LIVE</span>`;
+  if(status==="RESERVED") return `<span class="tag reserved">RESERVED</span>`;
+  return `<span class="tag open">OPEN</span>`;
+}
+
 async function loadData(){
   const pw = document.getElementById("password").value;
-  const filter = document.getElementById("statusFilter").value;
+  const statusFilter = document.getElementById("statusFilter").value;
+  const taxFilter = document.getElementById("taxFilter").value;
 
   const res = await fetch(`${API_URL}?action=admin_json&password=${pw}`);
   const data = await res.json();
@@ -156,18 +187,20 @@ async function loadData(){
 
   let totalRevenue = 0;
 
-  const tbody = document.getElementById("tbody");
-  tbody.innerHTML="";
-
   let ads = data.ads;
 
-  // 필터
-  if(filter !== "ALL"){
-    ads = ads.filter(a => a.status === filter);
+  // 상태 필터
+  if(statusFilter !== "ALL"){
+    ads = ads.filter(a => a.status === statusFilter);
   }
 
-  // 클릭수 정렬
-  ads.sort((a,b)=>b.clicks-a.clicks);
+  // 세금계산서 필터
+  if(taxFilter !== "ALL"){
+    ads = ads.filter(a => a.taxInvoiceNeeded === taxFilter);
+  }
+
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML="";
 
   ads.forEach(a=>{
     let price = 0;
@@ -180,13 +213,17 @@ async function loadData(){
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${a.seatNo}</td>
-      <td>${a.status}</td>
+      <td>${statusTag(a.status)}</td>
       <td>${a.name || ""}</td>
       <td>${a.tier || ""}</td>
-      <td>${a.clicks || 0}</td>
       <td>${price ? format(price) : "-"}</td>
       <td>${a.advertiserName || ""}</td>
+      <td>${a.depositorName || ""}</td>
       <td>${a.managerPhone || ""}</td>
+      <td>${a.managerEmail || ""}</td>
+      <td>${a.taxInvoiceNeeded || ""}</td>
+      <td>${a.businessName || ""}</td>
+      <td>${a.businessNumber || ""}</td>
     `;
     tbody.appendChild(tr);
   });
