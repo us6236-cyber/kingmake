@@ -463,7 +463,7 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/maacros/s/AKfycbyPc9SCOE3Ubb5fLk9k6er7pTdcyQDEOakByKhGc4RmeNEP33ZiCCb7TTBW__ssHFsU/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyPc9SCOE3Ubb5fLk9k6er7pTdcyQDEOakByKhGc4RmeNEP33ZiCCb7TTBW__ssHFsU/exec";
     const BOARD_URL = "kfood.html";
 
     const resultBox = document.getElementById("resultBox");
@@ -535,40 +535,43 @@
     }
 
     async function callPost(data){
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        });
+  try {
+    const body = new URLSearchParams();
 
-        const text = await res.text();
+    Object.keys(data).forEach(key => {
+      body.append(key, data[key] ?? "");
+    });
 
-        try {
-          return JSON.parse(text);
-        } catch(parseErr) {
-          return {
-            ok: false,
-            error: "서버 응답을 JSON으로 읽지 못했습니다.",
-            raw: text
-          };
-        }
-      } catch(err) {
-        return {
-          ok: false,
-          error:
-            "Failed to fetch\n\n" +
-            "가능한 원인:\n" +
-            "1) API_URL이 잘못됨\n" +
-            "2) Apps Script가 웹앱으로 재배포 안 됨\n" +
-            "3) 웹앱 권한이 '모든 사용자'가 아님\n" +
-            "4) file:// 환경에서 열림\n\n" +
-            "원본 오류:\n" + String(err)
-        };
-      }
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: body
+    });
+
+    const text = await res.text();
+
+    try {
+      return JSON.parse(text);
+    } catch(parseErr) {
+      return {
+        ok: false,
+        error: "서버 응답을 JSON으로 읽지 못했습니다.",
+        raw: text
+      };
     }
+  } catch(err) {
+    return {
+      ok: false,
+      error:
+        "Failed to fetch\n\n" +
+        "가능한 원인:\n" +
+        "1) API_URL이 잘못됨\n" +
+        "2) Apps Script가 웹앱으로 재배포 안 됨\n" +
+        "3) 웹앱 권한이 '모든 사용자'가 아님\n" +
+        "4) 현재 웹앱 주소가 /exec 가 아님\n\n" +
+        "원본 오류:\n" + String(err)
+    };
+  }
+}
 
     async function testApi(){
       setStatusText("API 연결 테스트 중...");
