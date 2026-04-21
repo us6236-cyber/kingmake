@@ -511,7 +511,7 @@
       <h1>🍗 K-FOOD Brand Seats</h1>
       <p>
         KING SEAT 5개 = Premium / Standard 누적 클릭 TOP5 자동 표시<br>
-        Premium 100석 / Standard 100석 = 광고 등록 요청 시 순차 등록
+        Premium 100석 / Standard 100석 = 광고 신청 후 자동 반영
       </p>
     </div>
 
@@ -530,7 +530,7 @@
       <div class="search">
         <input id="searchInput" type="text" placeholder="브랜드명 또는 좌석번호 검색" autocomplete="off" />
         <button class="btn" id="clearBtn" type="button">초기화</button>
-        <button class="btn" id="refreshKingBtn" type="button">KING 갱신</button>
+        <button class="btn" id="refreshBtn" type="button">새로고침</button>
       </div>
     </div>
 
@@ -579,43 +579,38 @@
       return `${prefix}${String(n).padStart(3, "0")}`;
     }
 
-    function fetchJSONP(action){
+    function callJsonp(action, params = {}){
       return new Promise((resolve) => {
-        const cb = "__cb_" + action + "_" + Math.random().toString(36).slice(2);
+        const cb = "__jsonp_" + Math.random().toString(36).slice(2);
+        const script = document.createElement("script");
+        const query = new URLSearchParams({
+          action,
+          cb,
+          ...params,
+          t: Date.now()
+        });
+
         let done = false;
 
         function finish(value){
           if (done) return;
           done = true;
+          try { delete window[cb]; } catch(e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
           resolve(value);
         }
 
-        window[cb] = (data) => {
-          try { delete window[cb]; } catch(e) {}
-          if (script.parentNode) script.parentNode.removeChild(script);
-          finish(data || {});
-        };
+        window[cb] = (data) => finish(data || { ok:false, error:"응답 없음" });
+        script.onerror = () => finish({ ok:false, error:"JSONP 연결 실패" });
+        setTimeout(() => finish({ ok:false, error:"요청 시간 초과" }), 10000);
 
-        const script = document.createElement("script");
-        script.onerror = () => {
-          try { delete window[cb]; } catch(e) {}
-          if (script.parentNode) script.parentNode.removeChild(script);
-          finish({});
-        };
-
-        setTimeout(() => {
-          try { delete window[cb]; } catch(e) {}
-          if (script.parentNode) script.parentNode.removeChild(script);
-          finish({});
-        }, 8000);
-
-        script.src = `${API_URL}?action=${action}&cb=${cb}&t=${Date.now()}`;
+        script.src = `${API_URL}?${query.toString()}`;
         document.body.appendChild(script);
       });
     }
 
     async function loadAdsData(){
-      const res = await fetchJSONP("ads_jsonp");
+      const res = await callJsonp("ads_jsonp");
       adsData = (res && res.ok && res.ads) ? res.ads : {};
     }
 
@@ -659,13 +654,12 @@
 
     const kingGrid = document.getElementById("kingGrid");
     const kingMeta = document.getElementById("kingMeta");
-    const refreshKingBtn = document.getElementById("refreshKingBtn");
 
     async function createKingSeats(){
       kingGrid.innerHTML = "";
       kingMeta.textContent = "누적 클릭 TOP5 불러오는 중…";
 
-      const res = await fetchJSONP("topall_jsonp");
+      const res = await callJsonp("topall_jsonp");
       const top = (res && res.ok && Array.isArray(res.top)) ? res.top : [];
 
       for(let i = 0; i < 5; i++){
@@ -732,7 +726,7 @@
           <div class="seat-no">${seatNo}</div>
           <div class="open-box">
             <strong>RESERVED</strong>
-            <span>예약 진행중</span>
+            <span>신청 진행중</span>
           </div>
           <div class="seat-status reserved">RESERVED</div>
         `;
@@ -746,18 +740,20 @@
         `;
       }
 
-      tile.addEventListener("click", async () => {
+      tile.addEventListener("click", () => {
         if (info.status === "OPEN") {
           window.location.href = `advertise.html?seatNo=${encodeURIComponent(seatNo)}&tier=${encodeURIComponent(tier)}`;
           return;
         }
+
         if (info.status === "RESERVED") {
-          alert(`${seatNo} 좌석은 예약 진행중입니다.`);
+          alert(`${seatNo} 좌석은 현재 신청 진행중입니다.`);
           return;
         }
+
         if (info.url) {
           trackClickViaImage(info, seatNo, tier);
-          setTimeout(createKingSeats, 1000);
+          setTimeout(createKingSeats, 1200);
           window.open(info.url, "_blank", "noopener,noreferrer");
         }
       });
@@ -772,6 +768,7 @@
     const chips = document.getElementById("chips");
     const searchInput = document.getElementById("searchInput");
     const clearBtn = document.getElementById("clearBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
     const countText = document.getElementById("countText");
 
     let currentCat = "ALL";
@@ -845,7 +842,9 @@
       applyFilter();
     });
 
-    refreshKingBtn.addEventListener("click", createKingSeats);
+    refreshBtn.addEventListener("click", async () => {
+      await boot();
+    });
 
     async function boot(){
       await loadAdsData();
