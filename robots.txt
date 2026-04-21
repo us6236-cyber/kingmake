@@ -1,1 +1,2 @@
-
+User-agent: *
+Disallow: /king-portal-9183.html
