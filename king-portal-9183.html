@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>관리자 | KING MAKE</title>
+<title>KING PORTAL</title>
 
 <style>
   :root{
@@ -90,7 +90,7 @@
     align-items:center;
   }
 
-  input, select, button, textarea{
+  input, select, button{
     padding:10px 12px;
     border-radius:12px;
     border:1px solid rgba(255,255,255,0.16);
@@ -99,7 +99,7 @@
     font-size:14px;
   }
 
-  input:focus, select:focus, textarea:focus{
+  input:focus, select:focus{
     outline:none;
     border-color:rgba(255,255,255,0.35);
   }
@@ -218,6 +218,17 @@
     margin-top:10px;
   }
 
+  .gate{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#000;
+    color:#fff;
+    font-family:sans-serif;
+    font-size:24px;
+  }
+
   @media (max-width:900px){
     .summary{
       grid-template-columns:1fr 1fr;
@@ -232,90 +243,100 @@
 </style>
 </head>
 <body>
-  <div class="top">
-    <div class="top-inner">
-      <a class="brand" href="index.html">
-        <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
-        <strong>KING MAKE</strong>
-      </a>
-      <div>관리자 전용</div>
+<script>
+  const ADMIN_PAGE_PASSWORD = "king123";
+  const pagePw = prompt("관리자 전용 페이지입니다. 비밀번호를 입력하세요.");
+
+  if (pagePw !== ADMIN_PAGE_PASSWORD) {
+    document.body.innerHTML = '<div class="gate">접근 불가</div>';
+    throw new Error("Unauthorized");
+  }
+</script>
+
+<div class="top">
+  <div class="top-inner">
+    <a class="brand" href="index.html">
+      <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
+      <strong>KING MAKE</strong>
+    </a>
+    <div>관리자 전용</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>관리자 대시보드</h1>
+    <p>
+      광고 신청 현황을 확인하고, 입금 확인 후 LIVE 처리할 수 있습니다.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <input id="password" type="password" placeholder="2차 관리자 비밀번호">
+      <button class="btn" id="loadBtn" type="button">데이터 불러오기</button>
+      <button class="btn" id="refreshBtn" type="button">새로고침</button>
+    </div>
+
+    <div class="filters">
+      <select id="statusFilter">
+        <option value="ALL">전체 상태</option>
+        <option value="RESERVED">RESERVED</option>
+        <option value="LIVE">LIVE</option>
+        <option value="OPEN">OPEN</option>
+      </select>
+
+      <input id="searchInput" type="text" placeholder="좌석번호 / 브랜드명 / 광고주명 / 입금자명 검색">
+    </div>
+
+    <div class="status-box" id="statusBox">대기중...</div>
+  </div>
+
+  <div class="card">
+    <div class="summary">
+      <div class="sum-box">
+        <b>OPEN</b>
+        <span id="openCount">-</span>
+      </div>
+      <div class="sum-box">
+        <b>RESERVED</b>
+        <span id="reservedCount">-</span>
+      </div>
+      <div class="sum-box">
+        <b>LIVE</b>
+        <span id="liveCount">-</span>
+      </div>
+      <div class="sum-box">
+        <b>TOTAL</b>
+        <span id="totalCount">-</span>
+      </div>
     </div>
   </div>
 
-  <div class="wrap">
-    <div class="hero">
-      <h1>관리자 대시보드</h1>
-      <p>
-        광고 신청 현황을 확인하고, 입금 확인 후 LIVE 처리할 수 있습니다.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="toolbar">
-        <input id="password" type="password" placeholder="관리자 비밀번호">
-        <button class="btn" id="loadBtn" type="button">데이터 불러오기</button>
-        <button class="btn" id="refreshBtn" type="button">새로고침</button>
-      </div>
-
-      <div class="filters">
-        <select id="statusFilter">
-          <option value="ALL">전체 상태</option>
-          <option value="RESERVED">RESERVED</option>
-          <option value="LIVE">LIVE</option>
-          <option value="OPEN">OPEN</option>
-        </select>
-
-        <input id="searchInput" type="text" placeholder="좌석번호 / 브랜드명 / 광고주명 검색">
-      </div>
-
-      <div class="status-box" id="statusBox">대기중...</div>
-    </div>
-
-    <div class="card">
-      <div class="summary">
-        <div class="sum-box">
-          <b>OPEN</b>
-          <span id="openCount">-</span>
-        </div>
-        <div class="sum-box">
-          <b>RESERVED</b>
-          <span id="reservedCount">-</span>
-        </div>
-        <div class="sum-box">
-          <b>LIVE</b>
-          <span id="liveCount">-</span>
-        </div>
-        <div class="sum-box">
-          <b>TOTAL</b>
-          <span id="totalCount">-</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card table-wrap">
-      <table id="adminTable">
-        <thead>
-          <tr>
-            <th>좌석</th>
-            <th>상태</th>
-            <th>브랜드</th>
-            <th>카테고리</th>
-            <th>등급</th>
-            <th>클릭수</th>
-            <th>광고주명</th>
-            <th>입금자명</th>
-            <th>연락처</th>
-            <th>이메일</th>
-            <th>세금계산서</th>
-            <th>사업자명</th>
-            <th>사업자번호</th>
-            <th>액션</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+  <div class="card table-wrap">
+    <table id="adminTable">
+      <thead>
+        <tr>
+          <th>좌석</th>
+          <th>상태</th>
+          <th>브랜드</th>
+          <th>카테고리</th>
+          <th>등급</th>
+          <th>클릭수</th>
+          <th>광고주명</th>
+          <th>입금자명</th>
+          <th>연락처</th>
+          <th>이메일</th>
+          <th>세금계산서</th>
+          <th>사업자명</th>
+          <th>사업자번호</th>
+          <th>액션</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
+</div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby-B6XTcdC0D_3YPRXVJrmq2dM5i4GfZRslbpWL8y4hrfe8HX_ZFZRrLT_Kk1hcaUtB/exec";
@@ -449,7 +470,7 @@ function renderTable(){
 async function loadAdmin(){
   const password = document.getElementById("password").value.trim();
   if (!password) {
-    alert("관리자 비밀번호를 입력하세요.");
+    alert("2차 관리자 비밀번호를 입력하세요.");
     return;
   }
 
