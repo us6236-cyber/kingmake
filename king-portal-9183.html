@@ -266,9 +266,7 @@
 <div class="wrap">
   <div class="hero">
     <h1>관리자 대시보드</h1>
-    <p>
-      광고 신청 현황을 확인하고, 입금 확인 후 LIVE 처리할 수 있습니다.
-    </p>
+    <p>광고 신청 현황을 확인하고, 입금 확인 후 LIVE 처리할 수 있습니다.</p>
   </div>
 
   <div class="card">
@@ -400,7 +398,6 @@ function applyFilters(list){
 
   return list.filter(item => {
     const statusOk = status === "ALL" || String(item.status || "").toUpperCase() === status;
-
     const searchTarget = [
       item.seatNo,
       item.name,
@@ -409,9 +406,7 @@ function applyFilters(list){
       item.managerEmail,
       item.depositorName
     ].join(" ").toLowerCase();
-
     const searchOk = !q || searchTarget.includes(q);
-
     return statusOk && searchOk;
   });
 }
@@ -477,7 +472,7 @@ async function loadAdmin(){
   currentPassword = password;
   setStatus("데이터 불러오는 중...");
 
-  const res = await callJsonp("admin_json", { password });
+  const res = await callJsonp("admin_jsonp", { password });
 
   if (!res.ok) {
     setStatus(`불러오기 실패\n\n${res.error || "알 수 없는 오류"}`);
