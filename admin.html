@@ -6,76 +6,335 @@
 <title>관리자 | KING MAKE</title>
 
 <style>
-body{
-  background:#000;
-  color:#fff;
-  font-family:sans-serif;
-  padding:20px;
-}
-h1{margin-bottom:10px}
+  :root{
+    --bg:#000;
+    --panel:rgba(255,255,255,0.04);
+    --line:rgba(255,255,255,0.12);
+    --text:#fff;
+    --muted:rgba(255,255,255,0.7);
+    --live:#2ecc71;
+    --reserved:#f39c12;
+    --open:#8e8e93;
+  }
 
-input,button{
-  padding:10px;
-  margin:5px;
-  border-radius:8px;
-  border:1px solid #333;
-}
-button{cursor:pointer}
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  }
 
-.table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:20px;
-}
-.table th, .table td{
-  border:1px solid #333;
-  padding:8px;
-  font-size:12px;
-  text-align:center;
-}
+  .top{
+    position:sticky;
+    top:0;
+    z-index:20;
+    backdrop-filter:blur(10px);
+    background:rgba(0,0,0,0.78);
+    border-bottom:1px solid var(--line);
+  }
+  .top-inner{
+    max-width:1400px;
+    margin:0 auto;
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#fff;
+    text-decoration:none;
+  }
+  .brand img{
+    height:26px;
+    width:auto;
+    display:block;
+  }
 
-.live{color:#2ecc71}
-.reserved{color:#f39c12}
-.open{color:#aaa}
+  .wrap{
+    max-width:1400px;
+    margin:0 auto;
+    padding:24px 18px 80px;
+  }
+
+  .hero{
+    margin-bottom:18px;
+  }
+  .hero h1{
+    margin:0;
+    font-size:32px;
+  }
+  .hero p{
+    margin:10px 0 0;
+    color:var(--muted);
+    line-height:1.6;
+  }
+
+  .card{
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:var(--panel);
+    padding:16px;
+    margin-bottom:16px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.35);
+  }
+
+  .toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+
+  input, select, button, textarea{
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.16);
+    background:rgba(0,0,0,0.35);
+    color:#fff;
+    font-size:14px;
+  }
+
+  input:focus, select:focus, textarea:focus{
+    outline:none;
+    border-color:rgba(255,255,255,0.35);
+  }
+
+  button{
+    cursor:pointer;
+  }
+
+  .btn{
+    background:rgba(255,255,255,0.06);
+  }
+  .btn:hover{
+    border-color:rgba(255,255,255,0.32);
+  }
+
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+  }
+  .sum-box{
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:rgba(255,255,255,0.03);
+    padding:14px;
+  }
+  .sum-box b{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .sum-box span{
+    font-size:26px;
+    font-weight:800;
+  }
+
+  .status-box{
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,0.03);
+    color:#ddd;
+    white-space:pre-wrap;
+    word-break:break-word;
+    line-height:1.5;
+    font-size:14px;
+  }
+
+  .table-wrap{
+    overflow:auto;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1200px;
+  }
+
+  th, td{
+    border-bottom:1px solid rgba(255,255,255,0.10);
+    padding:10px 8px;
+    text-align:left;
+    font-size:13px;
+    vertical-align:top;
+  }
+
+  th{
+    color:var(--muted);
+    font-size:12px;
+    position:sticky;
+    top:0;
+    background:#0a0a0a;
+  }
+
+  .badge{
+    display:inline-block;
+    padding:4px 8px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    border:1px solid rgba(255,255,255,0.16);
+    background:rgba(255,255,255,0.06);
+  }
+  .badge.live{
+    color:var(--live);
+    border-color:rgba(46,204,113,0.35);
+  }
+  .badge.reserved{
+    color:var(--reserved);
+    border-color:rgba(243,156,18,0.35);
+  }
+  .badge.open{
+    color:#d1d1d6;
+    border-color:rgba(142,142,147,0.35);
+  }
+
+  .row-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  .small-btn{
+    padding:7px 10px;
+    font-size:12px;
+    border-radius:10px;
+  }
+
+  .filters{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-top:10px;
+  }
+
+  @media (max-width:900px){
+    .summary{
+      grid-template-columns:1fr 1fr;
+    }
+  }
+
+  @media (max-width:600px){
+    .summary{
+      grid-template-columns:1fr;
+    }
+  }
 </style>
 </head>
-
 <body>
+  <div class="top">
+    <div class="top-inner">
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
+        <strong>KING MAKE</strong>
+      </a>
+      <div>관리자 전용</div>
+    </div>
+  </div>
 
-<h1>👑 KING ADMIN</h1>
+  <div class="wrap">
+    <div class="hero">
+      <h1>관리자 대시보드</h1>
+      <p>
+        광고 신청 현황을 확인하고, 입금 확인 후 LIVE 처리할 수 있습니다.
+      </p>
+    </div>
 
-<input id="password" placeholder="관리자 비밀번호">
-<button onclick="loadAdmin()">데이터 불러오기</button>
+    <div class="card">
+      <div class="toolbar">
+        <input id="password" type="password" placeholder="관리자 비밀번호">
+        <button class="btn" id="loadBtn" type="button">데이터 불러오기</button>
+        <button class="btn" id="refreshBtn" type="button">새로고침</button>
+      </div>
 
-<table class="table" id="table">
-  <thead>
-    <tr>
-      <th>좌석</th>
-      <th>상태</th>
-      <th>브랜드</th>
-      <th>카테고리</th>
-      <th>클릭수</th>
-      <th>광고주</th>
-      <th>연락처</th>
-      <th>이메일</th>
-      <th>액션</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+      <div class="filters">
+        <select id="statusFilter">
+          <option value="ALL">전체 상태</option>
+          <option value="RESERVED">RESERVED</option>
+          <option value="LIVE">LIVE</option>
+          <option value="OPEN">OPEN</option>
+        </select>
+
+        <input id="searchInput" type="text" placeholder="좌석번호 / 브랜드명 / 광고주명 검색">
+      </div>
+
+      <div class="status-box" id="statusBox">대기중...</div>
+    </div>
+
+    <div class="card">
+      <div class="summary">
+        <div class="sum-box">
+          <b>OPEN</b>
+          <span id="openCount">-</span>
+        </div>
+        <div class="sum-box">
+          <b>RESERVED</b>
+          <span id="reservedCount">-</span>
+        </div>
+        <div class="sum-box">
+          <b>LIVE</b>
+          <span id="liveCount">-</span>
+        </div>
+        <div class="sum-box">
+          <b>TOTAL</b>
+          <span id="totalCount">-</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card table-wrap">
+      <table id="adminTable">
+        <thead>
+          <tr>
+            <th>좌석</th>
+            <th>상태</th>
+            <th>브랜드</th>
+            <th>카테고리</th>
+            <th>등급</th>
+            <th>클릭수</th>
+            <th>광고주명</th>
+            <th>입금자명</th>
+            <th>연락처</th>
+            <th>이메일</th>
+            <th>세금계산서</th>
+            <th>사업자명</th>
+            <th>사업자번호</th>
+            <th>액션</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby-B6XTcdC0D_3YPRXVJrmq2dM5i4GfZRslbpWL8y4hrfe8HX_ZFZRrLT_Kk1hcaUtB/exec";
 
-// JSONP
+let adminData = [];
+let currentPassword = "";
+
+function setStatus(text){
+  document.getElementById("statusBox").textContent = text;
+}
+
 function callJsonp(action, params = {}){
   return new Promise((resolve) => {
     const cb = "__cb_" + Math.random().toString(36).slice(2);
 
     window[cb] = (data) => {
-      delete window[cb];
-      script.remove();
-      resolve(data);
+      try { delete window[cb]; } catch(e) {}
+      if (script.parentNode) script.parentNode.removeChild(script);
+      resolve(data || { ok:false, error:"응답 없음" });
     };
 
     const query = new URLSearchParams({
@@ -88,103 +347,197 @@ function callJsonp(action, params = {}){
     const script = document.createElement("script");
     script.src = API_URL + "?" + query.toString();
 
-    script.onerror = () => resolve({ ok:false, error:"JSONP 실패" });
+    script.onerror = () => {
+      try { delete window[cb]; } catch(e) {}
+      if (script.parentNode) script.parentNode.removeChild(script);
+      resolve({ ok:false, error:"JSONP 연결 실패" });
+    };
 
     document.body.appendChild(script);
   });
 }
 
-// 데이터 불러오기
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function statusBadge(status){
+  const s = String(status || "OPEN").toUpperCase();
+  if (s === "LIVE") return '<span class="badge live">LIVE</span>';
+  if (s === "RESERVED") return '<span class="badge reserved">RESERVED</span>';
+  return '<span class="badge open">OPEN</span>';
+}
+
+function applyFilters(list){
+  const status = document.getElementById("statusFilter").value;
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+
+  return list.filter(item => {
+    const statusOk = status === "ALL" || String(item.status || "").toUpperCase() === status;
+
+    const searchTarget = [
+      item.seatNo,
+      item.name,
+      item.advertiserName,
+      item.managerPhone,
+      item.managerEmail,
+      item.depositorName
+    ].join(" ").toLowerCase();
+
+    const searchOk = !q || searchTarget.includes(q);
+
+    return statusOk && searchOk;
+  });
+}
+
+function renderSummary(list){
+  const open = list.filter(x => String(x.status).toUpperCase() === "OPEN").length;
+  const reserved = list.filter(x => String(x.status).toUpperCase() === "RESERVED").length;
+  const live = list.filter(x => String(x.status).toUpperCase() === "LIVE").length;
+
+  document.getElementById("openCount").textContent = open;
+  document.getElementById("reservedCount").textContent = reserved;
+  document.getElementById("liveCount").textContent = live;
+  document.getElementById("totalCount").textContent = list.length;
+}
+
+function renderTable(){
+  const tbody = document.querySelector("#adminTable tbody");
+  tbody.innerHTML = "";
+
+  const filtered = applyFilters(adminData);
+  renderSummary(filtered);
+
+  filtered.forEach(item => {
+    const tr = document.createElement("tr");
+
+    const actions = [];
+    if (String(item.status).toUpperCase() === "RESERVED") {
+      actions.push(`<button class="btn small-btn" onclick="confirmSeat('${escapeHtml(item.seatNo)}')">승인</button>`);
+    }
+    if (String(item.status).toUpperCase() !== "LIVE") {
+      actions.push(`<button class="btn small-btn" onclick="releaseSeat('${escapeHtml(item.seatNo)}')">해제</button>`);
+    }
+
+    tr.innerHTML = `
+      <td>${escapeHtml(item.seatNo)}</td>
+      <td>${statusBadge(item.status)}</td>
+      <td>${escapeHtml(item.name || "-")}</td>
+      <td>${escapeHtml(item.category || "-")}</td>
+      <td>${escapeHtml(item.tier || "-")}</td>
+      <td>${escapeHtml(item.clicks ?? 0)}</td>
+      <td>${escapeHtml(item.advertiserName || "-")}</td>
+      <td>${escapeHtml(item.depositorName || "-")}</td>
+      <td>${escapeHtml(item.managerPhone || "-")}</td>
+      <td>${escapeHtml(item.managerEmail || "-")}</td>
+      <td>${escapeHtml(item.taxInvoiceNeeded || "-")}</td>
+      <td>${escapeHtml(item.businessName || "-")}</td>
+      <td>${escapeHtml(item.businessNumber || "-")}</td>
+      <td><div class="row-actions">${actions.join("") || "-"}</div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  setStatus(`불러오기 완료 · 표시 ${filtered.length}건`);
+}
+
 async function loadAdmin(){
-
-  const password = document.getElementById("password").value;
-
-  if(!password){
-    alert("비밀번호 입력");
+  const password = document.getElementById("password").value.trim();
+  if (!password) {
+    alert("관리자 비밀번호를 입력하세요.");
     return;
   }
+
+  currentPassword = password;
+  setStatus("데이터 불러오는 중...");
 
   const res = await callJsonp("admin_json", { password });
 
-  if(!res.ok){
-    alert(res.error);
+  if (!res.ok) {
+    setStatus(`불러오기 실패\n\n${res.error || "알 수 없는 오류"}`);
     return;
   }
 
-  renderTable(res.ads);
+  adminData = Array.isArray(res.ads) ? res.ads : [];
+  renderTable();
 }
 
-// 테이블 렌더
-function renderTable(list){
-
-  const tbody = document.querySelector("#table tbody");
-  tbody.innerHTML = "";
-
-  list.forEach(item => {
-
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
-      <td>${item.seatNo}</td>
-      <td class="${item.status.toLowerCase()}">${item.status}</td>
-      <td>${item.name || "-"}</td>
-      <td>${item.category || "-"}</td>
-      <td>${item.clicks}</td>
-      <td>${item.advertiserName || "-"}</td>
-      <td>${item.managerPhone || "-"}</td>
-      <td>${item.managerEmail || "-"}</td>
-      <td>
-        ${item.status === "RESERVED" ? `<button onclick="confirm('${item.seatNo}')">승인</button>` : ""}
-        ${item.status !== "LIVE" ? `<button onclick="release('${item.seatNo}')">해제</button>` : ""}
-      </td>
-    `;
-
-    tbody.appendChild(tr);
-  });
-}
-
-// 승인
-async function confirm(seatNo){
-
-  const password = document.getElementById("password").value;
-
-  const name = prompt("브랜드명 입력");
-  const url = prompt("브랜드 URL 입력");
-
-  if(!name || !url){
-    alert("브랜드 정보 필요");
+async function confirmSeat(seatNo){
+  const target = adminData.find(x => x.seatNo === seatNo);
+  if (!target) {
+    alert("대상 데이터를 찾지 못했습니다.");
     return;
   }
+
+  const name = prompt("브랜드명 입력", target.name || "");
+  if (!name) {
+    alert("브랜드명이 필요합니다.");
+    return;
+  }
+
+  const category = prompt("카테고리 입력", target.category || "");
+  const url = prompt("브랜드 URL 입력", target.url || "");
+  if (!url) {
+    alert("브랜드 URL이 필요합니다.");
+    return;
+  }
+
+  const tier = target.tier || prompt("등급 입력 (premium / standard)", "premium") || "";
+
+  setStatus(`${seatNo} LIVE 처리중...`);
 
   const res = await callJsonp("confirm_jsonp", {
-    adminPassword: password,
-    seatNo,
-    status:"LIVE",
-    name,
-    url
+    adminPassword: currentPassword,
+    seatNo: seatNo,
+    status: "LIVE",
+    name: name,
+    category: category || "",
+    url: url,
+    logo: "",
+    tier: tier,
+    advertiserName: target.advertiserName || "",
+    managerPhone: target.managerPhone || "",
+    managerEmail: target.managerEmail || "",
+    depositorName: target.depositorName || "",
+    taxInvoiceNeeded: target.taxInvoiceNeeded || "",
+    businessName: target.businessName || "",
+    businessNumber: target.businessNumber || ""
   });
 
-  if(res.ok){
-    alert("LIVE 처리 완료");
-    loadAdmin();
-  }else{
-    alert(res.error);
+  if (!res.ok) {
+    setStatus(`승인 실패\n\n${res.error || "알 수 없는 오류"}`);
+    return;
   }
+
+  setStatus(`${seatNo} LIVE 처리 완료`);
+  await loadAdmin();
 }
 
-// 해제
-async function release(seatNo){
+async function releaseSeat(seatNo){
+  if (!confirm(`${seatNo} 신청을 해제하시겠습니까?`)) return;
+
+  setStatus(`${seatNo} 해제 처리중...`);
 
   const res = await callJsonp("release_jsonp", { seatNo });
 
-  if(res.ok){
-    alert("해제 완료");
-    loadAdmin();
-  }else{
-    alert(res.error);
+  if (!res.ok) {
+    setStatus(`해제 실패\n\n${res.error || "알 수 없는 오류"}`);
+    return;
   }
-}
-</script>
 
+  setStatus(`${seatNo} 해제 완료`);
+  await loadAdmin();
+}
+
+document.getElementById("loadBtn").addEventListener("click", loadAdmin);
+document.getElementById("refreshBtn").addEventListener("click", loadAdmin);
+document.getElementById("statusFilter").addEventListener("change", renderTable);
+document.getElementById("searchInput").addEventListener("input", renderTable);
+</script>
 </body>
 </html>
