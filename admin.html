@@ -3,232 +3,186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>관리자 대시보드 | KING MAKE</title>
+<title>관리자 | KING MAKE</title>
 
 <style>
 body{
-  margin:0;
   background:#000;
   color:#fff;
-  font-family:Arial;
+  font-family:sans-serif;
+  padding:20px;
 }
-.wrap{
-  max-width:1400px;
-  margin:0 auto;
-  padding:24px;
-}
+h1{margin-bottom:10px}
 
-.card{
-  border:1px solid rgba(255,255,255,0.12);
-  background:rgba(255,255,255,0.04);
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:16px;
-}
-
-.summary{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-}
-
-.box{
-  border:1px solid rgba(255,255,255,0.12);
-  padding:12px;
-  border-radius:12px;
-}
-
-.label{font-size:12px;color:#aaa;}
-.value{font-size:24px;font-weight:bold;}
-
-input,select,button{
+input,button{
   padding:10px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.2);
-  background:#111;
-  color:#fff;
+  margin:5px;
+  border-radius:8px;
+  border:1px solid #333;
 }
+button{cursor:pointer}
 
-button{cursor:pointer;}
-
-table{
+.table{
   width:100%;
   border-collapse:collapse;
-  margin-top:12px;
+  margin-top:20px;
 }
-
-th,td{
-  border-bottom:1px solid rgba(255,255,255,0.1);
+.table th, .table td{
+  border:1px solid #333;
   padding:8px;
-  font-size:13px;
-  text-align:left;
+  font-size:12px;
+  text-align:center;
 }
 
-th{color:#aaa;}
-
-.filter{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.tag{
-  padding:4px 8px;
-  border-radius:8px;
-  font-size:11px;
-  font-weight:bold;
-}
-
-.live{background:#2ecc71;}
-.reserved{background:#f39c12;}
-.open{background:#555;}
+.live{color:#2ecc71}
+.reserved{color:#f39c12}
+.open{color:#aaa}
 </style>
 </head>
 
 <body>
-<div class="wrap">
 
-<h1>👑 KING MAKE 관리자 대시보드</h1>
+<h1>👑 KING ADMIN</h1>
 
-<div class="card filter">
-  <input id="password" type="password" placeholder="관리자 비밀번호">
-  
-  <select id="statusFilter">
-    <option value="ALL">전체 상태</option>
-    <option value="LIVE">LIVE</option>
-    <option value="RESERVED">RESERVED</option>
-    <option value="OPEN">OPEN</option>
-  </select>
+<input id="password" placeholder="관리자 비밀번호">
+<button onclick="loadAdmin()">데이터 불러오기</button>
 
-  <select id="taxFilter">
-    <option value="ALL">세금계산서 전체</option>
-    <option value="예">세금계산서 요청</option>
-    <option value="아니오">미요청</option>
-  </select>
-
-  <button onclick="loadData()">불러오기</button>
-</div>
-
-<div class="card summary">
-  <div class="box"><div class="label">OPEN</div><div class="value" id="open">-</div></div>
-  <div class="box"><div class="label">RESERVED</div><div class="value" id="reserved">-</div></div>
-  <div class="box"><div class="label">LIVE</div><div class="value" id="live">-</div></div>
-  <div class="box"><div class="label">총 매출</div><div class="value" id="revenue">-</div></div>
-</div>
-
-<div class="card">
-<table>
-<thead>
-<tr>
-<th>좌석</th>
-<th>상태</th>
-<th>브랜드</th>
-<th>등급</th>
-<th>가격</th>
-<th>광고주</th>
-<th>입금자</th>
-<th>연락처</th>
-<th>이메일</th>
-<th>세금계산서</th>
-<th>사업자명</th>
-<th>사업자번호</th>
-</tr>
-</thead>
-<tbody id="tbody"></tbody>
+<table class="table" id="table">
+  <thead>
+    <tr>
+      <th>좌석</th>
+      <th>상태</th>
+      <th>브랜드</th>
+      <th>카테고리</th>
+      <th>클릭수</th>
+      <th>광고주</th>
+      <th>연락처</th>
+      <th>이메일</th>
+      <th>액션</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
 </table>
-</div>
-
-</div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby-B6XTcdC0D_3YPRXVJrmq2dM5i4GfZRslbpWL8y4hrfe8HX_ZFZRrLT_Kk1hcaUtB/exec";
 
-function getPrice(seatNo, tier){
-  const num = parseInt(seatNo.replace(/[^\d]/g,""));
+// JSONP
+function callJsonp(action, params = {}){
+  return new Promise((resolve) => {
+    const cb = "__cb_" + Math.random().toString(36).slice(2);
 
-  if(tier==="premium"){
-    if(num<=10) return 500000;
-    if(num<=50) return 300000;
-    return 100000;
-  }
-  if(tier==="standard"){
-    if(num<=50) return 50000;
-    return 20000;
-  }
-  return 0;
+    window[cb] = (data) => {
+      delete window[cb];
+      script.remove();
+      resolve(data);
+    };
+
+    const query = new URLSearchParams({
+      action,
+      cb,
+      ...params,
+      t: Date.now()
+    });
+
+    const script = document.createElement("script");
+    script.src = API_URL + "?" + query.toString();
+
+    script.onerror = () => resolve({ ok:false, error:"JSONP 실패" });
+
+    document.body.appendChild(script);
+  });
 }
 
-function format(num){
-  return num.toLocaleString()+"원";
-}
+// 데이터 불러오기
+async function loadAdmin(){
 
-function statusTag(status){
-  if(status==="LIVE") return `<span class="tag live">LIVE</span>`;
-  if(status==="RESERVED") return `<span class="tag reserved">RESERVED</span>`;
-  return `<span class="tag open">OPEN</span>`;
-}
+  const password = document.getElementById("password").value;
 
-async function loadData(){
-  const pw = document.getElementById("password").value;
-  const statusFilter = document.getElementById("statusFilter").value;
-  const taxFilter = document.getElementById("taxFilter").value;
-
-  const res = await fetch(`${API_URL}?action=admin_json&password=${pw}`);
-  const data = await res.json();
-
-  if(!data.ok){
-    alert(data.error);
+  if(!password){
+    alert("비밀번호 입력");
     return;
   }
 
-  document.getElementById("open").innerText = data.summary.open;
-  document.getElementById("reserved").innerText = data.summary.reserved;
-  document.getElementById("live").innerText = data.summary.live;
+  const res = await callJsonp("admin_json", { password });
 
-  let totalRevenue = 0;
-
-  let ads = data.ads;
-
-  // 상태 필터
-  if(statusFilter !== "ALL"){
-    ads = ads.filter(a => a.status === statusFilter);
+  if(!res.ok){
+    alert(res.error);
+    return;
   }
 
-  // 세금계산서 필터
-  if(taxFilter !== "ALL"){
-    ads = ads.filter(a => a.taxInvoiceNeeded === taxFilter);
-  }
+  renderTable(res.ads);
+}
 
-  const tbody = document.getElementById("tbody");
-  tbody.innerHTML="";
+// 테이블 렌더
+function renderTable(list){
 
-  ads.forEach(a=>{
-    let price = 0;
+  const tbody = document.querySelector("#table tbody");
+  tbody.innerHTML = "";
 
-    if(a.status==="LIVE"){
-      price = getPrice(a.seatNo, a.tier);
-      totalRevenue += price;
-    }
+  list.forEach(item => {
 
     const tr = document.createElement("tr");
+
     tr.innerHTML = `
-      <td>${a.seatNo}</td>
-      <td>${statusTag(a.status)}</td>
-      <td>${a.name || ""}</td>
-      <td>${a.tier || ""}</td>
-      <td>${price ? format(price) : "-"}</td>
-      <td>${a.advertiserName || ""}</td>
-      <td>${a.depositorName || ""}</td>
-      <td>${a.managerPhone || ""}</td>
-      <td>${a.managerEmail || ""}</td>
-      <td>${a.taxInvoiceNeeded || ""}</td>
-      <td>${a.businessName || ""}</td>
-      <td>${a.businessNumber || ""}</td>
+      <td>${item.seatNo}</td>
+      <td class="${item.status.toLowerCase()}">${item.status}</td>
+      <td>${item.name || "-"}</td>
+      <td>${item.category || "-"}</td>
+      <td>${item.clicks}</td>
+      <td>${item.advertiserName || "-"}</td>
+      <td>${item.managerPhone || "-"}</td>
+      <td>${item.managerEmail || "-"}</td>
+      <td>
+        ${item.status === "RESERVED" ? `<button onclick="confirm('${item.seatNo}')">승인</button>` : ""}
+        ${item.status !== "LIVE" ? `<button onclick="release('${item.seatNo}')">해제</button>` : ""}
+      </td>
     `;
+
     tbody.appendChild(tr);
   });
+}
 
-  document.getElementById("revenue").innerText = format(totalRevenue);
+// 승인
+async function confirm(seatNo){
+
+  const password = document.getElementById("password").value;
+
+  const name = prompt("브랜드명 입력");
+  const url = prompt("브랜드 URL 입력");
+
+  if(!name || !url){
+    alert("브랜드 정보 필요");
+    return;
+  }
+
+  const res = await callJsonp("confirm_jsonp", {
+    adminPassword: password,
+    seatNo,
+    status:"LIVE",
+    name,
+    url
+  });
+
+  if(res.ok){
+    alert("LIVE 처리 완료");
+    loadAdmin();
+  }else{
+    alert(res.error);
+  }
+}
+
+// 해제
+async function release(seatNo){
+
+  const res = await callJsonp("release_jsonp", { seatNo });
+
+  if(res.ok){
+    alert("해제 완료");
+    loadAdmin();
+  }else{
+    alert(res.error);
+  }
 }
 </script>
 
