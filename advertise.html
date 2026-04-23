@@ -1,187 +1,578 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>광고 신청 | KING MAKE</title>
-
-<style>
-body{
-  margin:0;
-  background:#000;
-  color:#fff;
-  font-family:sans-serif;
-}
-
-.wrap{
-  max-width:700px;
-  margin:0 auto;
-  padding:30px 20px;
-}
-
-h1{
-  text-align:center;
-  margin-bottom:10px;
-}
-
-.sub{
-  text-align:center;
-  color:#aaa;
-  margin-bottom:30px;
-}
-
-.card{
-  background:#111;
-  padding:20px;
-  border-radius:14px;
-  margin-bottom:20px;
-}
-
-input, select{
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  margin-bottom:16px;
-  border-radius:8px;
-  border:none;
-  background:#222;
-  color:#fff;
-}
-
-button{
-  width:100%;
-  padding:14px;
-  background:#ff3b3b;
-  border:none;
-  color:#fff;
-  font-weight:bold;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-button:hover{
-  opacity:0.9;
-}
-
-.notice{
-  font-size:13px;
-  color:#aaa;
-  line-height:1.6;
-}
-
-.result{
-  margin-top:20px;
-  padding:15px;
-  background:#111;
-  border-radius:10px;
-  font-size:14px;
-  line-height:1.6;
-}
-</style>
-</head>
-
-<body>
-
-<div class="wrap">
-
-<h1>광고 좌석 신청</h1>
-<div class="sub">
-대한민국 브랜드 지도<br>
-클릭이 순위를 만듭니다 👑
-</div>
-
-<div class="card">
-
-<label>좌석번호</label>
-<input id="seatNo" placeholder="예: P001">
-
-<label>등급</label>
-<select id="tier">
-  <option value="premium">premium</option>
-  <option value="standard">standard</option>
-</select>
-
-<label>광고주명</label>
-<input id="advertiserName">
-
-<label>입금자명</label>
-<input id="depositorName">
-
-<label>연락처</label>
-<input id="managerPhone">
-
-<label>이메일</label>
-<input id="managerEmail">
-
-<button onclick="reserve()">좌석 신청하기</button>
-
-</div>
-
-<div class="card notice">
-✔ 좌석 신청 후 계좌 입금 진행<br>
-✔ 입금 확인 후 광고 LIVE 반영<br><br>
-
-<strong>입금계좌</strong><br>
-국민은행 000000-00-000000<br>
-예금주: 수아산업
-</div>
-
-<div id="result" class="result">대기중...</div>
-
-</div>
-
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbx2RbxlfkzrNcMA1bE8I3xnAYFbUmaMo1ISZvIhEF9G-BIDZz8R52ywjHqMlqlextoq/exec";
-
-function reserve(){
-
-  const seatNo = document.getElementById("seatNo").value.trim();
-  const tier = document.getElementById("tier").value;
-  const advertiserName = document.getElementById("advertiserName").value;
-  const depositorName = document.getElementById("depositorName").value;
-  const managerPhone = document.getElementById("managerPhone").value;
-  const managerEmail = document.getElementById("managerEmail").value;
-
-  if(!seatNo){
-    alert("좌석번호 입력하세요");
-    return;
-  }
-
-  document.getElementById("result").innerText = "신청 중...";
-
-  const cb = "cb_"+Date.now();
-
-  window[cb] = function(res){
-    delete window[cb];
-
-    if(res.ok){
-      document.getElementById("result").innerText =
-        "좌석 신청 완료\n\n" +
-        "좌석: " + seatNo + "\n" +
-        "입금자명: " + depositorName + "\n\n" +
-        "위 계좌로 입금해 주세요.\n" +
-        "입금 확인 후 광고가 등록됩니다.";
-    }else{
-      document.getElementById("result").innerText =
-        "실패: " + res.error;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>광고 신청 | KING MAKE</title>
+  <style>
+    :root{
+      --bg:#000;
+      --panel:rgba(255,255,255,0.04);
+      --line:rgba(255,255,255,0.12);
+      --text:#fff;
+      --muted:rgba(255,255,255,0.7);
+      --premium:#ff3b3b;
+      --standard:#ffffff;
+      --ok:#2ecc71;
+      --warn:#f39c12;
     }
-  }
 
-  const script = document.createElement("script");
-  script.src =
-    API_URL +
-    "?action=reserve_jsonp" +
-    "&cb=" + cb +
-    "&seatNo=" + seatNo +
-    "&tier=" + tier +
-    "&advertiserName=" + advertiserName +
-    "&depositorName=" + depositorName +
-    "&managerPhone=" + managerPhone +
-    "&managerEmail=" + managerEmail;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    }
 
-  document.body.appendChild(script);
-}
-</script>
+    .top{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(10px);
+      background:rgba(0,0,0,0.78);
+      border-bottom:1px solid var(--line);
+    }
+    .top-inner{
+      max-width:980px;
+      margin:0 auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#fff;
+      text-decoration:none;
+    }
+    .brand img{
+      height:26px;
+      width:auto;
+      display:block;
+    }
 
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:24px 18px 80px;
+    }
+
+    .hero{
+      text-align:center;
+      margin-bottom:20px;
+    }
+    .hero h1{
+      margin:0;
+      font-size:32px;
+    }
+    .hero p{
+      margin:10px 0 0;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .card{
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:var(--panel);
+      padding:18px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.45);
+      margin-bottom:16px;
+    }
+
+    .seat-summary{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .seat-box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:rgba(255,255,255,0.03);
+    }
+    .seat-box b{
+      display:block;
+      font-size:13px;
+      margin-bottom:8px;
+      color:var(--muted);
+    }
+    .seat-value{
+      font-size:22px;
+      font-weight:800;
+      word-break:break-word;
+    }
+    .premium-text{ color:var(--premium); }
+    .standard-text{ color:#fff; }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    .full{
+      grid-column:1 / -1;
+    }
+
+    .field label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    .field input,
+    .field select{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(0,0,0,0.35);
+      color:#fff;
+      outline:none;
+      font-size:14px;
+    }
+    .field input:focus,
+    .field select:focus{
+      border-color:rgba(255,255,255,0.35);
+    }
+
+    .notice{
+      margin-top:16px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.04);
+      border-radius:14px;
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    .bank-box{
+      margin-top:16px;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid rgba(46,204,113,0.25);
+      background:rgba(46,204,113,0.08);
+    }
+    .bank-title{
+      font-size:15px;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+    .bank-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+    }
+    .bank-item{
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.03);
+      border-radius:14px;
+      padding:12px;
+    }
+    .bank-item b{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    .bank-item span{
+      font-size:16px;
+      font-weight:800;
+      word-break:break-all;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:18px;
+      justify-content:center;
+    }
+    .btn{
+      border:1px solid rgba(255,255,255,0.14);
+      background:rgba(255,255,255,0.05);
+      color:#fff;
+      padding:12px 16px;
+      border-radius:14px;
+      cursor:pointer;
+      font-size:14px;
+      font-weight:700;
+    }
+    .btn:hover{
+      border-color:rgba(255,255,255,0.32);
+    }
+    .btn-primary{
+      background:rgba(255,59,59,0.16);
+      border-color:rgba(255,59,59,0.45);
+    }
+    .btn-warn{
+      background:rgba(243,156,18,0.14);
+      border-color:rgba(243,156,18,0.42);
+    }
+
+    .status-box{
+      margin-top:16px;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.03);
+      color:#ddd;
+      font-size:14px;
+      line-height:1.6;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .foot-actions{
+      margin-top:18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    @media (max-width:700px){
+      .seat-summary,
+      .form-grid,
+      .bank-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="top-inner">
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" alt="KING MAKE" onerror="this.style.display='none'">
+        <strong>KING MAKE</strong>
+      </a>
+      <div>광고 신청</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <h1>광고 좌석 신청</h1>
+      <p>
+        대한민국 브랜드 지도 위에 당신의 브랜드를 올려보세요.<br>
+        좌석 신청 후 계좌입금을 진행하면 관리자가 광고를 등록합니다.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="seat-summary">
+        <div class="seat-box">
+          <b>좌석번호</b>
+          <div class="seat-value" id="seatPreview">-</div>
+        </div>
+        <div class="seat-box">
+          <b>등급</b>
+          <div class="seat-value" id="tierPreview">-</div>
+        </div>
+        <div class="seat-box">
+          <b>현재 상태</b>
+          <div class="seat-value" id="statusPreview">입력 전</div>
+        </div>
+        <div class="seat-box">
+          <b>광고비</b>
+          <div class="seat-value" id="pricePreview">-</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="seatNo">좌석번호</label>
+          <input id="seatNo" placeholder="예: P001, S012" />
+        </div>
+
+        <div class="field">
+          <label for="tier">등급</label>
+          <select id="tier">
+            <option value="premium">premium</option>
+            <option value="standard">standard</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="brandName">브랜드명</label>
+          <input id="brandName" placeholder="예: BHC" />
+        </div>
+
+        <div class="field">
+          <label for="category">카테고리</label>
+          <select id="category">
+            <option value="치킨">치킨</option>
+            <option value="버거">버거</option>
+            <option value="카페">카페</option>
+            <option value="분식">분식</option>
+            <option value="한식">한식</option>
+            <option value="중식">중식</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="brandUrl">브랜드 URL</label>
+          <input id="brandUrl" placeholder="예: https://www.bhc.co.kr/" />
+        </div>
+
+        <div class="field">
+          <label for="advertiserName">광고주명</label>
+          <input id="advertiserName" placeholder="예: BHC 본사 / 담당 업체명" />
+        </div>
+
+        <div class="field">
+          <label for="depositorName">입금자명</label>
+          <input id="depositorName" placeholder="예: 홍길동 또는 수아산업" />
+        </div>
+
+        <div class="field">
+          <label for="managerPhone">담당자 연락처</label>
+          <input id="managerPhone" placeholder="예: 010-1234-5678" />
+        </div>
+
+        <div class="field">
+          <label for="managerEmail">담당자 이메일</label>
+          <input id="managerEmail" placeholder="예: manager@brand.com" />
+        </div>
+
+        <div class="field">
+          <label for="taxInvoiceNeeded">세금계산서 필요 여부</label>
+          <select id="taxInvoiceNeeded">
+            <option value="아니오">아니오</option>
+            <option value="예">예</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="businessName">사업자명</label>
+          <input id="businessName" placeholder="예: 수아산업" />
+        </div>
+
+        <div class="field full">
+          <label for="businessNumber">사업자번호</label>
+          <input id="businessNumber" placeholder="예: 123-45-67890" />
+        </div>
+      </div>
+
+      <div class="bank-box">
+        <div class="bank-title">입금 안내</div>
+        <div class="bank-grid">
+          <div class="bank-item">
+            <b>은행명</b>
+            <span>국민은행</span>
+          </div>
+          <div class="bank-item">
+            <b>계좌번호</b>
+            <span>000000-00-000000</span>
+          </div>
+          <div class="bank-item">
+            <b>예금주</b>
+            <span>수아산업</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="notice">
+        운영 흐름:<br>
+        1) 고객이 좌석 신청 후 계좌입금 진행<br>
+        2) 입금 확인 후 관리자가 광고를 등록합니다<br><br>
+        가격 정책:<br>
+        Premium 1~10: 50만원 / 11~50: 30만원 / 51~100: 10만원<br>
+        Standard 1~50: 5만원 / 51~100: 2만원
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-warn" id="reserveBtn" type="button">좌석 신청하기</button>
+      </div>
+
+      <div class="status-box" id="resultBox">대기중...</div>
+
+      <div class="foot-actions">
+        <button class="btn" id="goBoardBtn" type="button">광고판으로 돌아가기</button>
+        <button class="btn btn-primary" id="fillSampleBtn" type="button">BHC 샘플 채우기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbx2RbxlfkzrNcMA1bE8I3xnAYFbUmaMo1ISZvIhEF9G-BIDZz8R52ywjHqMlqlextoq/exec";
+    const BOARD_URL = "kfood.html";
+
+    const resultBox = document.getElementById("resultBox");
+
+    function qs(name){
+      const params = new URLSearchParams(location.search);
+      return params.get(name) || "";
+    }
+
+    function setStatusText(text){
+      resultBox.textContent = text;
+    }
+
+    function getSeatPrice(seatNo, tier){
+      if (!seatNo) return 0;
+      const num = parseInt(String(seatNo).replace(/[^\d]/g, ""), 10);
+      if (Number.isNaN(num)) return 0;
+
+      if (tier === "premium") {
+        if (num >= 1 && num <= 10) return 500000;
+        if (num >= 11 && num <= 50) return 300000;
+        return 100000;
+      }
+
+      if (tier === "standard") {
+        if (num >= 1 && num <= 50) return 50000;
+        return 20000;
+      }
+
+      return 0;
+    }
+
+    function formatWon(value){
+      return Number(value || 0).toLocaleString("ko-KR") + "원";
+    }
+
+    function updatePreview(statusText = "입력 중"){
+      const seatNo = document.getElementById("seatNo").value.trim();
+      const tier = document.getElementById("tier").value.trim();
+      const price = getSeatPrice(seatNo, tier);
+
+      document.getElementById("seatPreview").textContent = seatNo || "-";
+      document.getElementById("tierPreview").textContent = tier || "-";
+      document.getElementById("statusPreview").textContent = statusText;
+      document.getElementById("pricePreview").textContent = price ? formatWon(price) : "-";
+
+      document.getElementById("tierPreview").className =
+        "seat-value " + (tier === "premium" ? "premium-text" : "standard-text");
+    }
+
+    function collectFormData(){
+      return {
+        seatNo: document.getElementById("seatNo").value.trim(),
+        tier: document.getElementById("tier").value.trim(),
+        name: document.getElementById("brandName").value.trim(),
+        category: document.getElementById("category").value.trim(),
+        url: document.getElementById("brandUrl").value.trim(),
+        advertiserName: document.getElementById("advertiserName").value.trim(),
+        depositorName: document.getElementById("depositorName").value.trim(),
+        managerPhone: document.getElementById("managerPhone").value.trim(),
+        managerEmail: document.getElementById("managerEmail").value.trim(),
+        taxInvoiceNeeded: document.getElementById("taxInvoiceNeeded").value.trim(),
+        businessName: document.getElementById("businessName").value.trim(),
+        businessNumber: document.getElementById("businessNumber").value.trim()
+      };
+    }
+
+    function callJsonp(action, params = {}){
+      return new Promise((resolve) => {
+        const cb = "__jsonp_" + Math.random().toString(36).slice(2);
+        const script = document.createElement("script");
+        const query = new URLSearchParams({
+          action,
+          cb,
+          ...params,
+          t: Date.now()
+        });
+
+        let done = false;
+
+        function finish(value){
+          if (done) return;
+          done = true;
+          try { delete window[cb]; } catch(e) {}
+          if (script.parentNode) script.parentNode.removeChild(script);
+          resolve(value);
+        }
+
+        window[cb] = (data) => finish(data || { ok:false, error:"응답 없음" });
+        script.onerror = () => finish({ ok:false, error:"JSONP 연결 실패" });
+        setTimeout(() => finish({ ok:false, error:"요청 시간 초과" }), 10000);
+
+        script.src = `${API_URL}?${query.toString()}`;
+        document.body.appendChild(script);
+      });
+    }
+
+    async function reserveSeat(){
+      const data = collectFormData();
+
+      if (!data.seatNo) {
+        setStatusText("좌석번호를 입력하세요.");
+        return;
+      }
+
+      updatePreview("신청 요청중");
+      setStatusText("좌석 신청 요청중...");
+
+      const result = await callJsonp("reserve_jsonp", {
+        seatNo: data.seatNo,
+        tier: data.tier,
+        advertiserName: data.advertiserName,
+        managerPhone: data.managerPhone,
+        managerEmail: data.managerEmail,
+        depositorName: data.depositorName,
+        taxInvoiceNeeded: data.taxInvoiceNeeded,
+        businessName: data.businessName,
+        businessNumber: data.businessNumber
+      });
+
+      if (result.ok) {
+        updatePreview("RESERVED");
+        setStatusText(
+          `좌석 신청이 완료되었습니다 👑\n\n` +
+          `선택 좌석: ${data.seatNo}\n` +
+          `등급: ${data.tier}\n` +
+          `광고비: ${formatWon(getSeatPrice(data.seatNo, data.tier))}\n` +
+          `입금자명: ${data.depositorName || "-"}\n\n` +
+          `위 계좌로 입금해 주세요.\n` +
+          `입금 확인 후 관리자가 광고를 등록합니다.`
+        );
+      } else {
+        updatePreview("실패");
+        setStatusText(`좌석 신청 실패\n\n${result.error || "알 수 없는 오류"}`);
+      }
+    }
+
+    function fillSample(){
+      document.getElementById("seatNo").value = qs("seatNo") || "P001";
+      document.getElementById("tier").value = qs("tier") || "premium";
+      document.getElementById("brandName").value = "BHC";
+      document.getElementById("category").value = "치킨";
+      document.getElementById("brandUrl").value = "https://www.bhc.co.kr/";
+      document.getElementById("advertiserName").value = "BHC";
+      document.getElementById("depositorName").value = "BHC";
+      document.getElementById("managerPhone").value = "010-1234-5678";
+      document.getElementById("managerEmail").value = "manager@bhc.co.kr";
+      document.getElementById("taxInvoiceNeeded").value = "예";
+      document.getElementById("businessName").value = "수아산업";
+      document.getElementById("businessNumber").value = "123-45-67890";
+      updatePreview("샘플 입력 완료");
+    }
+
+    function initFromQuery(){
+      const seatNo = qs("seatNo");
+      const tier = qs("tier");
+
+      if (seatNo) document.getElementById("seatNo").value = seatNo;
+      if (tier) document.getElementById("tier").value = tier;
+
+      updatePreview("입력 중");
+    }
+
+    document.getElementById("seatNo").addEventListener("input", () => updatePreview("입력 중"));
+    document.getElementById("tier").addEventListener("change", () => updatePreview("입력 중"));
+    document.getElementById("reserveBtn").addEventListener("click", reserveSeat);
+    document.getElementById("fillSampleBtn").addEventListener("click", fillSample);
+    document.getElementById("goBoardBtn").addEventListener("click", () => {
+      window.location.href = BOARD_URL;
+    });
+
+    initFromQuery();
+  </script>
 </body>
 </html>
