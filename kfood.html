@@ -333,40 +333,36 @@
     .tile{
       position:relative;
       overflow:hidden;
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.12);
       cursor:pointer;
       transition:.18s ease;
       user-select:none;
     }
     .tile:hover{
       transform:translateY(-2px);
-      border-color:rgba(255,255,255,0.35);
-      background:rgba(255,255,255,0.07);
     }
     .tile.filtered-out{
       opacity:.16;
       filter:grayscale(1);
       pointer-events:none;
     }
-    .tile.open-seat{
-      background:rgba(255,255,255,0.02);
-    }
-
-    .tile.premium{
-      border-color:rgba(255,59,59,0.55);
-      border-radius:16px;
-    }
-    .tile.standard{
-      border-color:rgba(255,255,255,0.30);
-      border-radius:10px;
-    }
 
     .premium-tile{
-      min-height:112px;
+      min-height:130px;
+      border-radius:16px;
+      border:1px solid rgba(255,59,59,0.55);
+      background:linear-gradient(180deg, rgba(255,59,59,0.08), rgba(255,255,255,0.03));
+      box-shadow:0 0 18px rgba(255,59,59,0.10);
     }
+
     .standard-tile{
-      min-height:55px;
+      min-height:62px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.22);
+      background:rgba(255,255,255,0.03);
+    }
+
+    .tile.open-seat{
+      background:rgba(255,255,255,0.02);
     }
 
     .seat-no{
@@ -433,22 +429,38 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      overflow:hidden;
     }
     .premium-tile .logo-only-box{
-      padding:18px 8px 8px;
-    }
-    .premium-tile .logo-only-box img{
-      width:80px;
-      height:80px;
-      object-fit:contain;
+      padding:22px 10px 12px;
     }
     .standard-tile .logo-only-box{
-      padding:12px 4px 4px;
+      padding:14px 6px 6px;
     }
-    .standard-tile .logo-only-box img{
-      width:36px;
-      height:36px;
+
+    .premium-logo{
+      width:140px;
+      height:140px;
       object-fit:contain;
+      object-position:center;
+      display:block;
+      filter:drop-shadow(0 4px 10px rgba(0,0,0,0.25));
+    }
+
+    .standard-logo{
+      width:70px;
+      height:70px;
+      object-fit:contain;
+      object-position:center;
+      display:block;
+    }
+
+    .premium-glow{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      border-radius:16px;
+      box-shadow:inset 0 0 0 1px rgba(255,59,59,0.15), 0 0 22px rgba(255,59,59,0.08);
     }
 
     .open-box{
@@ -459,7 +471,7 @@
       align-items:center;
       justify-content:center;
       gap:4px;
-      color:rgba(255,255,255,0.75);
+      color:rgba(255,255,255,0.78);
       text-align:center;
       padding:10px 6px 6px;
     }
@@ -469,7 +481,7 @@
     }
     .open-box span{
       font-size:8px;
-      color:var(--muted);
+      color:rgba(255,255,255,0.6);
     }
     .standard-tile .open-box strong{
       font-size:8px;
@@ -644,11 +656,10 @@
         const url = encodeURIComponent(ad.url || "");
         const name = encodeURIComponent(ad.name || "");
         const t = encodeURIComponent(tier || "");
-        const ua = encodeURIComponent(navigator.userAgent.slice(0,120));
 
         const img = new Image();
         img.referrerPolicy = "no-referrer";
-        img.src = `${API_URL}?action=track&seatNo=${seat}&url=${url}&name=${name}&tier=${t}&ua=${ua}&t=${Date.now()}`;
+        img.src = `${API_URL}?action=track&seatNo=${seat}&url=${url}&name=${name}&tier=${t}&t=${Date.now()}`;
       }catch(e){}
     }
 
@@ -731,10 +742,19 @@
           <div class="seat-status reserved">RESERVED</div>
         `;
       } else {
+        const logoClass = tier === "premium" ? "premium-logo" : "standard-logo";
+        const glow = tier === "premium" ? '<div class="premium-glow"></div>' : '';
+
         tile.innerHTML = `
           <div class="seat-no">${seatNo}</div>
+          ${glow}
           <div class="logo-only-box">
-            <img src="${info.logo || 'images/logo.png'}" alt="${info.name || 'BRAND'}" onerror="this.onerror=null; this.src='images/logo.png';">
+            <img
+              class="${logoClass}"
+              src="${info.logo || 'images/logo.png'}"
+              alt="${info.name || 'BRAND'}"
+              onerror="this.onerror=null; this.src='images/logo.png';"
+            >
           </div>
           <div class="seat-status live">LIVE</div>
         `;
