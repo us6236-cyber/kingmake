@@ -317,12 +317,12 @@
 
         <div class="field full">
           <label for="brandUrl">브랜드 URL</label>
-          <input id="brandUrl" placeholder="예: https://www.bhc.co.kr/" />
+          <input id="brandUrl" placeholder="예: https://www.kingmake.kr/" />
         </div>
 
         <div class="field">
           <label for="advertiserName">광고주명</label>
-          <input id="advertiserName" placeholder="예: BHC 본사 / 담당 업체명" />
+          <input id="advertiserName" placeholder="예: 본사 / 담당 업체명" />
         </div>
 
         <div class="field">
@@ -364,15 +364,15 @@
         <div class="bank-grid">
           <div class="bank-item">
             <b>은행명</b>
-            <span>국민은행</span>
+            <span>카카오뱅크</span>
           </div>
           <div class="bank-item">
             <b>계좌번호</b>
-            <span>000000-00-000000</span>
+            <span>3333-33-3852002</span>
           </div>
           <div class="bank-item">
             <b>예금주</b>
-            <span>수아산업</span>
+            <span>박수연</span>
           </div>
         </div>
       </div>
@@ -394,7 +394,7 @@
 
       <div class="foot-actions">
         <button class="btn" id="goBoardBtn" type="button">광고판으로 돌아가기</button>
-        <button class="btn btn-primary" id="fillSampleBtn" type="button">BHC 샘플 채우기</button>
+        <button class="btn btn-primary" id="fillSampleBtn" type="button">샘플 채우기</button>
       </div>
     </div>
   </div>
@@ -541,11 +541,11 @@
     function fillSample(){
       document.getElementById("seatNo").value = qs("seatNo") || "P001";
       document.getElementById("tier").value = qs("tier") || "premium";
-      document.getElementById("brandName").value = "BHC";
+      document.getElementById("brandName").value = "수아산업";
       document.getElementById("category").value = "치킨";
-      document.getElementById("brandUrl").value = "https://www.bhc.co.kr/";
-      document.getElementById("advertiserName").value = "BHC";
-      document.getElementById("depositorName").value = "BHC";
+      document.getElementById("brandUrl").value = "https://www.kingmake.kr/";
+      document.getElementById("advertiserName").value = "수아산업";
+      document.getElementById("depositorName").value = "수아산업";
       document.getElementById("managerPhone").value = "010-1234-5678";
       document.getElementById("managerEmail").value = "manager@bhc.co.kr";
       document.getElementById("taxInvoiceNeeded").value = "예";
