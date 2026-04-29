@@ -378,7 +378,6 @@
       pointer-events:none;
     }
 
-    /* 좌석 크기 고정 */
     .premium-tile{
       height:120px;
       min-height:120px;
@@ -415,7 +414,7 @@
       background:rgba(0,0,0,0.42);
       color:#fff;
       border:1px solid rgba(255,255,255,0.16);
-      z-index:2;
+      z-index:3;
     }
 
     .standard-tile .seat-no{
@@ -437,7 +436,7 @@
       font-weight:800;
       text-align:center;
       letter-spacing:.2px;
-      z-index:2;
+      z-index:3;
       background:rgba(0,0,0,0.45);
       border:1px solid rgba(255,255,255,0.16);
     }
@@ -465,7 +464,6 @@
       font-size:7px;
     }
 
-    /* 로고는 좌석 안에서 자동 맞춤 */
     .logo-only-box{
       width:100%;
       height:100%;
@@ -473,6 +471,8 @@
       align-items:center;
       justify-content:center;
       overflow:hidden;
+      position:relative;
+      z-index:2;
     }
 
     .premium-tile .logo-only-box{
@@ -510,6 +510,76 @@
       pointer-events:none;
       border-radius:16px;
       box-shadow:inset 0 0 0 1px rgba(255,59,59,0.15), 0 0 22px rgba(255,59,59,0.08);
+      z-index:1;
+    }
+
+    .premium-tile::before{
+      content:"";
+      position:absolute;
+      top:-80%;
+      left:-90%;
+      width:60%;
+      height:240%;
+      background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.35),
+        transparent
+      );
+      transform:rotate(25deg);
+      animation:premiumShine 3.8s infinite;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    @keyframes premiumShine{
+      0%{ left:-90%; opacity:0; }
+      20%{ opacity:1; }
+      45%{ left:130%; opacity:0; }
+      100%{ left:130%; opacity:0; }
+    }
+
+    .premium-tile:hover{
+      transform:translateY(-4px) scale(1.015);
+      border-color:rgba(255,215,0,0.75);
+      box-shadow:
+        0 0 28px rgba(255,59,59,0.25),
+        0 0 36px rgba(212,175,55,0.18);
+    }
+
+    .premium-crown{
+      position:absolute;
+      top:6px;
+      right:6px;
+      z-index:4;
+      font-size:10px;
+      font-weight:900;
+      padding:4px 7px;
+      border-radius:999px;
+      color:#ffd76a;
+      background:rgba(0,0,0,0.55);
+      border:1px solid rgba(212,175,55,0.45);
+    }
+
+    .premium-tile.open-seat{
+      animation:premiumPulse 2.6s infinite;
+    }
+
+    @keyframes premiumPulse{
+      0%{ box-shadow:0 0 0 rgba(255,59,59,0); }
+      50%{ box-shadow:0 0 24px rgba(255,59,59,0.22); }
+      100%{ box-shadow:0 0 0 rgba(255,59,59,0); }
+    }
+
+    .seat-cta{
+      font-size:9px;
+      color:#ffd76a;
+      margin-top:3px;
+      font-weight:800;
+    }
+
+    .standard-tile .seat-cta{
+      font-size:6px;
     }
 
     .open-box{
@@ -523,6 +593,8 @@
       color:rgba(255,255,255,0.78);
       text-align:center;
       padding:10px 6px 6px;
+      position:relative;
+      z-index:2;
     }
 
     .open-box strong{
@@ -561,9 +633,9 @@
       }
 
       .premium-tile{
-        height:130px;
-        min-height:130px;
-        max-height:130px;
+        height:112px;
+        min-height:112px;
+        max-height:112px;
       }
 
       .standard-tile{
@@ -604,7 +676,6 @@
         <span class="chip" data-cat="분식">분식</span>
         <span class="chip" data-cat="한식">한식</span>
         <span class="chip" data-cat="중식">중식</span>
-        <span class="chip" data-cat="기타">기타</span>
         <span class="count" id="countText">-</span>
       </div>
 
@@ -795,11 +866,16 @@
       tile.dataset.name = (info.name || "").toLowerCase();
 
       if (info.status === "OPEN") {
+        const crown = tier === "premium" ? '<div class="premium-crown">👑 PREMIUM</div>' : '';
+        const cta = tier === "premium" ? '지금 선점하기' : '광고 신청';
+
         tile.innerHTML = `
           <div class="seat-no">${seatNo}</div>
+          ${crown}
           <div class="open-box">
             <strong>OPEN</strong>
             <span>Advertise Here</span>
+            <div class="seat-cta">${cta}</div>
           </div>
           <div class="seat-status open">OPEN</div>
         `;
@@ -814,7 +890,9 @@
         `;
       } else {
         const logoClass = tier === "premium" ? "premium-logo" : "standard-logo";
-        const glow = tier === "premium" ? '<div class="premium-glow"></div>' : '';
+        const glow = tier === "premium"
+          ? '<div class="premium-glow"></div><div class="premium-crown">👑 PREMIUM</div>'
+          : '';
 
         tile.innerHTML = `
           <div class="seat-no">${seatNo}</div>
