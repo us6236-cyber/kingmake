@@ -383,7 +383,7 @@
         1) 고객이 좌석 신청 후 계좌입금 진행<br>
         2) 입금 확인 후 관리자가 광고를 등록합니다<br><br>
         가격 정책:<br>
-        Premium 1~10: 50만원 / 11~50: 30만원 / 51~100: 10만원<br>
+        Premium 1~10: 30만원 / 11~50: 20만원 / 51~100: 10만원<br>
         Standard 1~50: 5만원 / 51~100: 2만원<br><br>
         제출 안내문:<br>
         -프리미엄 좌석 PNG(투명 배경 권장) 600x600px 권장(최소400x400)<br>
@@ -428,8 +428,8 @@
       if (Number.isNaN(num)) return 0;
 
       if (tier === "premium") {
-        if (num >= 1 && num <= 10) return 500000;
-        if (num >= 11 && num <= 50) return 300000;
+        if (num >= 1 && num <= 10) return 300000;
+        if (num >= 11 && num <= 50) return 200000;
         return 100000;
       }
 
